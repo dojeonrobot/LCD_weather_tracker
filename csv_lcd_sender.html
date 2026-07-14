@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>날씨 CSV LCD 전송기</title>
+<style>
+  :root{
+    --bg:#F4F7FB; --card:#FFFFFF; --ink:#132036; --muted:#64748B;
+    --soft:#EEF4FA; --line:#DDE7F2; --line2:#E9EFF7;
+    --blue:#2563EB; --blue2:#1E40AF; --cyan:#0891B2; --green:#16A34A;
+    --orange:#EA580C; --red:#DC2626; --shadow:0 10px 30px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Malgun Gothic",system-ui,sans-serif;background:radial-gradient(900px 450px at 88% -10%,#D8E8FF 0%,transparent 58%),radial-gradient(760px 420px at -10% 105%,#DFF7EF 0%,transparent 56%),var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;word-break:keep-all}
+  .wrap{width:min(1660px,calc(100vw - 28px));margin:0 auto;padding:16px 0 38px}
+  .topbar{background:linear-gradient(135deg,#0F213F,#2456BE);color:#fff;border-radius:18px;padding:18px 22px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden}
+  .topbar:after{content:"";position:absolute;right:-54px;top:-82px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,.14);box-shadow:0 0 0 24px rgba(255,255,255,.045),0 0 0 62px rgba(255,255,255,.025)}
+  .brand{position:relative;z-index:1;display:flex;align-items:center;gap:14px;min-width:0}.logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#60A5FA,#22D3EE);box-shadow:0 8px 22px rgba(0,0,0,.22);font-weight:950;font-size:24px;flex:none}.brand h1{font-size:21px;line-height:1.25;letter-spacing:-.5px}.brand .sub{font-size:12.5px;color:rgba(255,255,255,.76);margin-top:2px}
+  .status-pill{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:850;white-space:nowrap}.status-dot{width:9px;height:9px;border-radius:50%;background:#94A3B8;box-shadow:0 0 0 4px rgba(255,255,255,.10)}.status-pill.connected .status-dot{background:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.18)}.status-pill.connecting .status-dot{background:#F59E0B;box-shadow:0 0 0 4px rgba(245,158,11,.20)}.status-pill.error .status-dot{background:#EF4444;box-shadow:0 0 0 4px rgba(239,68,68,.18)}
+  .layout{margin-top:16px;display:grid;grid-template-columns:minmax(310px,370px) minmax(0,1fr);gap:16px;align-items:start}@media(max-width:1060px){.layout{grid-template-columns:1fr}}
+  .left,.right{min-width:0}.card{background:rgba(255,255,255,.95);border:1px solid var(--line2);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.card+.card{margin-top:14px}.card-head{padding:14px 16px;border-bottom:1px solid var(--line2);background:linear-gradient(180deg,#fff,#FBFCFF);display:flex;align-items:center;justify-content:space-between;gap:10px}.card-title{font-size:14px;font-weight:950;display:flex;align-items:center;gap:8px;color:#111827}.dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px #DBEAFE}.tag{font-size:11.5px;font-weight:850;color:var(--blue2);background:#EAF2FF;padding:4px 9px;border-radius:999px;white-space:nowrap}.card-body{padding:16px}.hint{font-size:12px;color:var(--muted);line-height:1.55}.muted{color:var(--muted)}
+  .upload-zone{margin-top:12px;border:1.8px dashed #B9C8DB;background:#F8FBFF;border-radius:14px;min-height:118px;display:grid;place-items:center;text-align:center;padding:18px;cursor:pointer;transition:.15s}.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:#fff;transform:translateY(-1px)}.upload-zone strong{display:block;font-size:15px;margin-bottom:5px;color:#172033}.upload-zone span{font-size:12px;color:var(--muted)}input[type=file]{display:none}.file-info{margin-top:12px;display:none;gap:8px;align-items:center;padding:10px 12px;background:var(--soft);border:1px solid var(--line2);border-radius:11px;font-size:12.5px;color:var(--muted)}.file-info.show{display:flex}.file-info b{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  button{border:none;font-family:inherit;cursor:pointer;font-weight:850;border-radius:11px;padding:11px 14px;transition:.13s}.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;box-shadow:0 6px 16px rgba(37,99,235,.24)}.btn-primary:hover:not(:disabled){filter:brightness(1.05);transform:translateY(-1px)}.btn-ghost{background:var(--soft);color:#334155;border:1px solid var(--line)}.btn-ghost:hover:not(:disabled){background:#fff;border-color:#A9B8CD}.btn-send{width:100%;font-size:15px;background:linear-gradient(135deg,#0891B2,#2563EB);color:#fff;box-shadow:0 8px 20px rgba(8,145,178,.23)}button:disabled{opacity:.42;cursor:default;transform:none!important;box-shadow:none!important}
+  .conn-box{display:flex;flex-direction:column;gap:12px}.conn-state{border-radius:14px;background:#F8FBFF;border:1px solid var(--line2);padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px}.conn-label{font-size:12px;color:var(--muted);font-weight:800}.conn-value{font-size:17px;font-weight:950;margin-top:2px}.conn-led{width:34px;height:34px;border-radius:50%;background:#CBD5E1;box-shadow:inset 0 0 0 7px #EFF4FA;flex:none}.conn-state.connected .conn-led{background:#22C55E;box-shadow:0 0 0 7px #DCFCE7}.conn-state.error .conn-led{background:#EF4444;box-shadow:0 0 0 7px #FEE2E2}
+  .data-block{border:1px solid var(--line2);background:#F8FBFF;border-radius:14px;padding:14px;cursor:pointer;transition:.14s;display:grid;gap:11px}.data-block:hover{background:#fff;border-color:#AFC0D6;transform:translateY(-1px)}.data-block.disabled{opacity:.58;cursor:default;transform:none!important}.data-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.data-stat{background:#fff;border:1px solid var(--line2);border-radius:11px;padding:10px}.data-stat span{display:block;font-size:11px;color:var(--muted);font-weight:800}.data-stat b{font-size:17px;font-weight:950}.open-data{width:100%;background:#EAF2FF;color:#1D4ED8;border:1px solid #CFE0FF}
+  .mode-switch{display:flex;gap:8px;flex-wrap:wrap}.mode-switch button{background:#EEF4FA;color:#334155;border:1px solid var(--line);padding:10px 14px}.mode-switch button.on{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-color:transparent}.panel{display:none}.panel.on{display:block}
+  .settings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end}.settings-grid.two{grid-template-columns:repeat(2,1fr)}.settings-grid.one{grid-template-columns:1fr}.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}@media(max-width:900px){.settings-grid,.settings-grid.two,.form-grid{grid-template-columns:1fr}}
+  .field{display:grid;gap:6px;min-width:0}label{font-size:12px;font-weight:950;color:#334155}select,input[type=number]{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#fff;color:var(--ink);font-family:inherit;font-size:13px;font-weight:750;outline:none;min-width:0}select:focus,input[type=number]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.13)}
+  .mode-tabs{display:flex;gap:7px;flex-wrap:wrap}.mode-tabs button{font-size:12.5px;padding:9px 12px;background:var(--soft);color:#435166;border:1px solid var(--line)}.mode-tabs button.on{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-color:transparent}.check-scroll{max-height:112px;overflow:auto;border:1px solid var(--line2);border-radius:12px;background:#fff;padding:8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}.check-item{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:750;color:#374151;background:#F8FAFC;border:1px solid #EEF2F7;border-radius:9px;padding:7px 8px;min-width:0}.check-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.check-item input{accent-color:var(--blue)}
+  .content-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px;align-items:stretch}@media(max-width:1180px){.content-layout{grid-template-columns:1fr}.lcd-box{max-width:none}}
+  .selected-data-wrap{border:1px solid var(--line2);border-radius:16px;background:#F8FBFF;min-width:0;overflow:hidden;display:flex;flex-direction:column}.selected-data-head{padding:12px 14px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#fff,#F8FBFF)}.selected-data-head b{font-size:13px;font-weight:950}.selected-data-head span{font-size:11px;color:var(--muted);font-weight:800}.selected-table-wrap{min-width:0;overflow:auto;max-height:430px;background:#fff}.selected-table{border-collapse:separate;border-spacing:0;width:100%;min-width:max-content;font-size:12px}.selected-table th,.selected-table td{padding:10px 12px;border-right:1px solid #EEF2F7;border-bottom:1px solid #EEF2F7;white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}.selected-table th{position:sticky;top:0;z-index:2;background:#EEF5FF;color:#24334D;font-weight:950;text-align:left}.selected-table th:first-child,.selected-table td:first-child{position:sticky;left:0;z-index:1;background:#F8FBFF;color:#64748B;font-weight:900;text-align:right;min-width:56px}.selected-table th:first-child{z-index:3;background:#E5F0FF}.selected-table tr:hover td{background:#FBFDFF}.selected-note{padding:10px 14px;background:#F8FBFF;border-top:1px solid var(--line2);font-size:12px;color:var(--muted);line-height:1.55}
+  .lcd-box{border:1px solid var(--line2);border-radius:16px;background:#F8FBFF;padding:14px;min-width:0}.lcd-title{font-size:13px;font-weight:950;margin-bottom:8px}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.metric{background:#fff;border:1px solid var(--line2);border-radius:11px;padding:10px;min-width:0}.metric span{display:block;font-size:11px;color:var(--muted);font-weight:800}.metric b{display:block;font-size:16px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.send-status{margin-top:10px;min-height:34px;padding:9px 11px;border-radius:10px;background:#F8FBFF;border:1px solid var(--line2);font-size:12.5px;color:var(--muted);font-weight:800}.send-status.ok{background:#ECFDF3;border-color:#BBF7D0;color:#15803D}.send-status.err{background:#FEF2F2;border-color:#FECACA;color:#B91C1C}.send-status.wait{background:#FFF7ED;border-color:#FED7AA;color:#C2410C}
+  .scenario-list{display:grid;gap:8px}.scenario-btn{width:100%;text-align:left;background:#F8FBFF;border:1px solid var(--line2);color:#233047;padding:10px 11px}.scenario-btn:hover{background:#fff;border-color:#AFC0D6}.scenario-btn b{display:block;font-size:12.5px}.scenario-btn span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+  .empty{min-height:240px;display:grid;place-items:center;text-align:center;color:var(--muted);background:#F8FBFF;border:1px dashed #C7D2E2;border-radius:14px;padding:24px}.empty b{display:block;color:#334155;margin-bottom:5px}.hidden{display:none!important}.spacer{height:12px}
+  .modal-back{position:fixed;inset:0;z-index:50;background:rgba(15,23,42,.58);backdrop-filter:blur(3px);display:grid;place-items:center;padding:24px}.modal{width:min(1440px,96vw);height:min(820px,88vh);background:#fff;border-radius:18px;box-shadow:0 28px 80px rgba(15,23,42,.45);display:flex;flex-direction:column;overflow:hidden}.modal-head{padding:15px 18px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,#fff,#F8FBFF)}.modal-title{font-size:15px;font-weight:950}.modal-body{min-height:0;flex:1;overflow:hidden}.table-wrap{height:100%;overflow:auto}.table-wrap table{border-collapse:separate;border-spacing:0;min-width:max-content;width:100%;font-size:12px}.table-wrap th,.table-wrap td{padding:9px 10px;border-right:1px solid #EEF2F7;border-bottom:1px solid #EEF2F7;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}.table-wrap th{position:sticky;top:0;z-index:2;background:#F1F6FD;color:#24334D;font-weight:950;text-align:left}.table-wrap th:first-child,.table-wrap td:first-child{position:sticky;left:0;z-index:1;background:#F8FBFF;color:#64748B;font-weight:900;text-align:right;min-width:52px}.table-wrap th:first-child{z-index:3;background:#E8F1FD}.table-wrap tr:hover td{background:#FBFDFF}.modal-close{background:#EEF3FA;color:#334155;border:1px solid var(--line);padding:9px 13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="logo">☁</div><div><h1>날씨 CSV LCD 전송기</h1><div class="sub">일반 날씨 화면과 그래프 화면을 구분해서 LCD로 전송</div></div></div>
+    <div class="status-pill" id="topStatus"><span class="status-dot"></span><span id="topStatusText">Arduino 연결 안 됨</span></div>
+  </header>
+
+  <div class="layout">
+    <aside class="left">
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 업로드</div><span class="tag" id="dataCount">0행</span></div>
+        <div class="card-body">
+          <p class="hint">샘플 데이터로 먼저 진행한 뒤, 나중에 공공데이터 CSV로 교체하는 구조입니다.</p>
+          <label class="upload-zone" id="uploadZone"><input id="csvFile" type="file" accept=".csv,.txt" /><div><strong>CSV 파일 선택</strong><span>또는 파일을 이 영역에 끌어다 놓기</span></div></label>
+          <div class="file-info" id="fileInfo"><span>파일</span><b id="fileName">-</b></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>Arduino 연결</div></div>
+        <div class="card-body conn-box">
+          <div class="conn-state" id="connStateBox"><div><div class="conn-label">상태</div><div class="conn-value" id="connStateText">연결 안 됨</div></div><div class="conn-led"></div></div>
+          <div class="btn-row"><button class="btn-primary" id="connectBtn" type="button">Arduino 연결</button><button class="btn-ghost" id="disconnectBtn" type="button" disabled>연결 해제</button></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>실습 시나리오</div><span class="tag">샘플</span></div>
+        <div class="card-body scenario-list">
+          <button class="scenario-btn" type="button" data-date="2026-07-02" data-area="부산"><b>부산 집중호우 확인</b><span>2026-07-02 · 부산 · 폭우</span></button>
+          <button class="scenario-btn" type="button" data-date="2026-07-04" data-area="대구"><b>대구 폭염 확인</b><span>2026-07-04 · 대구 · 폭염</span></button>
+          <button class="scenario-btn" type="button" data-date="2026-07-06" data-area="제주"><b>제주 강풍비 확인</b><span>2026-07-06 · 제주 · 강풍비</span></button>
+          <button class="scenario-btn" type="button" data-date="2026-07-03" data-area="강릉"><b>강릉 건조·강풍 확인</b><span>2026-07-03 · 강릉 · 건조</span></button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 데이터 확인</div><span class="tag" id="columnCount">0열</span></div>
+        <div class="card-body">
+          <div class="data-block disabled" id="dataBlock">
+            <div><b id="dataBlockTitle">CSV를 업로드하면 전체 데이터를 볼 수 있습니다.</b><p class="hint" id="dataBlockHint">표는 화면에 펼치지 않고, 클릭 시 별도 창에서 확인합니다.</p></div>
+            <div class="data-stats"><div class="data-stat"><span>행</span><b id="statRows">0</b></div><div class="data-stat"><span>열</span><b id="statCols">0</b></div><div class="data-stat"><span>숫자 열</span><b id="statNums">0</b></div><div class="data-stat"><span>표시</span><b id="statPreview">클릭</b></div></div>
+            <button class="open-data" id="openDataBtn" type="button" disabled>전체 데이터 보기</button>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <main class="right">
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>LCD 화면 모드</div></div>
+        <div class="card-body"><div class="mode-switch" id="screenModeTabs"><button type="button" data-mode="NORMAL" class="on">일반 모드: 특정 날짜·지역 날씨</button><button type="button" data-mode="GRAPH">그래프 모드: 범위 데이터 변화</button></div></div>
+      </section>
+
+      <section class="card panel on" id="normalPanel">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>일반 모드 설정</div><span class="tag">날씨 아이콘</span></div>
+        <div class="card-body">
+          <div class="settings-grid">
+            <div class="field"><label>날짜 열</label><select id="dateCol"></select></div>
+            <div class="field"><label>지역 열</label><select id="areaCol"></select></div>
+            <div class="field"><label>날씨상태 열</label><select id="condCol"></select></div>
+          </div>
+          <div class="settings-grid" style="margin-top:12px">
+            <div class="field"><label>기온 열</label><select id="tempCol"></select></div>
+            <div class="field"><label>습도 열</label><select id="humCol"></select></div>
+            <div class="field"><label>강수량 열</label><select id="rainCol"></select></div>
+          </div>
+          <div class="settings-grid" style="margin-top:12px">
+            <div class="field"><label>풍속 열</label><select id="windCol"></select></div>
+            <div class="field"><label>체감온도 열</label><select id="feelCol"></select></div>
+            <div class="field"><label>뉴스/주의 문구 열</label><select id="noticeCol"></select></div>
+          </div>
+          <div class="settings-grid two" style="margin-top:14px">
+            <div class="field"><label>찾을 날짜</label><select id="dateValue"></select></div>
+            <div class="field"><label>찾을 지역</label><select id="areaValue"></select></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card panel" id="graphPanel">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>그래프 모드 설정</div><span class="tag">LCD 그래프</span></div>
+        <div class="card-body">
+          <div class="settings-grid" id="settingsGrid">
+            <div class="field"><label>그래프 형식</label><div class="mode-tabs" id="graphTabs"><button type="button" data-type="LINE" class="on">꺾은선</button><button type="button" data-type="BAR">막대</button><button type="button" data-type="HBAR">가로막대</button><button type="button" data-type="SUMMARY">요약막대</button></div></div>
+            <div class="field" id="xField"><label>X축 열</label><select id="xSelect"></select></div>
+            <div class="field" id="yField"><label>값 열</label><select id="ySelect"></select></div>
+          </div>
+          <div class="field hidden" id="summaryField" style="margin-top:12px"><label>요약에 넣을 숫자 열</label><div class="check-scroll" id="summaryChecks"></div></div>
+          <div class="form-grid"><div class="field"><label>시작 행</label><input id="startRow" type="number" min="1" value="1" /></div><div class="field"><label>끝 행</label><input id="endRow" type="number" min="1" value="12" /></div><div class="field"><label>최대 점 개수</label><input id="maxPoints" type="number" min="3" max="24" value="12" /></div></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>선택한 CSV 데이터</div><span class="tag" id="selectedDataTag">전송용 데이터</span></div>
+        <div class="card-body">
+          <div id="emptyPreview" class="empty"><div><b>CSV를 업로드하면 선택 데이터가 표시됩니다.</b><span>HTML에서는 CSV 값만 확인하고, LCD에서 아이콘 또는 그래프를 출력합니다.</span></div></div>
+          <div id="previewArea" class="content-layout hidden">
+            <div class="selected-data-wrap"><div class="selected-data-head"><b id="previewTitle">선택한 CSV 데이터</b><span id="previewMeta">-</span></div><div class="selected-table-wrap" id="selectedTableWrap"></div><div class="selected-note" id="selectedNote">여기에는 LCD로 전송될 CSV 원본 값만 표시됩니다.</div></div>
+            <div class="lcd-box"><div class="lcd-title">LCD 전송 요약</div><p class="hint" id="sendHint">선택한 데이터가 LCD에 표시됩니다.</p><div class="metric-grid"><div class="metric"><span>모드</span><b id="mType">-</b></div><div class="metric"><span>데이터 수</span><b id="mCount">-</b></div><div class="metric"><span>기준</span><b id="mX">-</b></div><div class="metric"><span>값</span><b id="mY">-</b></div></div><button class="btn-send" id="sendBtn" type="button" disabled style="margin-top:12px">LCD로 전송</button><div class="send-status" id="sendStatus">전송 대기</div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="modal-back hidden" id="dataModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">CSV 전체 데이터</div><p class="hint" id="modalMeta">-</p></div><button class="modal-close" id="closeDataBtn" type="button">닫기</button></div><div class="modal-body"><div class="table-wrap" id="tableWrap"></div></div></div></div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const BAUD_RATE = 115200;
+let headers = [], rows = [];
+let screenMode = 'NORMAL';
+let graphType = 'LINE';
+let port = null, reader = null, writer = null, keepReading = false;
+let lastPacket = '';
+const graphName = {LINE:'꺾은선', BAR:'막대', HBAR:'가로막대', SUMMARY:'요약막대'};
+const modeName = {NORMAL:'일반 날씨', GRAPH:'그래프'};
+
+function setConnectionState(state, text){
+  const top=$('topStatus'), box=$('connStateBox');
+  top.className='status-pill'+(state?' '+state:''); box.className='conn-state'+(state?' '+state:'');
+  $('topStatusText').textContent=text; $('connStateText').textContent=text.replace('Arduino ','');
+  $('connectBtn').disabled=state==='connected'||state==='connecting'; $('disconnectBtn').disabled=state!=='connected'; updateSendAvailability();
+}
+function setSendStatus(text, kind=''){ $('sendStatus').className='send-status'+(kind?' '+kind:''); $('sendStatus').textContent=text; }
+async function connectArduino(){ if(!('serial' in navigator)){ setConnectionState('error','브라우저 미지원'); return; } try{ setConnectionState('connecting','Arduino 연결 중'); port=await navigator.serial.requestPort(); await port.open({baudRate:BAUD_RATE}); writer=port.writable.getWriter(); setConnectionState('connected','Arduino 연결됨'); setSendStatus('전송 대기'); readLoop(); }catch(err){ console.error(err); setConnectionState('error','연결 실패'); } }
+async function disconnectArduino(){ try{ keepReading=false; if(reader){try{await reader.cancel();}catch(e){} try{reader.releaseLock();}catch(e){} reader=null;} if(writer){try{writer.releaseLock();}catch(e){} writer=null;} if(port){try{await port.close();}catch(e){} port=null;} } finally{ setConnectionState('', 'Arduino 연결 안 됨'); } }
+async function readLoop(){ if(!port||!port.readable) return; keepReading=true; const decoder=new TextDecoder(); let buffer=''; while(port&&port.readable&&keepReading){ try{ reader=port.readable.getReader(); while(true){ const {value,done}=await reader.read(); if(done) break; buffer+=decoder.decode(value); const lines=buffer.split(/\r?\n/); buffer=lines.pop()||''; for(const line of lines){ const clean=line.trim(); if(!clean) continue; if(clean.startsWith('OK')) setSendStatus('전송 완료', 'ok'); else if(clean.startsWith('ERR|FORMAT')) setSendStatus('Arduino 코드 포맷 불일치. 최신 일반/그래프 겸용 코드를 업로드하세요.', 'err'); else if(clean.startsWith('ERR|TOO_LONG')) setSendStatus('전송 데이터가 너무 깁니다. 최대 점 개수를 줄이세요.', 'err'); else if(clean.startsWith('ERR')) setSendStatus('Arduino 처리 오류', 'err'); } } }catch(e){ if(keepReading) console.error(e); } finally{ try{reader&&reader.releaseLock();}catch(e){} reader=null; } } }
+navigator.serial?.addEventListener('disconnect',()=>{ disconnectArduino(); setConnectionState('error','포트 분리됨'); });
+$('connectBtn').addEventListener('click',connectArduino); $('disconnectBtn').addEventListener('click',disconnectArduino);
+
+function parseCSV(text){ text=text.replace(/^\uFEFF/,''); const out=[]; let row=[], cell='', q=false; for(let i=0;i<text.length;i++){ const c=text[i], n=text[i+1]; if(q){ if(c==='"'&&n==='"'){cell+='"';i++;} else if(c==='"') q=false; else cell+=c; } else { if(c==='"') q=true; else if(c===','){row.push(cell.trim());cell='';} else if(c==='\n'){row.push(cell.trim());cell=''; if(row.some(v=>v!=='')) out.push(row); row=[];} else if(c!=='\r') cell+=c; } } row.push(cell.trim()); if(row.some(v=>v!=='')) out.push(row); if(!out.length) return {headers:[],rows:[]}; const h=out[0].map((v,i)=>v||`열${i+1}`); const rs=out.slice(1).map(r=>h.map((_,i)=>r[i]??'')); return {headers:h,rows:rs}; }
+async function decodeFile(file){ const buf=await file.arrayBuffer(); let text=new TextDecoder('utf-8').decode(buf); if(text.includes('\uFFFD')){ try{text=new TextDecoder('euc-kr').decode(buf);}catch(e){} } return text; }
+function toNum(v){ if(v==null) return NaN; const s=String(v).replace(/,/g,'').replace(/[^0-9.\-]/g,'').trim(); if(s===''||s==='-'||s==='.') return NaN; const n=Number(s); return Number.isFinite(n)?n:NaN; }
+function isNumericCol(idx){ if(!rows.length) return false; let good=0,total=0; for(const r of rows.slice(0,Math.min(rows.length,80))){ const raw=r[idx]; if(raw==='') continue; total++; if(Number.isFinite(toNum(raw))) good++; } return total>0&&good/total>=.6; }
+function numericColumns(){ return headers.map((h,i)=>({name:h,i})).filter(c=>isNumericCol(c.i)); }
+function findCol(patterns, fallback=0){ for(const p of patterns){ const idx=headers.findIndex(h=>p.test(h)); if(idx>=0) return idx; } return fallback; }
+function allHeaderOptions(){ return headers.map((h,i)=>`<option value="${i}">${escapeHTML(h)}</option>`).join(''); }
+function numericHeaderOptions(){ const nums=numericColumns(); return (nums.length?nums:headers.map((h,i)=>({name:h,i}))).map(c=>`<option value="${c.i}">${escapeHTML(c.name)}</option>`).join(''); }
+async function handleFile(file){ const text=await decodeFile(file); const parsed=parseCSV(text); headers=parsed.headers; rows=parsed.rows; $('fileName').textContent=file.name; $('fileInfo').classList.add('show'); $('dataCount').textContent=`${rows.length}행`; $('columnCount').textContent=`${headers.length}열`; buildControls(); updateDataBlock(); renderCurrent(); }
+const uploadZone=$('uploadZone'); $('csvFile').addEventListener('change',e=>{const f=e.target.files?.[0]; if(f) handleFile(f); e.target.value='';}); ['dragenter','dragover'].forEach(ev=>uploadZone.addEventListener(ev,e=>{e.preventDefault();uploadZone.classList.add('drag')})); ['dragleave','dragend'].forEach(ev=>uploadZone.addEventListener(ev,e=>{e.preventDefault();uploadZone.classList.remove('drag')})); uploadZone.addEventListener('drop',e=>{e.preventDefault();uploadZone.classList.remove('drag'); const f=e.dataTransfer?.files?.[0]; if(f) handleFile(f);});
+
+function buildControls(){
+  const opts=allHeaderOptions(), nums=numericHeaderOptions();
+  ['dateCol','areaCol','condCol','noticeCol','xSelect'].forEach(id=>$(id).innerHTML=opts);
+  ['tempCol','humCol','rainCol','windCol','feelCol','ySelect'].forEach(id=>$(id).innerHTML=nums);
+  $('dateCol').value=findCol([/날짜|일시|date|time|tm/i]);
+  $('areaCol').value=findCol([/지역|지점|장소|area|station|loc/i]);
+  $('condCol').value=findCol([/날씨상태|상태|기상|condition|weather/i]);
+  $('noticeCol').value=findCol([/뉴스|주의|특보|단계|notice|event|issue/i], Math.min(headers.length-1,0));
+  $('tempCol').value=findCol([/평균.*기온|기온|온도|temp/i], numericColumns()[0]?.i??0);
+  $('humCol').value=findCol([/습도|hum/i], numericColumns()[0]?.i??0);
+  $('rainCol').value=findCol([/강수|비|rain/i], numericColumns()[0]?.i??0);
+  $('windCol').value=findCol([/풍속|바람|wind/i], numericColumns()[0]?.i??0);
+  $('feelCol').value=findCol([/체감|feel/i], Number($('tempCol').value||0));
+  $('xSelect').value=$('areaCol').value||0; $('ySelect').value=findCol([/최고.*기온|max.*temp/i], Number($('tempCol').value||0));
+  const xName=headers[Number($('xSelect').value)]||''; setGraphType(/지역|지점|장소|area|station|loc/i.test(xName)?'HBAR':'LINE');
+  $('startRow').max=rows.length; $('endRow').max=rows.length; $('startRow').value=1; $('endRow').value=Math.min(12,rows.length||12); $('maxPoints').value=Math.min(12,rows.length||12);
+  renderSummaryChecks(); updateDateAreaOptions();
+}
+function uniqueValues(idx){ return [...new Set(rows.map(r=>r[idx]).filter(v=>String(v).trim()!==''))]; }
+function updateDateAreaOptions(keep=true){ if(!rows.length) return; const dIdx=Number($('dateCol').value), aIdx=Number($('areaCol').value); const oldD=$('dateValue').value, oldA=$('areaValue').value; const dates=uniqueValues(dIdx); $('dateValue').innerHTML=dates.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join(''); if(keep&&dates.includes(oldD)) $('dateValue').value=oldD; const areas=uniqueValues(aIdx); $('areaValue').innerHTML=areas.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join(''); if(keep&&areas.includes(oldA)) $('areaValue').value=oldA; }
+function renderSummaryChecks(){ const nums=numericColumns(), selected=new Set(nums.slice(0,Math.min(4,nums.length)).map(c=>String(c.i))); $('summaryChecks').innerHTML=nums.map(c=>`<label class="check-item" title="${escapeHTML(c.name)}"><input type="checkbox" value="${c.i}" ${selected.has(String(c.i))?'checked':''}/><span>${escapeHTML(c.name)}</span></label>`).join('')||'<div class="hint">숫자 열을 찾지 못했습니다.</div>'; $('summaryChecks').querySelectorAll('input').forEach(ch=>ch.addEventListener('change',renderCurrent)); }
+function setScreenMode(mode){ screenMode=mode; $('screenModeTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode)); $('normalPanel').classList.toggle('on',mode==='NORMAL'); $('graphPanel').classList.toggle('on',mode==='GRAPH'); renderCurrent(); }
+$('screenModeTabs').addEventListener('click',e=>{const b=e.target.closest('button'); if(b) setScreenMode(b.dataset.mode);});
+function setGraphType(type){ graphType=type; $('graphTabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.type===type)); $('xField').classList.toggle('hidden',graphType==='SUMMARY'); $('yField').classList.toggle('hidden',graphType==='SUMMARY'); $('summaryField').classList.toggle('hidden',graphType!=='SUMMARY'); $('settingsGrid').classList.toggle('one',graphType==='SUMMARY'); }
+$('graphTabs').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return; setGraphType(b.dataset.type); renderCurrent();});
+['dateCol','areaCol'].forEach(id=>$(id).addEventListener('change',()=>{updateDateAreaOptions(false); renderCurrent();}));
+['condCol','tempCol','humCol','rainCol','windCol','feelCol','noticeCol','dateValue','areaValue','xSelect','ySelect','startRow','endRow','maxPoints'].forEach(id=>$(id).addEventListener('input',renderCurrent));
+
+function normalRowIndex(){ if(!rows.length)return -1; const dIdx=Number($('dateCol').value), aIdx=Number($('areaCol').value); const d=$('dateValue').value, a=$('areaValue').value; return rows.findIndex(r=>String(r[dIdx])===String(d)&&String(r[aIdx])===String(a)); }
+function currentWeatherData(){ const idx=normalRowIndex(); if(idx<0)return null; const r=rows[idx]; const get=id=>r[Number($(id).value)]??''; return {rowNo:idx+1, row:r, date:get('dateCol'), area:get('areaCol'), cond:get('condCol'), temp:get('tempCol'), hum:get('humCol'), rain:get('rainCol'), wind:get('windCol'), feel:get('feelCol'), notice:get('noticeCol')}; }
+function selectedRows(){ if(!rows.length)return[]; const start=Math.max(1,Number($('startRow').value||1)); const end=Math.min(rows.length,Math.max(start,Number($('endRow').value||start))); const maxPoints=Math.max(3,Math.min(24,Number($('maxPoints').value||12))); let slice=rows.slice(start-1,end); if(slice.length>maxPoints){ const step=(slice.length-1)/(maxPoints-1), picked=[]; for(let i=0;i<maxPoints;i++) picked.push(slice[Math.round(i*step)]); slice=picked; } return slice; }
+function currentGraphData(){ if(!rows.length)return null; const slice=selectedRows(); if(graphType==='SUMMARY'){ const checked=[...$('summaryChecks').querySelectorAll('input:checked')].map(x=>Number(x.value)).slice(0,8); const labels=checked.map(i=>headers[i]); const values=checked.map(i=>{const nums=slice.map(r=>toNum(r[i])).filter(Number.isFinite); if(!nums.length)return 0; return nums.reduce((a,b)=>a+b,0)/nums.length;}); return {type:graphType,title:'SUMMARY',xTitle:'FIELDS',labels,values,slice,checked}; } const xIdx=Number($('xSelect').value), yIdx=Number($('ySelect').value); const labels=slice.map((r,i)=>shortLabel(r[xIdx]||String(i+1))); const values=slice.map(r=>{const n=toNum(r[yIdx]); return Number.isFinite(n)?n:0;}); return {type:graphType,title:headers[yIdx]||'DATA',xTitle:headers[xIdx]||'ROW',labels,values,slice,xIdx,yIdx}; }
+function renderCurrent(){ if(!rows.length){ $('emptyPreview').classList.remove('hidden'); $('previewArea').classList.add('hidden'); lastPacket=''; updateSendAvailability(); return; } $('emptyPreview').classList.add('hidden'); $('previewArea').classList.remove('hidden'); if(screenMode==='NORMAL') renderWeatherView(); else renderGraphView(); updateSendAvailability(); }
+function renderWeatherView(){ const w=currentWeatherData(); if(!w){ $('selectedTableWrap').innerHTML='<div class="empty" style="margin:14px"><div><b>해당 날짜·지역 데이터가 없습니다.</b><span>날짜와 지역을 다시 선택하세요.</span></div></div>'; lastPacket=''; return; } const cols=[['날짜',w.date],['지역',w.area],['날씨상태',w.cond],['기온',w.temp],['습도',w.hum],['강수량',w.rain],['풍속',w.wind],['체감온도',w.feel],['뉴스/주의',w.notice]]; renderKeyValueTable(w.rowNo, cols); $('previewTitle').textContent=`일반 날씨 · ${w.date} · ${w.area}`; $('previewMeta').textContent=`CSV ${w.rowNo}행`; $('selectedNote').textContent='LCD에는 날씨 아이콘, 기온, 습도, 강수량, 풍속이 카드 형태로 표시됩니다.'; $('mType').textContent='일반 날씨'; $('mCount').textContent='1행'; $('mX').textContent=w.area; $('mY').textContent=w.cond; $('sendHint').textContent='특정 날짜와 지역의 날씨 카드가 LCD에 표시됩니다.'; lastPacket=buildWeatherPacket(w); }
+function renderGraphView(){ const g=currentGraphData(); if(!g){lastPacket='';return;} renderGraphDataTable(g); const vals=g.values.map(v=>Number(v)||0); const min=vals.length?Math.min(...vals):0, max=vals.length?Math.max(...vals):0; $('previewTitle').textContent=`${graphName[g.type]} · ${asciiTitle(g.title)}`; $('previewMeta').textContent=`X축 기준: ${asciiTitle(g.xTitle||'ROW')} · ${vals.length}개 데이터`; $('selectedNote').textContent='HTML에는 CSV 값만 표시하고, LCD에는 선택한 그래프 형태로 전송됩니다.'; $('mType').textContent=graphName[g.type]||g.type; $('mCount').textContent=`${vals.length}개`; $('mX').textContent=asciiTitle(g.xTitle||'ROW'); $('mY').textContent=`${fmt(min)}~${fmt(max)}`; $('sendHint').textContent='선택한 범위의 CSV 값이 LCD 그래프로 표시됩니다.'; lastPacket=buildGraphPacket(g); }
+function renderKeyValueTable(rowNo, cols){ let html='<table class="selected-table"><thead><tr><th>행</th><th>항목</th><th>CSV 값</th><th>LCD 변환</th></tr></thead><tbody>'; for(const [k,v] of cols){ html+=`<tr><td>${rowNo}</td><td>${escapeHTML(k)}</td><td title="${escapeHTML(v)}">${escapeHTML(v)}</td><td>${escapeHTML(toLCDToken(k,v))}</td></tr>`; } html+='</tbody></table>'; $('selectedTableWrap').innerHTML=html; }
+function renderGraphDataTable(g){ let headers2=[], tableRows=[]; if(g.type==='SUMMARY'){ headers2=g.checked.map(i=>headers[i]); tableRows=g.slice.map((r,idx)=>({rowNo:rows.indexOf(r)+1||idx+1,cells:g.checked.map(i=>r[i]??'')})); } else { headers2=[headers[g.xIdx]||'X축 열', headers[g.yIdx]||'값 열', 'LCD 전송값']; tableRows=g.slice.map((r,idx)=>({rowNo:rows.indexOf(r)+1||idx+1,cells:[r[g.xIdx]??'',r[g.yIdx]??'',safeNumber(toNum(r[g.yIdx]))]})); } let html='<table class="selected-table"><thead><tr><th>행</th>'+headers2.map(h=>`<th title="${escapeHTML(h)}">${escapeHTML(h)}</th>`).join('')+'</tr></thead><tbody>'; for(const r of tableRows){ html+=`<tr><td>${r.rowNo}</td>`+r.cells.map(c=>`<td title="${escapeHTML(c)}">${escapeHTML(c)}</td>`).join('')+'</tr>'; } html+='</tbody></table>'; $('selectedTableWrap').innerHTML=html; }
+function buildWeatherPacket(w){ const date=shortDate(w.date); const area=asciiRegion(w.area); const cond=asciiCondition(w.cond,w.rain,w.wind,w.temp); const temp=safeNumber(toNum(w.temp)); const hum=safeNumber(toNum(w.hum)); const rain=safeNumber(toNum(w.rain)); const wind=safeNumber(toNum(w.wind)); const feel=safeNumber(toNum(w.feel)); const notice=asciiNotice(w.notice||w.cond); return `W2|${date}|${area}|${cond}|${temp}|${hum}|${rain}|${wind}|${feel}|${notice}`; }
+function buildGraphPacket(g){ const labels=g.labels.slice(0,24).map((v,i)=>safeLabelForArduino(v,i)).join(','); const values=g.values.slice(0,24).map(v=>safeNumber(v)).join(','); return `G2|${g.type}|${asciiTitle(g.title)}|${asciiTitle(g.xTitle||'ROW')}|${g.values.slice(0,24).length}|${labels}|${values}`; }
+function updateSendAvailability(){ $('sendBtn').disabled=!(port&&writer&&rows.length&&lastPacket); }
+$('sendBtn').addEventListener('click',async()=>{ if(!writer||!lastPacket)return; try{ setSendStatus('전송 중','wait'); const encoder=new TextEncoder(); await writer.write(encoder.encode(lastPacket+'\n')); setTimeout(()=>{if($('sendStatus').textContent==='전송 중')setSendStatus('전송됨. Arduino 응답 대기','wait');},350); setTimeout(()=>{if($('sendStatus').textContent.includes('응답 대기'))setSendStatus('응답 없음. 최신 일반/그래프 겸용 코드를 업로드했는지 확인하세요.','err');},1800); }catch(e){console.error(e); setSendStatus('전송 실패','err');} });
+
+function updateDataBlock(){ const nums=numericColumns().length; $('statRows').textContent=rows.length.toLocaleString(); $('statCols').textContent=headers.length.toLocaleString(); $('statNums').textContent=nums.toLocaleString(); $('statPreview').textContent='클릭'; $('dataBlockTitle').textContent='CSV 전체 데이터 확인'; $('dataBlockHint').textContent='클릭하면 전체 표를 별도 창에서 확인합니다. 열이 많아도 창 안에서만 가로 스크롤됩니다.'; $('openDataBtn').disabled=!rows.length; $('dataBlock').classList.toggle('disabled',!rows.length); }
+function renderFullTable(){ if(!headers.length){ $('tableWrap').innerHTML='<div class="empty" style="margin:16px"><div><b>데이터 없음</b><span>CSV 파일을 먼저 업로드하세요.</span></div></div>'; return; } let html='<table><thead><tr><th>#</th>'+headers.map(h=>`<th title="${escapeHTML(h)}">${escapeHTML(h)}</th>`).join('')+'</tr></thead><tbody>'; for(let i=0;i<rows.length;i++) html+=`<tr><td>${i+1}</td>`+headers.map((_,j)=>`<td title="${escapeHTML(rows[i][j]??'')}">${escapeHTML(rows[i][j]??'')}</td>`).join('')+'</tr>'; html+='</tbody></table>'; $('tableWrap').innerHTML=html; }
+function openDataModal(){ if(!rows.length)return; $('modalMeta').textContent=`${rows.length.toLocaleString()}행 · ${headers.length.toLocaleString()}열`; renderFullTable(); $('dataModal').classList.remove('hidden'); }
+function closeDataModal(){ $('dataModal').classList.add('hidden'); }
+$('openDataBtn').addEventListener('click',openDataModal); $('dataBlock').addEventListener('click',e=>{ if(e.target.id!=='openDataBtn')openDataModal(); }); $('closeDataBtn').addEventListener('click',closeDataModal); $('dataModal').addEventListener('click',e=>{if(e.target===$('dataModal'))closeDataModal();}); document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDataModal();});
+
+document.querySelectorAll('.scenario-btn').forEach(btn=>btn.addEventListener('click',()=>{ if(!rows.length){setSendStatus('샘플 CSV를 먼저 업로드하세요.','wait'); return;} setScreenMode('NORMAL'); const d=btn.dataset.date, a=btn.dataset.area; if([...$('dateValue').options].some(o=>o.value===d)) $('dateValue').value=d; if([...$('areaValue').options].some(o=>o.value===a)) $('areaValue').value=a; renderCurrent(); }));
+function shortLabel(v,max=7){ const s=String(v??'').trim()||'-'; if(/^\d{4}-\d{2}-\d{2}/.test(s)){ const m=s.match(/(\d{2}-\d{2})(?:\s+)?(\d{2}:\d{2})?/); return m?(m[2]?m[2]:m[1]):s.slice(5,10);} return s.length>max?s.slice(0,max):s; }
+function shortDate(v){ const s=String(v??'').trim(); const m=s.match(/\d{4}-(\d{2}-\d{2})/); return m?m[1]:safeToken(s).slice(0,10); }
+function asciiRegion(v){ const s=String(v??''); const map=[['서울','SEOUL'],['부산','BUSAN'],['대구','DAEGU'],['광주','GWANGJU'],['대전','DAEJEON'],['제주','JEJU'],['인천','INCHEON'],['강릉','GANGNEUNG'],['수원','SUWON'],['울산','ULSAN'],['세종','SEJONG']]; for(const [ko,en] of map){if(s.includes(ko))return en;} const ascii=s.replace(/[^A-Za-z0-9_ -]/g,'').trim(); return safeToken(ascii||'AREA'); }
+function asciiCondition(cond,rain,wind,temp){ const s=String(cond??''); const r=toNum(rain), w=toNum(wind), t=toNum(temp); if(/폭우|호우|집중|태풍|storm/i.test(s)||r>=50)return 'STORM'; if(/비|강수|rain/i.test(s)||r>0)return 'RAIN'; if(/폭염|heat|hot/i.test(s)||t>=33)return 'HEAT'; if(/강풍|wind/i.test(s)||w>=10)return 'WIND'; if(/구름|흐림|cloud/i.test(s))return 'CLOUD'; if(/눈|snow/i.test(s))return 'SNOW'; return 'SUN'; }
+function asciiNotice(v){ const s=String(v??''); if(/위험|폭우|집중호우|호우|태풍/i.test(s))return 'WARNING'; if(/주의|폭염|강풍|건조/i.test(s))return 'CAUTION'; if(/관심/i.test(s))return 'WATCH'; return 'WEATHER'; }
+function asciiTitle(v){ const s=String(v??''); if(/요약|SUMMARY/i.test(s))return 'SUMMARY'; if(/폭염.*여부|폭염.*특보|heat/i.test(s))return 'HEAT'; if(/최고.*체감|체감|feel/i.test(s))return 'FEEL_TEMP'; if(/최고.*기온|max.*temp/i.test(s))return 'MAX_TEMP'; if(/평균.*기온|avg.*temp|mean.*temp/i.test(s))return 'AVG_TEMP'; if(/최저.*기온|min.*temp/i.test(s))return 'MIN_TEMP'; if(/기온|온도|temp/i.test(s))return 'TEMP'; if(/상대.*습도|습도|hum/i.test(s))return 'HUM'; if(/강수|비|rain/i.test(s))return 'RAIN'; if(/풍속|바람|wind/i.test(s))return 'WIND'; if(/자외선|uv/i.test(s))return 'UV'; if(/일시|날짜|시간|date|time/i.test(s))return 'DATE'; if(/지점|지역|장소|station|area|loc/i.test(s))return 'AREA'; const ascii=s.replace(/[^A-Za-z0-9_ -]/g,'').trim(); return safeToken(ascii||'DATA'); }
+function safeLabelForArduino(v,i){ const s=String(v??'').trim(); if(/^\d{2}:\d{2}$/.test(s)||/^\d{2}-\d{2}$/.test(s))return s; if(/^\d{4}-\d{2}-\d{2}/.test(s))return shortDate(s); const code=s.match(/\((\d{2,6})\)/); if(code)return code[1]; if(/^[\x20-\x7E]+$/.test(s))return safeToken(s); const area=asciiRegion(s); if(area!=='AREA')return area.slice(0,9); const mapped=asciiTitle(s); if(mapped&&mapped!=='DATA')return safeToken(mapped); return 'R'+String(i+1); }
+function toLCDToken(k,v){ if(/지역/.test(k))return asciiRegion(v); if(/상태/.test(k))return asciiCondition(v,0,0,0); if(/뉴스|주의/.test(k))return asciiNotice(v); if(/날짜/.test(k))return shortDate(v); return String(v??''); }
+function safeToken(v){ return String(v??'').replace(/[|,\n\r]/g,' ').trim().slice(0,16)||'-'; }
+function safeNumber(v){ const n=Number(v); return Number.isFinite(n)?Number(n.toFixed(1)):0; }
+function fmt(n){ return Number.isInteger(Number(n))?Number(n).toLocaleString():Number(n).toFixed(1); }
+function escapeHTML(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+setConnectionState('','Arduino 연결 안 됨'); updateDataBlock();
+</script>
+</body>
+</html>
