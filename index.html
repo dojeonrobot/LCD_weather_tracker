@@ -318,7 +318,7 @@ const NO_AREA_LABEL = '전체';   // CSV에 지역 열이 없을 때 쓰는 이�
 const MAX_GRAPH_POINTS = 50;       // INO 수신 안전 한도
 const MIN_VISIBLE_GRAPH_POINTS = 3;
 const DEFAULT_VISIBLE_GRAPH_POINTS = 12;
-const MAX_VISIBLE_GRAPH_POINTS = 50;
+const MAX_VISIBLE_GRAPH_POINTS = 15;   // 한 번에 비교할 점의 최대 개수(LCD 가독 한도)
 let headers = [], rows = [], datasets = [];
 let datasetSeq = 0;
 let screenMode = 'NORMAL';
@@ -949,10 +949,11 @@ void drawXAxisLabels(String* labels, int n, int px, int py, int pw, int ph, bool
   const bool compactDates = n > 8;
 
   String previousMonth = "";
-  int labelStep = n <= 12 ? 1 : (int)ceil((float)n / 8.0f);
+  // 플롯 폭 273px, 날짜는 2글자(01)로 찍히므로 15개까지는 모두 표시됩니다.
+  int labelStep = n <= 15 ? 1 : (int)ceil((float)n / 8.0f);
 
   for (int i = 0; i < n; i++) {
-    if (n > 12 && i != 0 && i != n - 1 && i % labelStep != 0) continue;
+    if (n > 15 && i % labelStep != 0) continue;
 
     int x;
     if (barMode) {
@@ -1866,11 +1867,12 @@ function buildGraphEndOptions(keep=true){
     endSelect.innerHTML='<option>데이터 부족</option>'; endSelect.disabled=true; return;
   }
 
-  // 각 CSV의 앞 50행 안에서 끝 행을 자유롭게 고를 수 있습니다.
-  const selectableCount=Math.min(entries.length,MAX_VISIBLE_GRAPH_POINTS);
-  const start=Math.max(0,Math.min(selectableCount-1,Number(startSelect.value)||0));
+  // 끝 행은 시작 행에서 최대 MAX_VISIBLE_GRAPH_POINTS 개까지 고를 수 있습니다.
+  // (고를 수 있는 행 자체는 파일 전체입니다)
+  const total=entries.length;
+  const start=Math.max(0,Math.min(total-MIN_VISIBLE_GRAPH_POINTS,Number(startSelect.value)||0));
   const minEnd=start+MIN_VISIBLE_GRAPH_POINTS-1;
-  const maxEnd=selectableCount-1;
+  const maxEnd=Math.min(total-1,start+MAX_VISIBLE_GRAPH_POINTS-1);
   const old=Number(endSelect.value);
   const options=[];
 
@@ -1890,8 +1892,8 @@ function buildGraphDateOptions(keep=true){
     $('graphEndDate').innerHTML='<option>데이터 부족</option>'; $('graphEndDate').disabled=true;
     return;
   }
-  const selectableCount=Math.min(entries.length,MAX_VISIBLE_GRAPH_POINTS);
-  const maxStart=selectableCount-MIN_VISIBLE_GRAPH_POINTS;
+  // 시작 행은 파일 끝에서 최소 개수만 남으면 어디든 고를 수 있습니다.
+  const maxStart=entries.length-MIN_VISIBLE_GRAPH_POINTS;
   const options=[];
   for(let i=0;i<=maxStart;i++) options.push(i);
   select.innerHTML=options.map(i=>`<option value="${i}">${entries[i].rowNo}행 · ${escapeHTML(dateOnly(entries[i].date))}</option>`).join('');
@@ -1905,7 +1907,7 @@ function buildGraphControls(keep=true){
     areaSelect.innerHTML='<option>CSV 필요</option>'; areaSelect.disabled=true;
     $('graphStartDate').innerHTML='<option>CSV 필요</option>'; $('graphStartDate').disabled=true;
     $('graphEndDate').innerHTML='<option>CSV 필요</option>'; $('graphEndDate').disabled=true;
-    $('graphRangeNote').innerHTML='<b>표시 구간:</b> 기본 12행으로 열리며, 끝 행은 최대 50행까지 선택할 수 있습니다.';
+    $('graphRangeNote').innerHTML='<b>표시 구간:</b> 기본 12개로 열리며, 한 번에 최대 15개까지 비교할 수 있습니다.';
     setGraphAxisNote('선택한 데이터에 맞춰 Y축을 자동으로 설정합니다.');
     areaField.classList.remove('hidden'); updateGraphMappingNote(); return;
   }
@@ -1933,7 +1935,7 @@ function selectedGraphPoints(){
   const cfg=currentGraphMetric(), valueIdx=Number($(cfg.selectId).value), entries=graphDateEntries();
   const start=Math.max(0,Number($('graphStartDate').value)||0);
   const requestedEnd=Number($('graphEndDate').value);
-  const maxEnd=Math.min(entries.length-1,MAX_VISIBLE_GRAPH_POINTS-1);
+  const maxEnd=Math.min(entries.length-1,start+MAX_VISIBLE_GRAPH_POINTS-1);
   const end=Math.min(maxEnd,Number.isFinite(requestedEnd)?requestedEnd:start+DEFAULT_VISIBLE_GRAPH_POINTS-1);
   const points=[];
   for(let i=start;i<=end&&points.length<MAX_VISIBLE_GRAPH_POINTS;i++){
@@ -1948,7 +1950,7 @@ function currentGraphRangeMeta(points=[]){
   const entries=graphDateEntries();
   const start=Math.max(0,Number($('graphStartDate').value)||0);
   const requestedEnd=Number($('graphEndDate').value);
-  const maxEnd=Math.min(entries.length-1,MAX_VISIBLE_GRAPH_POINTS-1);
+  const maxEnd=Math.min(entries.length-1,start+MAX_VISIBLE_GRAPH_POINTS-1);
   const end=Math.min(maxEnd,Number.isFinite(requestedEnd)?requestedEnd:start+DEFAULT_VISIBLE_GRAPH_POINTS-1);
   return {
     startIndex:start,
@@ -2040,9 +2042,13 @@ function resolveGraphAxis(points,cfg){
 function renderWebGraph(points,cfg,axisRange){
   const H=500,L=70,R=28,T=36,B=82;
   const canvasWidth=Math.max(760,(document.getElementById('graphChartCanvas')?.clientWidth||0)-28);
-  const pointGap=points.length>30?32:(points.length>16?42:(points.length>8?58:82));
+  const avail=canvasWidth-L-R;
+  const idealGap=points.length>30?32:(points.length>16?42:(points.length>8?58:82));
+  // 패널 폭을 넘지 않도록 간격을 줄인다. 전체 구간이 항상 한 화면에 들어와야
+  // '가장 높은 날 찾기'가 성립한다.
+  const pointGap=points.length>1?Math.min(idealGap,avail/(points.length-1)):idealGap;
   const contentWidth=Math.max(1,points.length-1)*pointGap;
-  const PW=Math.max(canvasWidth-L-R,contentWidth), W=L+PW+R, PH=H-T-B;
+  const PW=Math.max(avail,contentWidth), W=L+PW+R, PH=H-T-B;
   const values=points.map(p=>p.value), rawMin=Math.min(...values), rawMax=Math.max(...values);
   let min=axisRange?.min, max=axisRange?.max;
   if(!Number.isFinite(min)||!Number.isFinite(max)){ const auto=calculateAutoAxis(points); min=auto.min; max=auto.max; }
@@ -2050,7 +2056,9 @@ function renderWebGraph(points,cfg,axisRange){
   const y=v=>T+PH-((v-min)/(max-min))*PH;
   const x=i=>L+(points.length<=1?PW/2:(PW*i)/(points.length-1));
   const ticks=5, maxIndex=values.indexOf(rawMax), minIndex=values.indexOf(rawMin), lastIndex=points.length-1;
-  const showLabel=()=>true;
+  const labelStep=Math.max(1,Math.ceil(18/pointGap));
+  const showLabel=i=>i%labelStep===0;
+  const steep=pointGap<30;
   const valueStep=Math.max(1,Math.ceil(38/pointGap));
   const showValue=i=>i%valueStep===0||i===maxIndex||i===minIndex;
   let grid='';
@@ -2081,12 +2089,12 @@ function renderWebGraph(points,cfg,axisRange){
       }
     });
   }
-  const rotate=points.length>7;
+  const rotate=points.length>7, rotDeg=steep?-45:-35, labelFont=steep?9.5:10.5;
   let labels='';
   points.forEach((p,i)=>{
     if(!showLabel(i)) return;
     const xx=graphType==='BAR'?L+(PW/points.length)*i+(PW/points.length)/2:x(i), yy=T+PH+22;
-    labels+=`<text x="${xx}" y="${yy}" text-anchor="${rotate?'end':'middle'}" font-size="10.5" fill="#64748B" paint-order="stroke" stroke="#fff" stroke-width="3" stroke-linejoin="round" transform="${rotate?`rotate(-35 ${xx} ${yy})`:''}">${svgText(p.label)}</text>`;
+    labels+=`<text x="${xx}" y="${yy}" text-anchor="${rotate?'end':'middle'}" font-size="${labelFont}" fill="#64748B" paint-order="stroke" stroke="#fff" stroke-width="3" stroke-linejoin="round" transform="${rotate?`rotate(${rotDeg} ${xx} ${yy})`:''}">${svgText(p.label)}</text>`;
   });
   return `<svg style="width:${W}px;min-width:${W}px;max-width:none" viewBox="0 0 ${W} ${H}" role="img" aria-label="${svgText(cfg.label)} 날짜별 비교 그래프">
     <rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>
@@ -2120,7 +2128,7 @@ function renderGraphView(){
   if(!axisRange.valid){ showGraphEmpty('Y축 범위를 확인해주세요.',axisRange.message); return; }
   $('graphEmpty').classList.add('hidden'); $('graphPreviewWrap').classList.remove('hidden');
   const range=currentGraphRangeMeta(points);
-  $('graphRangeNote').innerHTML=`<b>표시 구간:</b> ${range.startRow}행 ~ ${range.endRow}행 · ${escapeHTML(dateOnly(range.startDate))} ~ ${escapeHTML(dateOnly(range.endDate))} · 그래프 ${points.length}개 / 최대 50개`;
+  $('graphRangeNote').innerHTML=`<b>표시 구간:</b> ${range.startRow}행 ~ ${range.endRow}행 · ${escapeHTML(dateOnly(range.startDate))} ~ ${escapeHTML(dateOnly(range.endDate))} · 그래프 ${points.length}개 / 최대 ${MAX_VISIBLE_GRAPH_POINTS}개`;
   const values=points.map(p=>p.value), maxValue=Math.max(...values), minValue=Math.min(...values), avg=values.reduce((a,b)=>a+b,0)/values.length;
   const maxPoint=points.find(p=>p.value===maxValue), minPoint=points.find(p=>p.value===minValue);
   const area=hasArea?$('graphAreaValue').value:NO_AREA_LABEL;

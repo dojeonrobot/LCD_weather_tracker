@@ -609,10 +609,11 @@ void drawXAxisLabels(String* labels, int n, int px, int py, int pw, int ph, bool
   const bool compactDates = n > 8;
 
   String previousMonth = "";
-  int labelStep = n <= 12 ? 1 : (int)ceil((float)n / 8.0f);
+  // 플롯 폭 273px, 날짜는 2글자(01)로 찍히므로 15개까지는 모두 표시됩니다.
+  int labelStep = n <= 15 ? 1 : (int)ceil((float)n / 8.0f);
 
   for (int i = 0; i < n; i++) {
-    if (n > 12 && i != 0 && i != n - 1 && i % labelStep != 0) continue;
+    if (n > 15 && i % labelStep != 0) continue;
 
     int x;
     if (barMode) {
