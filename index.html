@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>날씨 CSV LCD 전송기</title>
+<title>금천구 날씨 CSV 10개 · 그래프 비교 · LCD 전송기</title>
 <style>
   :root{
     --bg:#F4F7FB; --card:#FFFFFF; --ink:#132036; --muted:#64748B;
@@ -20,7 +20,7 @@
   .status-pill{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:850;white-space:nowrap}.status-dot{width:9px;height:9px;border-radius:50%;background:#94A3B8;box-shadow:0 0 0 4px rgba(255,255,255,.10)}.status-pill.connected .status-dot{background:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.18)}.status-pill.connecting .status-dot{background:#F59E0B;box-shadow:0 0 0 4px rgba(245,158,11,.20)}.status-pill.error .status-dot{background:#EF4444;box-shadow:0 0 0 4px rgba(239,68,68,.18)}
   .layout{margin-top:16px;display:grid;grid-template-columns:minmax(310px,370px) minmax(0,1fr);gap:16px;align-items:start}@media(max-width:1060px){.layout{grid-template-columns:1fr}}
   .left,.right{min-width:0}.card{background:rgba(255,255,255,.95);border:1px solid var(--line2);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.card+.card{margin-top:14px}.card-head{padding:14px 16px;border-bottom:1px solid var(--line2);background:linear-gradient(180deg,#fff,#FBFCFF);display:flex;align-items:center;justify-content:space-between;gap:10px}.card-title{font-size:14px;font-weight:950;display:flex;align-items:center;gap:8px;color:#111827}.dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px #DBEAFE}.tag{font-size:11.5px;font-weight:850;color:var(--blue2);background:#EAF2FF;padding:4px 9px;border-radius:999px;white-space:nowrap}.card-body{padding:16px}.hint{font-size:12px;color:var(--muted);line-height:1.55}.muted{color:var(--muted)}
-  .upload-zone{margin-top:12px;border:1.8px dashed #B9C8DB;background:#F8FBFF;border-radius:14px;min-height:118px;display:grid;place-items:center;text-align:center;padding:18px;cursor:pointer;transition:.15s}.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:#fff;transform:translateY(-1px)}.upload-zone strong{display:block;font-size:15px;margin-bottom:5px;color:#172033}.upload-zone span{font-size:12px;color:var(--muted)}input[type=file]{display:none}.file-info{margin-top:12px;display:none;gap:8px;align-items:center;padding:10px 12px;background:var(--soft);border:1px solid var(--line2);border-radius:11px;font-size:12.5px;color:var(--muted)}.file-info.show{display:flex}.file-info b{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .upload-zone{margin-top:12px;border:1.8px dashed #B9C8DB;background:#F8FBFF;border-radius:14px;min-height:118px;display:grid;place-items:center;text-align:center;padding:18px;cursor:pointer;transition:.15s}.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:#fff;transform:translateY(-1px)}.upload-zone strong{display:block;font-size:15px;margin-bottom:5px;color:#172033}.upload-zone span{font-size:12px;color:var(--muted)}input[type=file]{display:none}.file-info{margin-top:12px;display:none;gap:8px;align-items:center;padding:10px 12px;background:var(--soft);border:1px solid var(--line2);border-radius:11px;font-size:12.5px;color:var(--muted)}.file-info.show{display:flex}.file-info b{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-list{display:none;margin-top:9px;gap:6px;flex-wrap:wrap;max-height:150px;overflow:auto;padding-right:2px}.file-list.show{display:flex}.file-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:5px 8px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:10.5px;font-weight:850;color:#334155}.file-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}.file-chip em{font-style:normal;color:var(--muted);font-weight:800}.file-chip.warn{background:#FFF7ED;border-color:#FED7AA;color:#9A3412}.file-chip.warn em{color:#C2410C}.file-chip{padding-right:3px}.chip-x{border:0;background:transparent;color:#94A3B8;font-size:11px;line-height:1;font-weight:900;cursor:pointer;padding:3px 5px;border-radius:999px;flex:none}.chip-x:hover{background:#FEE2E2;color:#B91C1C}.file-chip.warn .chip-x:hover{background:#FED7AA;color:#9A3412}.file-clear{margin-left:auto;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:850;padding:4px 9px;border-radius:999px;cursor:pointer;white-space:nowrap;flex:none}.file-clear:hover{border-color:#FCA5A5;color:#B91C1C;background:#FEF2F2}.slot-note{margin-top:8px;font-size:11.5px;font-weight:800;color:var(--muted)}
   button{border:none;font-family:inherit;cursor:pointer;font-weight:850;border-radius:11px;padding:11px 14px;transition:.13s}.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;box-shadow:0 6px 16px rgba(37,99,235,.24)}.btn-primary:hover:not(:disabled){filter:brightness(1.05);transform:translateY(-1px)}.btn-ghost{background:var(--soft);color:#334155;border:1px solid var(--line)}.btn-ghost:hover:not(:disabled){background:#fff;border-color:#A9B8CD}.btn-send{width:100%;font-size:15px;background:linear-gradient(135deg,#0891B2,#2563EB);color:#fff;box-shadow:0 8px 20px rgba(8,145,178,.23)}button:disabled{opacity:.42;cursor:default;transform:none!important;box-shadow:none!important}
   .conn-box{display:flex;flex-direction:column;gap:12px}.conn-state{border-radius:14px;background:#F8FBFF;border:1px solid var(--line2);padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px}.conn-label{font-size:12px;color:var(--muted);font-weight:800}.conn-value{font-size:17px;font-weight:950;margin-top:2px}.conn-led{width:34px;height:34px;border-radius:50%;background:#CBD5E1;box-shadow:inset 0 0 0 7px #EFF4FA;flex:none}.conn-state.connected .conn-led{background:#22C55E;box-shadow:0 0 0 7px #DCFCE7}.conn-state.error .conn-led{background:#EF4444;box-shadow:0 0 0 7px #FEE2E2}
   .data-block{border:1px solid var(--line2);background:#F8FBFF;border-radius:14px;padding:14px;cursor:pointer;transition:.14s;display:grid;gap:11px}.data-block:hover{background:#fff;border-color:#AFC0D6;transform:translateY(-1px)}.data-block.disabled{opacity:.58;cursor:default;transform:none!important}.data-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.data-stat{background:#fff;border:1px solid var(--line2);border-radius:11px;padding:10px}.data-stat span{display:block;font-size:11px;color:var(--muted);font-weight:800}.data-stat b{font-size:17px;font-weight:950}.open-data{width:100%;background:#EAF2FF;color:#1D4ED8;border:1px solid #CFE0FF}
@@ -53,10 +53,45 @@
   .big-send{width:100%;font-size:18px;padding:16px;margin-top:14px;background:linear-gradient(135deg,#0891B2,#2563EB);color:#fff;box-shadow:0 10px 24px rgba(8,145,178,.28)}
   .conn-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   details.adv{margin-top:14px;border:1px solid var(--line2);border-radius:12px;background:#F8FBFF;padding:0 13px}details.adv summary{cursor:pointer;padding:13px 0;font-size:13px;font-weight:900;color:#334155;list-style:none}details.adv summary::-webkit-details-marker{display:none}details.adv summary:before{content:"▸ ";color:var(--blue)}details.adv[open] summary:before{content:"▾ "}details.adv .adv-body{padding-bottom:15px}
+
+  /* ===== ③ 그래프로 비교하기 ===== */
+  .graph-setup-grid{display:grid;grid-template-columns:minmax(300px,350px) minmax(0,1fr);gap:16px;align-items:stretch}
+  .graph-upload-panel,.graph-compare-panel{border:1px solid var(--line2);background:#F8FBFF;border-radius:15px;padding:15px;min-width:0}
+  .graph-upload-panel .upload-zone{margin-top:10px;min-height:94px;padding:14px;background:#fff}
+  .graph-panel-head{display:flex;align-items:center;gap:10px;margin-bottom:11px}.graph-panel-head .step-num{width:29px;height:29px;font-size:14px}.graph-panel-head-text{min-width:0}.graph-panel-head-text b{display:block;font-size:15px;font-weight:950;color:#172033}.graph-panel-head-text span{display:block;margin-top:1px;font-size:11.5px;color:var(--muted)}
+  .graph-file-meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.graph-file-meta .tag{font-size:11px}
+  .graph-compare-panel{padding:15px 16px 16px}
+  .mission-box{margin-bottom:12px;border:1px solid #CFE0FF;background:linear-gradient(135deg,#EFF6FF,#F8FBFF);border-radius:13px;padding:12px 14px;display:grid;gap:2px}
+  .mission-box span{font-size:10.5px;font-weight:950;color:#1D4ED8;letter-spacing:.02em}.mission-box b{font-size:16px;color:#172033}.mission-box p{font-size:12px;color:var(--muted)}
+  .graph-metric-grid{display:grid;grid-template-columns:repeat(5,minmax(112px,1fr));gap:8px}
+  .graph-metric-btn{background:#fff;border:2px solid var(--line);border-radius:13px;padding:11px 9px;text-align:left;color:#24334D;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;min-width:0}
+  .graph-metric-btn:hover{border-color:#9CB9EA;transform:translateY(-1px)}.graph-metric-btn.on{border-color:var(--blue);background:#EFF5FF;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  .graph-metric-btn .gm-emoji{font-size:24px;line-height:1}.graph-metric-btn .gm-text{min-width:0}.graph-metric-btn b{display:block;font-size:12.5px}.graph-metric-btn span{display:block;font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .graph-control-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:12px;align-items:end}
+  .graph-mode-tabs{display:flex;gap:7px}.graph-mode-tabs button{flex:1;padding:10px 8px;font-size:12px;background:var(--soft);color:#435166;border:1px solid var(--line)}.graph-mode-tabs button.on{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-color:transparent}
+  .graph-axis-grid{display:grid;grid-template-columns:minmax(170px,.75fr) minmax(115px,.45fr) minmax(115px,.45fr) minmax(230px,1.2fr);gap:10px;align-items:end;margin-top:10px;padding:11px;border:1px solid var(--line2);border-radius:12px;background:#fff}
+  .graph-axis-note{min-height:42px;display:flex;align-items:center;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;background:#F8FBFF;color:var(--muted);font-size:11.5px;font-weight:800;line-height:1.45}.graph-axis-note.err{background:#FEF2F2;border-color:#FECACA;color:#B91C1C}.graph-axis-note.ok{background:#ECFDF3;border-color:#BBF7D0;color:#15803D}
+  .range-note{margin-top:10px;padding:9px 11px;border-radius:10px;background:#EFF6FF;border:1px solid #CFE0FF;font-size:11.5px;color:#334155;font-weight:800}.range-note b{color:#1D4ED8}
+  input[type=number]:disabled,select:disabled{background:#F1F5F9;color:#94A3B8}
+  .mapping-note{margin-top:8px;padding:9px 11px;border-radius:10px;background:#fff;border:1px solid var(--line2);font-size:11.5px;color:var(--muted)}.mapping-note b{color:#334155}
+  .graph-connect-strip{margin-bottom:13px;padding:10px 12px;border:1px solid var(--line2);border-radius:13px;background:#F8FBFF;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.graph-connect-strip .conn-state{min-width:230px;flex:1;padding:10px 12px;background:#fff}.graph-connect-strip .conn-value{font-size:14px}.graph-connect-strip .conn-led{width:26px;height:26px;box-shadow:inset 0 0 0 6px #EFF4FA}.graph-connect-strip .conn-state.connected .conn-led{box-shadow:0 0 0 6px #DCFCE7}.graph-connect-strip .btn-row{flex:none}.graph-connect-strip button{padding:9px 12px;font-size:12px}.graph-connect-strip .hint{flex:1 1 260px}
+  .graph-preview-layout{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:16px;align-items:start}
+  .chart-panel{border:1px solid var(--line2);border-radius:16px;background:#fff;overflow:hidden;min-width:0;display:flex;flex-direction:column}.chart-head{padding:12px 14px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#fff,#F8FBFF)}.chart-head b{font-size:14px}.chart-head span{font-size:11px;color:var(--muted);font-weight:800}
+  .chart-canvas{padding:12px 14px 6px;overflow-x:auto;background:#fff;min-height:514px}.chart-canvas svg{display:block;width:auto;min-width:100%;max-width:none;height:auto}.chart-caption{padding:10px 14px 12px;border-top:1px solid var(--line2);font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .graph-side{border:1px solid var(--line2);border-radius:16px;background:#F8FBFF;padding:14px;display:flex;flex-direction:column;min-width:0}
+  .answer-card{background:linear-gradient(135deg,#0F213F,#2456BE);color:#fff;border-radius:14px;padding:15px}.answer-card span{display:block;font-size:11px;color:rgba(255,255,255,.72);font-weight:850}.answer-card b{display:block;font-size:18px;line-height:1.35;margin-top:4px}.answer-card p{font-size:12px;color:rgba(255,255,255,.78);margin-top:5px}
+  .graph-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.graph-stat{background:#fff;border:1px solid var(--line2);border-radius:11px;padding:10px;min-width:0}.graph-stat span{display:block;font-size:10.5px;color:var(--muted);font-weight:800}.graph-stat b{display:block;font-size:15px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .point-table-wrap{margin-top:12px;border:1px solid var(--line2);border-radius:12px;background:#fff;overflow:auto;max-height:254px}.point-table{width:100%;border-collapse:collapse;font-size:11.5px}.point-table th,.point-table td{padding:8px 10px;border-bottom:1px solid #EEF2F7;text-align:left;white-space:nowrap}.point-table th{background:#F4F8FE;color:#334155;font-weight:950;position:sticky;top:0}.point-table td:last-child,.point-table th:last-child{text-align:right}.point-table tr.max-row td{background:#FFF7ED;color:#9A3412;font-weight:900}.point-table tr:last-child td{border-bottom:none}
+  .graph-send-wrap{margin-top:auto;padding-top:12px}.graph-send-wrap .btn-send{font-size:15px;padding:13px}
+  @media(max-width:1320px){.graph-control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.graph-axis-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.graph-axis-note{grid-column:1/-1}}
+  @media(max-width:1180px){.graph-preview-layout{grid-template-columns:1fr}.graph-side{min-height:0}.graph-send-wrap{margin-top:12px}.point-table-wrap{max-height:220px}}
+  @media(max-width:1020px){.graph-setup-grid{grid-template-columns:1fr}.graph-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:700px){.graph-metric-grid,.graph-control-grid,.graph-axis-grid{grid-template-columns:1fr}.graph-connect-strip{align-items:stretch}.graph-connect-strip .conn-state,.graph-connect-strip .btn-row{width:100%}.graph-connect-strip .btn-row button{flex:1}.chart-canvas svg{min-width:620px}}
+
 </style>
 </head>
 <body>
-<div class="top-switch" id="topViewTabs"><button type="button" data-view="BASIC" class="on">① 기본 예제</button><button type="button" data-view="TOOL">② 광명시 실제 데이터</button><button type="button" data-view="CODE">예제 코드 (ESP32)</button></div>
+<div class="top-switch" id="topViewTabs"><button type="button" data-view="BASIC" class="on">① 기본 예제</button><button type="button" data-view="TOOL">② 금천구 실제 데이터</button><button type="button" data-view="GRAPH">③ 그래프로 비교하기</button><button type="button" data-view="CODE">예제 코드 (ESP32)</button></div>
 
 <div class="wrap" id="basicView">
   <header class="practice-hero">
@@ -97,18 +132,20 @@
 
 <div class="wrap hidden" id="toolView">
   <header class="topbar">
-    <div class="brand"><div class="logo">🌦</div><div><h1>② 광명시 실제 데이터</h1><div class="sub">공공데이터 CSV를 올리고, 날짜만 골라서 LCD로 보내요</div></div></div>
+    <div class="brand"><div class="logo">🌦</div><div><h1>② 금천구 실제 데이터</h1><div class="sub">공공데이터 CSV를 올리고, 날짜만 골라서 LCD로 보내요</div></div></div>
     <div class="status-pill" id="topStatus"><span class="status-dot"></span><span id="topStatusText">Arduino 연결 안 됨</span></div>
   </header>
 
   <div class="layout">
     <aside class="left">
       <section class="card">
-        <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 업로드</div><span class="tag" id="dataCount">0행</span></div>
+        <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 업로드</div><span class="tag" id="dataCount">0개 파일</span></div>
         <div class="card-body">
-          <p class="hint">광명시 공공데이터 CSV 파일을 올리면, 날짜만 골라서 LCD로 보낼 수 있어요.</p>
-          <label class="upload-zone" id="uploadZone"><input id="csvFile" type="file" accept=".csv,.txt" /><div><strong>CSV 파일 선택</strong><span>또는 파일을 이 영역에 끌어다 놓기</span></div></label>
-          <div class="file-info" id="fileInfo"><span>파일</span><b id="fileName">-</b></div>
+          <p class="hint">금천구 공공데이터 CSV를 최대 10개까지 올릴 수 있어요. 한 번에 여러 개를 고르거나, 1개씩 나눠서 추가해도 먼저 올린 파일은 그대로 남습니다.</p>
+          <label class="upload-zone" id="uploadZone"><input id="csvFile" type="file" accept=".csv,.txt" multiple /><div><strong>CSV 파일 선택 (최대 10개)</strong><span>각 파일 50행 · 여러 개를 한 번에 골라도, 1개씩 추가해도 됩니다</span></div></label>
+          <div class="file-info" id="fileInfo"><span>업로드</span><b id="fileName">-</b><button class="file-clear" id="clearFilesBtn" type="button">전체 지우기</button></div>
+          <div class="file-list" id="fileList"></div>
+          <p class="slot-note" id="uploadSlotNote">아직 올린 파일이 없어요. 최대 10개까지 추가할 수 있습니다.</p>
         </div>
       </section>
 
@@ -125,7 +162,7 @@
         <div class="card-body">
           <div class="data-block disabled" id="dataBlock">
             <div><b id="dataBlockTitle">CSV를 업로드하면 전체 데이터를 볼 수 있습니다.</b><p class="hint" id="dataBlockHint">표는 화면에 펼치지 않고, 클릭 시 별도 창에서 확인합니다.</p></div>
-            <div class="data-stats"><div class="data-stat"><span>행</span><b id="statRows">0</b></div><div class="data-stat"><span>열</span><b id="statCols">0</b></div><div class="data-stat"><span>숫자 열</span><b id="statNums">0</b></div><div class="data-stat"><span>표시</span><b id="statPreview">클릭</b></div></div>
+            <div class="data-stats"><div class="data-stat"><span>파일</span><b id="statFiles">0</b></div><div class="data-stat"><span>총 행</span><b id="statRows">0</b></div><div class="data-stat"><span>열</span><b id="statCols">0</b></div><div class="data-stat"><span>숫자 열</span><b id="statNums">0</b></div></div>
             <button class="open-data" id="openDataBtn" type="button" disabled>전체 데이터 보기</button>
           </div>
         </div>
@@ -136,9 +173,10 @@
       <section class="card panel on" id="normalPanel">
         <div class="card-head"><div class="card-title"><span class="dot"></span>날짜 고르기</div><span class="tag">날씨 카드</span></div>
         <div class="card-body">
-          <div class="settings-grid two">
-            <div class="field"><label>📅 날짜 고르기</label><select id="dateValue"></select></div>
-            <div class="field" id="areaValueField"><label>📍 지역 고르기</label><select id="areaValue"></select></div>
+          <div class="settings-grid">
+            <div class="field"><label>📁 CSV 파일 고르기</label><select id="datasetValue" disabled><option>CSV 필요</option></select></div>
+            <div class="field"><label>📅 날짜 고르기</label><select id="dateValue" disabled><option>CSV 필요</option></select></div>
+            <div class="field" id="areaValueField"><label>📍 지역 고르기</label><select id="areaValue" disabled><option>CSV 필요</option></select></div>
           </div>
           <details class="adv"><summary>고급 설정 · 열 자동 인식 확인/바꾸기 (선생님용)</summary><div class="adv-body">
             <p class="hint" style="margin-bottom:12px">CSV의 어떤 칸이 날짜·기온·습도인지 자동으로 찾아요. 자동 인식이 틀렸을 때만 바꿔주세요.</p>
@@ -175,86 +213,212 @@
   </div>
 </div>
 
+
+<div class="wrap hidden" id="graphView">
+  <header class="practice-hero">
+    <div><h1>③ 날씨 데이터 · 그래프로 비교하기</h1><div class="sub">최대 10개 CSV를 올려두고, 그중 1개 파일을 선택해 시작 행부터 끝 행까지 최대 50개 값을 비교해 보세요. LCD 전송은 ① 기본 예제에서 아두이노를 연결한 뒤 사용할 수 있어요.</div></div>
+  </header>
+
+  <section class="card step" style="margin-top:16px">
+    <div class="card-body">
+      <div class="graph-setup-grid">
+        <div class="graph-upload-panel">
+          <div class="graph-panel-head">
+            <div class="step-num">1</div>
+            <div class="graph-panel-head-text"><b>날씨 CSV를 불러와요</b><span>비교할 파일을 먼저 준비합니다.</span></div>
+          </div>
+          <p class="hint">최대 10개 파일을 미리 올려둘 수 있어요(1개씩 나눠 올려도 누적됩니다). 그래프에서는 그중 선택한 1개 CSV의 데이터만 비교합니다.</p>
+          <label class="upload-zone" id="graphUploadZone"><input id="graphCsvFile" type="file" accept=".csv,.txt" multiple /><div><strong>금천구 CSV 파일 추가 (최대 10개)</strong><span>각 파일 50행 · 1개씩 올려도 누적되며, 업로드 후 비교할 CSV 1개를 선택합니다</span></div></label>
+          <div class="file-info" id="graphFileInfo"><span>업로드</span><b id="graphFileName">-</b><button class="file-clear" id="graphClearFilesBtn" type="button">전체 지우기</button></div>
+          <div class="file-list" id="graphFileList"></div>
+          <p class="slot-note" id="graphUploadSlotNote">아직 올린 파일이 없어요. 최대 10개까지 추가할 수 있습니다.</p>
+          <div class="graph-file-meta"><span class="tag" id="graphFileCount">0개 파일</span><span class="tag" id="graphDataCount">0행</span><span class="tag" id="graphColumnCount">0열</span></div>
+        </div>
+
+        <div class="graph-compare-panel">
+          <div class="graph-panel-head">
+            <div class="step-num">2</div>
+            <div class="graph-panel-head-text"><b>비교할 날씨 정보를 골라요</b><span>업로드한 CSV 중 한 파일과 비교 구간을 선택합니다.</span></div>
+          </div>
+          <div class="mission-box">
+            <span>오늘의 질문</span>
+            <b id="graphMissionTitle">기온이 가장 높은 날은 언제일까요?</b>
+            <p id="graphMissionText">여러 날짜의 값을 비교하고 가장 높은 점을 찾아보세요.</p>
+          </div>
+          <div class="graph-metric-grid" id="graphMetricGrid"></div>
+          <div class="graph-control-grid">
+            <div class="field"><label>📁 비교할 CSV 1개</label><select id="graphDatasetValue" disabled><option>CSV 필요</option></select></div>
+            <div class="field" id="graphAreaField"><label>📍 비교할 지역</label><select id="graphAreaValue" disabled><option>CSV 필요</option></select></div>
+            <div class="field"><label>↔️ 시작 행</label><select id="graphStartDate" disabled><option>CSV 필요</option></select></div>
+            <div class="field"><label>↔️ 끝 행</label><select id="graphEndDate" disabled><option>CSV 필요</option></select></div>
+            <div class="field"><label>📊 그래프 모양</label><div class="graph-mode-tabs" id="graphTypeTabs"><button type="button" data-type="LINE" class="on">꺾은선</button><button type="button" data-type="BAR">막대</button></div></div>
+          </div>
+          <div class="graph-axis-grid">
+            <div class="field"><label>↕️ Y축 표시 범위</label><div class="graph-mode-tabs" id="graphAxisModeTabs"><button type="button" data-axis-mode="AUTO" class="on">자동 맞춤</button><button type="button" data-axis-mode="MANUAL">직접 입력</button></div></div>
+            <div class="field"><label>Y축 최솟값</label><input id="graphYMin" type="number" step="any" disabled placeholder="자동" /></div>
+            <div class="field"><label>Y축 최댓값</label><input id="graphYMax" type="number" step="any" disabled placeholder="자동" /></div>
+            <div class="graph-axis-note" id="graphAxisNote">선택한 데이터에 맞춰 Y축을 자동으로 설정합니다.</div>
+          </div>
+          <div class="range-note" id="graphRangeNote"><b>표시 구간:</b> CSV를 올리면 시작 행과 끝 행을 선택할 수 있습니다.</div>
+          <div class="mapping-note" id="graphMappingNote"><b>열 자동 인식:</b> CSV를 올리면 날짜와 날씨 값의 열을 자동으로 찾습니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card step" style="margin-top:14px">
+    <div class="card-body">
+      <div class="step-head"><div class="step-num">3</div><div class="step-title">그래프로 비교하고 LCD로 보내요</div></div>
+      <div id="graphEmpty" class="empty"><div><b>CSV 파일을 먼저 올려주세요.</b><span>업로드한 파일 중 1개를 선택하고, 원하는 시작 행과 끝 행을 골라 그래프로 비교할 수 있어요.</span></div></div>
+      <div id="graphPreviewWrap" class="graph-preview-layout hidden">
+        <div class="chart-panel">
+          <div class="chart-head"><b id="graphChartTitle">날짜별 기온 비교</b><span id="graphChartMeta">-</span></div>
+          <div class="chart-canvas" id="graphChartCanvas"></div>
+          <div class="chart-caption"><span id="graphChartCaption">값이 가장 높은 날짜를 강조해서 표시합니다.</span><span>LCD 전송: 최대 50개 · 12개 초과 시 대표 날짜·값만 표시</span></div>
+        </div>
+        <aside class="graph-side">
+          <div class="answer-card"><span>그래프에서 찾은 결과</span><b id="graphAnswer">-</b><p id="graphAnswerDetail">-</p></div>
+          <div class="graph-stat-grid">
+            <div class="graph-stat"><span>최댓값</span><b id="graphMax">-</b></div>
+            <div class="graph-stat"><span>최솟값</span><b id="graphMin">-</b></div>
+            <div class="graph-stat"><span>평균</span><b id="graphAvg">-</b></div>
+            <div class="graph-stat"><span>데이터 수</span><b id="graphCount">-</b></div>
+          </div>
+          <div class="point-table-wrap" id="graphPointTableWrap"></div>
+          <div class="graph-send-wrap">
+            <p class="hint" id="graphSendHint" style="margin-bottom:9px">아두이노 연결은 ① 기본 예제에서 먼저 진행한 뒤, 여기서 그래프를 LCD로 보내세요.</p>
+            <button class="btn-send" id="graphSendBtn" type="button" disabled>그래프를 LCD로 보내기</button>
+            <div class="send-status" id="graphSendStatus">CSV를 올리고 그래프를 만든 뒤, ① 기본 예제에서 아두이노를 연결해 주세요</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</div>
+
 <div class="code-view hidden" id="codeView">
   <div class="wrap" style="padding-top:0">
     <section class="card">
       <div class="card-head"><div class="card-title"><span class="dot"></span>예제 코드: csv_lcd_receiver.ino</div><button class="copy-btn" id="copyCodeBtn" type="button">코드 복사</button></div>
       <div class="card-body">
-        <p class="hint">ESP32 + ILI9341 TFT용 수신 스케치입니다. 왼쪽 "CSV 실습 도구"에서 만든 W2(일반)/G2(그래프)/F1(자유) 패킷을 그대로 받아 LCD에 그립니다. Arduino IDE에 그대로 붙여넣거나 .ino로 저장해서 업로드하세요. 배선: TFT_MOSI 23 · TFT_MISO 19 · TFT_SCLK 14 · TFT_CS 33 · TFT_DC 13 · TFT_RST 25 (VSPI)</p>
+        <p class="hint">ESP32 + ST7789 TFT용 최신 수신 스케치입니다. 웹 화면의 3~50개 그래프를 받아 LCD의 안전 영역에 X축 이름·Y축 이름·눈금·날짜와 값을 표시합니다. 12개 이하는 모든 값을, 13~50개는 겹침 방지를 위해 대표값을 표시합니다. 대기 화면에 FW: XY-VALUE-V4, 그래프 우측 상단에 V4가 보이면 최신 코드입니다. 웹에서 설정한 Y축 최솟값과 최댓값도 LCD에 동일하게 적용됩니다. Arduino IDE에 그대로 붙여넣어 업로드하세요. 배선: TFT_MOSI 23 · TFT_MISO 미사용 · TFT_SCLK 14 · TFT_CS 33 · TFT_DC 13 · TFT_RST 25</p>
         <pre class="code-block"><code id="arduinoCodeBlock"></code></pre>
       </div>
     </section>
   </div>
 </div>
 
-<div class="modal-back hidden" id="dataModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">CSV 전체 데이터</div><p class="hint" id="modalMeta">-</p></div><button class="modal-close" id="closeDataBtn" type="button">닫기</button></div><div class="modal-body"><div class="table-wrap" id="tableWrap"></div></div></div></div>
+<div class="modal-back hidden" id="dataModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">CSV 10개 전체 데이터</div><p class="hint" id="modalMeta">-</p></div><button class="modal-close" id="closeDataBtn" type="button">닫기</button></div><div class="modal-body"><div class="table-wrap" id="tableWrap"></div></div></div></div>
 
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
 const BAUD_RATE = 115200;
-let headers = [], rows = [];
+const MAX_CSV_FILES = 10;
+const EXPECTED_ROWS_PER_FILE = 50;
+const MAX_GRAPH_POINTS = 50;       // INO 수신 안전 한도
+const MIN_VISIBLE_GRAPH_POINTS = 3;
+const DEFAULT_VISIBLE_GRAPH_POINTS = 12;
+const MAX_VISIBLE_GRAPH_POINTS = 50;
+let headers = [], rows = [], datasets = [];
+let datasetSeq = 0;
 let screenMode = 'NORMAL';
 let graphType = 'LINE';
 let port = null, reader = null, writer = null, keepReading = false;
 let lastPacket = '';
 const graphName = {LINE:'꺾은선', BAR:'막대', HBAR:'가로막대', SUMMARY:'요약막대'};
 const modeName = {NORMAL:'일반 날씨', GRAPH:'그래프'};
+let lastGraphPacket = '';
+let graphMetricKey = 'TEMP';
+let graphAxisMode = 'AUTO';
+const GRAPH_METRICS = [
+  {key:'TEMP', label:'기온', emoji:'🌡️', selectId:'tempCol', unit:'°C', lcdTitle:'TEMP', defaultType:'LINE', question:'기온이 가장 높은 날은 언제일까요?', guide:'날짜에 따라 기온이 어떻게 달라지는지 선의 높이를 비교해 보세요.'},
+  {key:'FEEL', label:'체감온도', emoji:'🥵', selectId:'feelCol', unit:'°C', lcdTitle:'FEEL_TEMP', defaultType:'LINE', question:'가장 덥게 느껴지는 날은 언제일까요?', guide:'실제 기온과 다르게 몸이 느끼는 온도의 변화를 비교해 보세요.'},
+  {key:'HUM', label:'습도', emoji:'💧', selectId:'humCol', unit:'%', lcdTitle:'HUM', defaultType:'LINE', question:'공기 중 수분이 가장 많은 날은 언제일까요?', guide:'습도가 높을수록 그래프의 점이 더 위에 표시됩니다.'},
+  {key:'RAIN', label:'강수량', emoji:'🌧️', selectId:'rainCol', unit:'mm', lcdTitle:'RAIN', defaultType:'BAR', question:'비가 가장 많이 내린 날은 언제일까요?', guide:'막대의 높이를 비교해 강수량이 가장 많은 날짜를 찾아보세요.'},
+  {key:'WIND', label:'풍속', emoji:'💨', selectId:'windCol', unit:'m/s', lcdTitle:'WIND', defaultType:'BAR', question:'바람이 가장 강한 날은 언제일까요?', guide:'풍속 값이 가장 큰 날짜를 찾아 야외활동에 주의할 날을 생각해 보세요.'}
+];
 
-const ARDUINO_CODE = `/*
+const ARDUINO_CODE = String.raw`/*
   csv_lcd_receiver.ino
   ------------------------------------------------------------------
   csv_lcd_sender.html 에서 Web Serial로 보내는 패킷을 받아
-  ESP32 + ILI9341 TFT에 표시하는 스케치입니다.
+  ESP32 + ST7789 TFT에 표시하는 스케치입니다.
+  그래프 화면에는 X축 이름·Y축 이름과 각 점/막대의 실제 값을 표시합니다.
 
     W2|날짜|지역|날씨상태|기온|습도|강수량|풍속|체감|주의   → 일반 모드(날씨 카드)
-    G2|타입|제목|X축명|개수|라벨목록|값목록               → 그래프 모드
+    G2|타입|제목|X축명|개수|라벨목록|값목록|Y최소|Y최대   → 그래프 모드
+       ※ Y최소·Y최대는 선택 항목입니다. 기존 7필드 G2도 지원합니다.
+    I1                                                     → 대기 화면 다시 표시
     F1|열개수|행개수|헤더목록|셀목록(행 우선)              → 자유 모드(실전 데이터 표, 최대 5열x10행)
 
   응답: OK / ERR|FORMAT / ERR|TOO_LONG
 
   배선은 prac4.ino와 완전히 동일합니다 (변경 없음):
-    TFT_MOSI 23 / TFT_MISO 19 / TFT_SCLK 14
+    TFT_MOSI 23 / TFT_MISO 미사용 / TFT_SCLK 14
     TFT_CS   33 / TFT_DC   13 / TFT_RST  25
-    VSPI(mySPI) + Adafruit_ILI9341 생성자 순서 동일
+    기본 SPI 객체 + Adafruit_ST7789 사용
 
-  필요 라이브러리: Adafruit GFX Library, Adafruit ILI9341
+  필요 라이브러리: Adafruit GFX Library, Adafruit ST7735 and ST7789 Library
   ------------------------------------------------------------------
 */
 
 #include <SPI.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_ILI9341.h>
+#include <Adafruit_ST7789.h>
+#include <math.h>
 
-// ===================== 배선 (prac4.ino 그대로, 수정 금지) =====================
+// Arduino IDE에서 반드시 ESP32 계열 보드를 선택해야 합니다.
+#if !defined(ARDUINO_ARCH_ESP32)
+  #error "Select an ESP32 board in Tools > Board."
+#endif
+
+// ===================== 배선 =====================
 #define TFT_MOSI 23
-#define TFT_MISO 19
+#define TFT_MISO -1   // ST7789 화면 출력에는 MISO가 필요하지 않음
 #define TFT_SCLK 14
 #define TFT_CS   33
 #define TFT_DC   13
 #define TFT_RST  25
 
-SPIClass mySPI(VSPI);
-Adafruit_ILI9341 tft = Adafruit_ILI9341(&mySPI, TFT_DC, TFT_CS, TFT_RST);
+// VSPI 상수를 사용하지 않아 보드 코어별 명칭 차이를 피합니다.
+Adafruit_ST7789 tft = Adafruit_ST7789(&SPI, TFT_CS, TFT_DC, TFT_RST);
 
 // ===================== 시리얼 프로토콜 설정 (csv_lcd_sender.html과 동일) =====================
 #define BAUD_RATE    115200
-#define LINE_MAX_LEN 800     // 이 길이를 넘는 한 줄은 ERR|TOO_LONG 처리
-#define MAX_POINTS   24      // 그래프 데이터 최대 개수 (HTML의 최대 포인트 수와 동일)
+#define LINE_MAX_LEN 2048    // 50개 그래프 포인트가 포함된 긴 패킷까지 수신
+#define MAX_POINTS   50      // 수신 안전 한도. 웹 화면은 3~50개 표시
 #define MAX_FREE_COLS  5     // 자유 모드 최대 열 수 (HTML과 동일)
 #define MAX_FREE_ROWS  10    // 자유 모드 최대 행 수 (HTML과 동일)
 #define MAX_FREE_CELLS (MAX_FREE_COLS * MAX_FREE_ROWS)
 
-// ===================== 색상 팔레트 =====================
-#define COL_BG      ILI9341_BLACK
-#define COL_CARD    0x2104
-#define COL_TEXT    ILI9341_WHITE
-#define COL_SUB     ILI9341_LIGHTGREY
-#define COL_WARN    ILI9341_RED
-#define COL_CAUTION ILI9341_ORANGE
-#define COL_WATCH   ILI9341_YELLOW
-#define COL_INFO    ILI9341_CYAN
-#define COL_LINE    ILI9341_DARKGREY
+// ===================== RGB565 색상 팔레트 =====================
+// 기준 이미지에 맞춘 다크 네이비 + 청록 포인트 색상
+#define TFT_BLACK      0x0000
+#define TFT_BLUE       0x001F
+#define TFT_RED        0xFA08
+#define TFT_CYAN       0x1F1D
+#define TFT_YELLOW     0xFEE7
+#define TFT_WHITE      0xE77E
+#define TFT_ORANGE     0xFCC3
+#define TFT_DARKGREY   0x2A09
+#define TFT_LIGHTGREY  0x6D78
+
+#define COL_BG      0x0042   // 거의 검정에 가까운 남색 배경
+#define COL_CARD    0x10E5   // 상단 헤더의 짙은 네이비
+#define COL_TEXT    TFT_WHITE
+#define COL_SUB     TFT_LIGHTGREY
+#define COL_WARN    TFT_RED
+#define COL_CAUTION TFT_ORANGE
+#define COL_WATCH   TFT_YELLOW
+#define COL_INFO    TFT_CYAN // WEATHER 상태 바의 밝은 청록색
+#define COL_LINE    TFT_DARKGREY
+#define COL_GRID    0x18E3
+#define COL_MAX     TFT_ORANGE
+
+// ===================== 화면 크기 (setRotation 이후 실제 값으로 갱신) =====================
+int16_t SCR_W = 240;
+int16_t SCR_H = 320;
 
 String inputLine;
 bool lineOverflow = false;
@@ -263,15 +427,27 @@ bool lineOverflow = false;
 // setup / loop
 // ------------------------------------------------------------------
 void setup() {
-  Serial.setRxBufferSize(1024);   // begin() 전에 호출해야 적용됨
+  Serial.setRxBufferSize(4096);   // 50개 그래프 포인트 패킷 수신용, begin() 전에 호출
   Serial.begin(BAUD_RATE);
   inputLine.reserve(LINE_MAX_LEN + 16);
 
-  mySPI.begin(TFT_SCLK, TFT_MISO, TFT_MOSI, TFT_CS);
-  tft.begin();
-  tft.setRotation(1);   // prac4.ino와 동일: 가로 320x240
+  SPI.begin(TFT_SCLK, TFT_MISO, TFT_MOSI, TFT_CS);
+  tft.init(240, 320);  // ST7789 실제 패널 해상도
+  tft.setRotation(3);   // 가로 320x240. 반대 방향이면 3으로 변경
+
+  // 이 패널은 기본 ST7789 반전 설정을 그대로 쓰면
+  // 검정이 흰색으로 표시되는 경우가 있어 반전을 해제합니다.
+  tft.invertDisplay(false);
+
+  SCR_W = tft.width();
+  SCR_H = tft.height();
+  tft.setTextWrap(false);
 
   showIdleScreen();
+  Serial.print("LCD_SIZE|");
+  Serial.print(tft.width());
+  Serial.print("|");
+  Serial.println(tft.height());
   Serial.println("READY|CSV_LCD_RECEIVER");
 }
 
@@ -279,7 +455,7 @@ void loop() {
   while (Serial.available()) {
     char c = (char)Serial.read();
 
-    if (c == '\\n') {
+    if (c == '\n') {
       if (lineOverflow) {
         Serial.println("ERR|TOO_LONG");
         lineOverflow = false;
@@ -287,7 +463,7 @@ void loop() {
         handleLine(inputLine);
       }
       inputLine = "";
-    } else if (c != '\\r') {
+    } else if (c != '\r') {
       if (inputLine.length() < LINE_MAX_LEN) {
         inputLine += c;
       } else {
@@ -306,7 +482,10 @@ void handleLine(const String& line) {
   int sep = line.indexOf('|');
   String type = (sep == -1) ? line : line.substring(0, sep);
 
-  if (type == "W2") {
+  if (type == "I1") {
+    showIdleScreen();
+    Serial.println("READY|CSV_LCD_RECEIVER");
+  } else if (type == "W2") {
     handleWeatherPacket(line);
   } else if (type == "G2") {
     handleGraphPacket(line);
@@ -365,11 +544,13 @@ void handleWeatherPacket(const String& line) {
   Serial.println("OK");
 }
 
-// G2|타입|제목|X축명|개수|라벨목록|값목록  (필드 7개, 라벨/값은 콤마로 구분)
+// G2|타입|제목|X축명|개수|라벨목록|값목록[|Y최소|Y최대]
+// 기존 7필드 G2와 Y축 범위를 추가한 9필드 G2를 모두 지원합니다.
 void handleGraphPacket(const String& line) {
-  String f[7];
-  int n = splitFields(line, f, 7);
-  if (n != 7) {
+  String f[9];
+  int fieldCount = splitFields(line, f, 9);
+
+  if (fieldCount != 7 && fieldCount != 9) {
     Serial.println("ERR|FORMAT");
     return;
   }
@@ -384,18 +565,40 @@ void handleGraphPacket(const String& line) {
     return;
   }
 
+  if (count <= 0 || count > MAX_POINTS) {
+    Serial.println("ERR|FORMAT");
+    return;
+  }
+
   String labels[MAX_POINTS];
   float  values[MAX_POINTS];
   int labelN = splitByComma(f[5], labels, MAX_POINTS);
   int valueN = splitFloatsByComma(f[6], values, MAX_POINTS);
 
-  int plotN = min(count, min(labelN, valueN));
-  if (plotN <= 0) {
+  if (labelN < count || valueN < count) {
     Serial.println("ERR|FORMAT");
     return;
   }
 
-  drawGraph(type, title, xTitle, labels, values, plotN);
+  bool useFixedAxis = false;
+  float fixedMin = 0;
+  float fixedMax = 0;
+
+  if (fieldCount == 9) {
+    fixedMin = f[7].toFloat();
+    fixedMax = f[8].toFloat();
+
+    float rawMin = values[0];
+    float rawMax = values[0];
+    for (int i = 1; i < count; i++) {
+      if (values[i] < rawMin) rawMin = values[i];
+      if (values[i] > rawMax) rawMax = values[i];
+    }
+
+    useFixedAxis = fixedMin < fixedMax && fixedMin <= rawMin && fixedMax >= rawMax;
+  }
+
+  drawGraph(type, title, xTitle, labels, values, count, useFixedAxis, fixedMin, fixedMax);
   Serial.println("OK");
 }
 
@@ -459,7 +662,7 @@ String asciiOnly(const String& s) {
 // ------------------------------------------------------------------
 void showIdleScreen() {
   tft.fillScreen(COL_BG);
-  tft.fillRect(0, 0, 320, 34, COL_CARD);
+  tft.fillRect(0, 0, SCR_W, 34, COL_CARD);
   tft.setTextColor(COL_TEXT);
   tft.setTextSize(2);
   tft.setCursor(10, 9);
@@ -467,10 +670,24 @@ void showIdleScreen() {
 
   tft.setTextColor(COL_SUB);
   tft.setTextSize(1);
-  tft.setCursor(10, 60);
-  tft.print("Waiting for data (Serial 115200)");
-  tft.setCursor(10, 78);
-  tft.print("Format: W2|weather G2|graph F1|free");
+  tft.setCursor(10, 70);
+  tft.print("Waiting for data");
+  tft.setCursor(10, 86);
+  tft.print("(Serial 115200)");
+
+  tft.setTextColor(COL_WATCH, COL_BG);
+  tft.setCursor(10, 104);
+  tft.print("FW: XY-VALUE-V4");
+
+  tft.setTextColor(COL_SUB, COL_BG);
+  tft.setCursor(10, 130);
+  tft.print("Format:");
+  tft.setCursor(10, 150);
+  tft.print("W2 | weather");
+  tft.setCursor(10, 168);
+  tft.print("G2 | graph");
+  tft.setCursor(10, 186);
+  tft.print("F1 | free");
 }
 
 // ------------------------------------------------------------------
@@ -480,38 +697,67 @@ void drawWeatherCard(String date, String area, String cond, float temp,
                       float hum, float rain, float wind, float feel, String notice) {
   tft.fillScreen(COL_BG);
 
-  tft.fillRect(0, 0, 320, 34, COL_CARD);
+  // ------------------------------------------------------------
+  // 1. 상단 제목 바: 지역은 왼쪽, 날짜는 오른쪽
+  // ------------------------------------------------------------
+  const int headerH = 34;
+  const int statusH = 22;
+
+  tft.fillRect(0, 0, SCR_W, headerH, COL_CARD);
   tft.setTextColor(COL_TEXT);
   tft.setTextSize(2);
-  tft.setCursor(10, 9);
-  tft.print(area);
-  tft.print("  ");
-  tft.print(date);
 
+  String safeArea = shortenLabel(asciiOnly(area), 15);
+  String safeDate = shortenLabel(asciiOnly(date), 10);
+
+  tft.setCursor(10, 9);
+  tft.print(safeArea);
+
+  int dateW = safeDate.length() * 12;  // 기본 폰트 textSize 2 기준
+  tft.setCursor(SCR_W - 10 - dateW, 9);
+  tft.print(safeDate);
+
+  // ------------------------------------------------------------
+  // 2. 상태 바
+  // ------------------------------------------------------------
   uint16_t noticeColor = COL_INFO;
   if (notice == "WARNING")      noticeColor = COL_WARN;
   else if (notice == "CAUTION") noticeColor = COL_CAUTION;
   else if (notice == "WATCH")   noticeColor = COL_WATCH;
 
-  tft.fillRect(0, 34, 320, 22, noticeColor);
-  tft.setTextColor(ILI9341_BLACK);
+  tft.fillRect(0, headerH, SCR_W, statusH, noticeColor);
+  tft.setTextColor(TFT_BLACK);
   tft.setTextSize(2);
-  tft.setCursor(10, 39);
-  tft.print(notice);
+  tft.setCursor(10, headerH + 4);
+  tft.print(shortenLabel(asciiOnly(notice), 24));
 
-  drawWeatherIcon(78, 145, 55, cond);
-  tft.setTextColor(COL_SUB);
-  tft.setTextSize(1);
-  tft.setCursor(48, 207);
-  tft.print(cond);
+  // ------------------------------------------------------------
+  // 3. 좌측 데이터 영역: 원하는 시안과 동일한 2열 배치
+  // ------------------------------------------------------------
+  const int colL = 18;
+  const int colR = 120;
 
-  drawMetric(158, 66,  "TEMP", String(temp, 1) + "C");
-  drawMetric(243, 66,  "FEEL", String(feel, 1) + "C");
-  drawMetric(158, 122, "HUM",  String((int)hum) + "%");
-  drawMetric(243, 122, "RAIN", String(rain, 1) + "mm");
-  drawMetric(158, 178, "WIND", String(wind, 1) + "m/s");
+  const int row1 = 70;
+  const int row2 = 116;
+  const int row3 = 170;
+
+  drawMetric(colL, row1, "TEMP", String(temp, 1) + "C");
+  drawMetric(colR, row1, "FEEL", String(feel, 1) + "C");
+
+  drawMetric(colL, row2, "HUM",  String((int)hum) + "%");
+  drawMetric(colR, row2, "RAIN", String(rain, 1) + "mm");
+
+  drawMetric(colL, row3, "WIND", String(wind, 1) + "m/s");
+
+  // ------------------------------------------------------------
+  // 4. 우측 날씨 아이콘
+  // ------------------------------------------------------------
+  const int iconX = SCR_W - 70;
+  const int iconY = 130;
+  const int iconR = 34;
+
+  drawWeatherIcon(iconX, iconY, iconR, cond);
 }
-
 void drawMetric(int x, int y, const String& label, const String& value) {
   tft.setTextColor(COL_SUB);
   tft.setTextSize(1);
@@ -546,37 +792,37 @@ void drawCloudShape(int cx, int cy, int r, uint16_t color) {
 
 void drawWeatherIcon(int cx, int cy, int r, const String& cond) {
   if (cond == "SUN") {
-    tft.fillCircle(cx, cy, (int)(r * 0.5), ILI9341_YELLOW);
-    drawSunRays(cx, cy, (int)(r * 0.65), r, ILI9341_YELLOW);
+    tft.fillCircle(cx, cy, (int)(r * 0.5), TFT_YELLOW);
+    drawSunRays(cx, cy, (int)(r * 0.65), r, TFT_YELLOW);
 
   } else if (cond == "HEAT") {
-    tft.fillCircle(cx, cy, (int)(r * 0.55), ILI9341_RED);
-    drawSunRays(cx, cy, (int)(r * 0.7), (int)(r * 1.05), ILI9341_ORANGE);
+    tft.fillCircle(cx, cy, (int)(r * 0.55), TFT_RED);
+    drawSunRays(cx, cy, (int)(r * 0.7), (int)(r * 1.05), TFT_ORANGE);
 
   } else if (cond == "CLOUD") {
-    drawCloudShape(cx, cy, r, ILI9341_LIGHTGREY);
+    drawCloudShape(cx, cy, r, TFT_LIGHTGREY);
 
   } else if (cond == "RAIN") {
-    drawCloudShape(cx, cy - (int)(r * 0.15), r, ILI9341_LIGHTGREY);
+    drawCloudShape(cx, cy - (int)(r * 0.15), r, TFT_LIGHTGREY);
     for (int i = -2; i <= 2; i++) {
       int x = cx + i * (int)(r * 0.28);
-      tft.drawLine(x, cy + (int)(r * 0.35), x - (int)(r * 0.12), cy + (int)(r * 0.75), ILI9341_BLUE);
+      tft.drawLine(x, cy + (int)(r * 0.35), x - (int)(r * 0.12), cy + (int)(r * 0.75), TFT_BLUE);
     }
 
   } else if (cond == "STORM") {
-    drawCloudShape(cx, cy - (int)(r * 0.15), r, ILI9341_DARKGREY);
-    tft.fillTriangle(cx - 4, cy + (int)(r * 0.3), cx + 10, cy + (int)(r * 0.3), cx - 2, cy + (int)(r * 0.62), ILI9341_YELLOW);
-    tft.fillTriangle(cx - 2, cy + (int)(r * 0.62), cx + 12, cy + (int)(r * 0.62), cx, cy + (int)(r * 0.95), ILI9341_YELLOW);
+    drawCloudShape(cx, cy - (int)(r * 0.15), r, TFT_DARKGREY);
+    tft.fillTriangle(cx - 4, cy + (int)(r * 0.3), cx + 10, cy + (int)(r * 0.3), cx - 2, cy + (int)(r * 0.62), TFT_YELLOW);
+    tft.fillTriangle(cx - 2, cy + (int)(r * 0.62), cx + 12, cy + (int)(r * 0.62), cx, cy + (int)(r * 0.95), TFT_YELLOW);
 
   } else if (cond == "SNOW") {
-    drawCloudShape(cx, cy - (int)(r * 0.15), r, ILI9341_LIGHTGREY);
+    drawCloudShape(cx, cy - (int)(r * 0.15), r, TFT_LIGHTGREY);
     for (int i = -2; i <= 2; i++) {
       int x = cx + i * (int)(r * 0.28);
       int y = cy + (int)(r * 0.55);
-      tft.drawLine(x - 4, y, x + 4, y, ILI9341_WHITE);
-      tft.drawLine(x, y - 4, x, y + 4, ILI9341_WHITE);
-      tft.drawLine(x - 3, y - 3, x + 3, y + 3, ILI9341_WHITE);
-      tft.drawLine(x - 3, y + 3, x + 3, y - 3, ILI9341_WHITE);
+      tft.drawLine(x - 4, y, x + 4, y, TFT_WHITE);
+      tft.drawLine(x, y - 4, x, y + 4, TFT_WHITE);
+      tft.drawLine(x - 3, y - 3, x + 3, y + 3, TFT_WHITE);
+      tft.drawLine(x - 3, y + 3, x + 3, y - 3, TFT_WHITE);
     }
 
   } else if (cond == "WIND") {
@@ -599,117 +845,418 @@ void drawWeatherIcon(int cx, int cy, int r, const String& cond) {
 // ------------------------------------------------------------------
 // 그래프 모드
 // ------------------------------------------------------------------
+String graphUnitFromTitle(const String& title) {
+  String upper = title;
+  upper.toUpperCase();
+
+  if (upper.indexOf("TEMP") >= 0) return "C";
+  if (upper.indexOf("HUM") >= 0)  return "%";
+  if (upper.indexOf("RAIN") >= 0) return "mm";
+  if (upper.indexOf("WIND") >= 0) return "m/s";
+  return "";
+}
+
+String graphMetricAxisLabel(const String& title) {
+  String upper = title;
+  upper.toUpperCase();
+
+  // LCD 폭에 맞춘 짧은 Y축 이름입니다.
+  if (upper.indexOf("FEEL") >= 0) return "FEEL(C)";
+  if (upper.indexOf("TEMP") >= 0) return "TEMP(C)";
+  if (upper.indexOf("HUM") >= 0)  return "HUM(%)";
+  if (upper.indexOf("RAIN") >= 0) return "RAIN(mm)";
+  if (upper.indexOf("WIND") >= 0) return "WIND(m/s)";
+
+  return shortenLabel(asciiOnly(title), 12);
+}
+
+String formatGraphNumber(float value) {
+  if (fabs(value) >= 1000.0f) return String(value, 0);
+
+  float nearest = roundf(value);
+  if (fabs(value - nearest) < 0.05f) return String((int)nearest);
+
+  return String(value, 1);
+}
+
+int centeredTextX(const String& text, int centerX) {
+  int width = text.length() * 6;
+  return constrain(centerX - width / 2, 0, max(0, SCR_W - width));
+}
+
+void drawCenteredText1(const String& text, int centerX, int y, uint16_t color) {
+  tft.setTextSize(1);
+  tft.setTextColor(color, COL_BG);
+  tft.setCursor(centeredTextX(text, centerX), y);
+  tft.print(text);
+}
+
+void drawRightText1(const String& text, int rightX, int y, uint16_t color) {
+  int width = text.length() * 6;
+  int x = max(0, rightX - width);
+
+  tft.setTextSize(1);
+  tft.setTextColor(color, COL_BG);
+  tft.setCursor(x, y);
+  tft.print(text);
+}
+
+bool isShortDateLabel(const String& label) {
+  return label.length() >= 5 && label.charAt(2) == '-';
+}
+
+String dateMonthPart(const String& label) {
+  if (!isShortDateLabel(label)) return "";
+  return label.substring(0, 2);
+}
+
+String dateDayPart(const String& label) {
+  if (!isShortDateLabel(label)) return shortenLabel(label, 3);
+  return label.substring(3, 5);
+}
+
+int maxValueIndex(float* values, int n) {
+  int result = 0;
+  for (int i = 1; i < n; i++) {
+    if (values[i] > values[result]) result = i;
+  }
+  return result;
+}
+
+int valueToY(float value, float vMin, float vMax, int py, int ph) {
+  float ratio = (value - vMin) / (vMax - vMin);
+  ratio = constrain(ratio, 0.0f, 1.0f);
+  return py + ph - (int)roundf(ratio * ph);
+}
+
+void drawYAxisGrid(float vMin, float vMax, int px, int py, int pw, int ph) {
+  const int tickCount = 5;
+
+  for (int i = 0; i < tickCount; i++) {
+    float ratio = (float)i / (tickCount - 1);
+    float value = vMax - (vMax - vMin) * ratio;
+    int y = py + (int)roundf(ph * ratio);
+
+    tft.drawFastHLine(px, y, pw, COL_GRID);
+    drawRightText1(formatGraphNumber(value), px - 4, y - 3, COL_SUB);
+  }
+
+  tft.drawRect(px, py, pw, ph, COL_LINE);
+}
+
+void drawXAxisLabels(String* labels, int n, int px, int py, int pw, int ph, bool barMode) {
+  const int firstLineY = py + ph + 5;
+  const int secondLineY = firstLineY + 10;
+  const bool compactDates = n > 8;
+
+  String previousMonth = "";
+  int labelStep = n <= 12 ? 1 : (int)ceil((float)n / 8.0f);
+
+  for (int i = 0; i < n; i++) {
+    if (n > 12 && i != 0 && i != n - 1 && i % labelStep != 0) continue;
+
+    int x;
+    if (barMode) {
+      int slot = max(1, pw / n);
+      x = px + i * slot + slot / 2;
+    } else {
+      x = px + (n <= 1 ? pw / 2 : (pw * i) / (n - 1));
+    }
+
+    String label = shortenLabel(asciiOnly(labels[i]), 9);
+
+    if (compactDates && isShortDateLabel(label)) {
+      String month = dateMonthPart(label);
+      String day = dateDayPart(label);
+
+      drawCenteredText1(day, x, firstLineY, COL_SUB);
+
+      if (i == 0 || month != previousMonth) {
+        drawCenteredText1("M" + month, x, secondLineY, COL_SUB);
+      }
+
+      previousMonth = month;
+    } else {
+      drawCenteredText1(label, x, firstLineY, COL_SUB);
+    }
+  }
+}
+
+bool shouldDrawPointValue(int index, int n, int maxIndex) {
+  // 12개 이하는 모든 점의 값을 표시합니다.
+  if (n <= 12) return true;
+
+  // 데이터가 많을 때도 첫 값·마지막 값·최댓값은 반드시 표시합니다.
+  if (index == 0 || index == n - 1 || index == maxIndex) return true;
+
+  // 13~50개에서는 화면 겹침을 막기 위해 약 8개 간격으로 대표값만 표시합니다.
+  int step = max(2, (int)ceil((float)n / 8.0f));
+  return index % step == 0;
+}
+
+void drawPointValue(float value, int centerX, int pointY,
+                    int py, int ph, bool highlighted) {
+  String text = formatGraphNumber(value);
+
+  // 기본적으로 모든 수치를 점/막대 위에 표시합니다.
+  int y = pointY - 12;
+
+  // 그래프 위쪽 경계를 벗어날 때만 점 아래로 내립니다.
+  if (y < py + 2) {
+    y = pointY + 6;
+  }
+
+  // 그래프 내부 안전 영역을 벗어나지 않도록 제한합니다.
+  y = constrain(y, py + 1, py + ph - 8);
+
+  drawCenteredText1(text, centerX, y, highlighted ? COL_MAX : COL_TEXT);
+}
+
+void calculateGraphAxis(const String& type, float* values, int n,
+                        bool useFixedAxis, float fixedMin, float fixedMax,
+                        float& vMin, float& vMax) {
+  float rawMin = values[0];
+  float rawMax = values[0];
+
+  for (int i = 1; i < n; i++) {
+    if (values[i] < rawMin) rawMin = values[i];
+    if (values[i] > rawMax) rawMax = values[i];
+  }
+
+  if (useFixedAxis && fixedMin < fixedMax && fixedMin <= rawMin && fixedMax >= rawMax) {
+    vMin = fixedMin;
+    vMax = fixedMax;
+    return;
+  }
+
+  if (type == "LINE") {
+    float span = rawMax - rawMin;
+    if (span == 0) span = max(1.0f, (float)fabs(rawMax) * 0.1f);
+    float padding = max(0.5f, span * 0.15f);
+
+    vMin = rawMin - padding;
+    vMax = rawMax + padding;
+  } else {
+    vMin = min(0.0f, rawMin);
+    vMax = max(0.0f, rawMax);
+
+    float span = vMax - vMin;
+    if (span == 0) span = 1;
+
+    if (vMax > 0) vMax += span * 0.10f;
+    if (vMin < 0) vMin -= span * 0.10f;
+  }
+
+  if (vMax == vMin) {
+    vMax += 1;
+    vMin -= 1;
+  }
+}
+
+void drawAxisFooter(const String& xAxisLabel) {
+  // LCD 하단 가장자리는 패널별로 일부 잘릴 수 있으므로 22px 높이의
+  // 전용 표시 영역을 만들고 글자를 화면 안쪽에 배치합니다.
+  const int footerY = SCR_H - 22;
+
+  tft.fillRect(0, footerY, SCR_W, 22, COL_CARD);
+  tft.drawFastHLine(0, footerY, SCR_W, COL_LINE);
+
+  String text = "X AXIS: " + shortenLabel(asciiOnly(xAxisLabel), 12);
+  int textWidth = text.length() * 6;
+  int textX = max(4, (SCR_W - textWidth) / 2);
+
+  tft.setTextSize(1);
+  tft.setTextColor(COL_TEXT, COL_CARD);
+  tft.setCursor(textX, footerY + 7);
+  tft.print(text);
+}
+
 void drawGraph(const String& type, const String& title, const String& xTitle,
-               String* labels, float* values, int n) {
+               String* labels, float* values, int n,
+               bool useFixedAxis, float fixedMin, float fixedMax) {
   tft.fillScreen(COL_BG);
 
-  tft.fillRect(0, 0, 320, 30, COL_CARD);
-  tft.setTextColor(COL_TEXT);
+  String metricLabel = graphMetricAxisLabel(title);
+  String dateAxisLabel = shortenLabel(asciiOnly(xTitle), 10);
+
+  // 가로 막대그래프는 축의 역할이 반대입니다.
+  String yAxisLabel = (type == "HBAR") ? dateAxisLabel : metricLabel;
+  String xAxisLabel = (type == "HBAR") ? metricLabel : dateAxisLabel;
+
+  // 1) 상단 제목 바
+  tft.fillRect(0, 0, SCR_W, 30, COL_CARD);
+  tft.setTextColor(COL_TEXT, COL_CARD);
   tft.setTextSize(2);
-  tft.setCursor(10, 6);
-  tft.print(title);
+  tft.setCursor(8, 7);
+  tft.print(shortenLabel(metricLabel, 13));
+  tft.print(" GRAPH");
 
-  tft.setTextColor(COL_SUB);
+  // 새 펌웨어가 실제로 올라갔는지 확인할 수 있는 버전 표식
   tft.setTextSize(1);
-  tft.setCursor(10, 22);
-  tft.print("X:");
-  tft.print(xTitle);
-  tft.print("  N=");
-  tft.print(n);
+  tft.setTextColor(COL_WATCH, COL_CARD);
+  tft.setCursor(SCR_W - 28, 10);
+  tft.print("V4");
 
-  float vMin = values[0], vMax = values[0];
-  for (int i = 1; i < n; i++) {
-    if (values[i] < vMin) vMin = values[i];
-    if (values[i] > vMax) vMax = values[i];
-  }
-  if (vMax == vMin) { vMax += 1; vMin -= 1; }
+  // 2) Y축 이름 전용 줄
+  // 기존 y=34 가장자리 출력보다 안쪽으로 옮기고 밝은 색으로 표시합니다.
+  tft.fillRect(0, 30, SCR_W, 20, COL_BG);
+  tft.setTextSize(1);
+  tft.setTextColor(COL_WATCH, COL_BG);
+  tft.setCursor(5, 36);
+  tft.print("Y AXIS: ");
+  tft.print(shortenLabel(yAxisLabel, 12));
 
-  const int px = 12, py = 40, pw = 296, ph = 172;
+  // 우측에는 선택 구간만 짧게 표시
+  String rangeText = shortenLabel(asciiOnly(labels[0]), 5);
+  rangeText += "~";
+  rangeText += shortenLabel(asciiOnly(labels[n - 1]), 5);
+  int rangeWidth = rangeText.length() * 6;
+  tft.setTextColor(COL_SUB, COL_BG);
+  tft.setCursor(max(4, SCR_W - 5 - rangeWidth), 36);
+  tft.print(rangeText);
+
+  float vMin, vMax;
+  calculateGraphAxis(type, values, n, useFixedAxis, fixedMin, fixedMax, vMin, vMax);
+
+  const int footerY = SCR_H - 22;
 
   if (type == "HBAR") {
+    const int px = 8;
+    const int py = 54;
+    const int pw = SCR_W - 16;
+    const int ph = max(70, footerY - py - 5);
+
     drawHBar(labels, values, n, vMin, vMax, px, py, pw, ph);
-  } else if (type == "LINE") {
+    drawAxisFooter(xAxisLabel);
+    return;
+  }
+
+  // 3) 그래프 영역
+  // 왼쪽은 Y축 숫자, 아래는 날짜 눈금과 X축 이름을 위한 안전 여백입니다.
+  const int px = 39;
+  const int py = 54;
+  const int pw = SCR_W - px - 8;
+  const int ph = max(70, footerY - py - 31);
+
+  drawYAxisGrid(vMin, vMax, px, py, pw, ph);
+
+  if (type == "LINE") {
     drawLineChart(labels, values, n, vMin, vMax, px, py, pw, ph);
   } else {
     drawBarChart(labels, values, n, vMin, vMax, px, py, pw, ph);
   }
+
+  // 4) X축 이름 전용 하단 바
+  drawAxisFooter(xAxisLabel);
 }
 
 void drawLineChart(String* labels, float* values, int n, float vMin, float vMax,
-                    int px, int py, int pw, int ph) {
-  tft.drawRect(px, py, pw, ph, COL_LINE);
+                   int px, int py, int pw, int ph) {
+  int maxIndex = maxValueIndex(values, n);
 
-  int prevX = px, prevY = py + ph;
+  int previousX = px;
+  int previousY = valueToY(values[0], vMin, vMax, py, ph);
+
+  for (int i = 1; i < n; i++) {
+    int x = px + (n <= 1 ? pw / 2 : (pw * i) / (n - 1));
+    int y = valueToY(values[i], vMin, vMax, py, ph);
+
+    tft.drawLine(previousX, previousY, x, y, COL_INFO);
+
+    previousX = x;
+    previousY = y;
+  }
+
+  // 선을 먼저 그린 뒤 점과 수치 레이블을 올려 가독성을 확보합니다.
+  int pointRadius = n > 24 ? 1 : (n > 12 ? 2 : 3);
+  int maxPointRadius = n > 24 ? 3 : 4;
+
   for (int i = 0; i < n; i++) {
     int x = px + (n <= 1 ? pw / 2 : (pw * i) / (n - 1));
-    int y = py + ph - (int)(((values[i] - vMin) / (vMax - vMin)) * ph);
-    if (i > 0) tft.drawLine(prevX, prevY, x, y, COL_INFO);
-    tft.fillCircle(x, y, 3, COL_INFO);
-    prevX = x; prevY = y;
+    int y = valueToY(values[i], vMin, vMax, py, ph);
+    bool highlighted = i == maxIndex;
+
+    tft.fillCircle(
+      x,
+      y,
+      highlighted ? maxPointRadius : pointRadius,
+      highlighted ? COL_MAX : COL_INFO
+    );
+
+    if (shouldDrawPointValue(i, n, maxIndex)) {
+      drawPointValue(values[i], x, y, py, ph, highlighted);
+    }
   }
-  drawAxisLabels(labels, n, px, py, pw, ph);
+
+  drawXAxisLabels(labels, n, px, py, pw, ph, false);
 }
 
 void drawBarChart(String* labels, float* values, int n, float vMin, float vMax,
-                   int px, int py, int pw, int ph) {
-  tft.drawRect(px, py, pw, ph, COL_LINE);
+                  int px, int py, int pw, int ph) {
+  int maxIndex = maxValueIndex(values, n);
+  int slot = max(1, pw / n);
+  int barWidth = max(3, min(22, slot - 5));
 
-  float base = (vMin > 0) ? 0 : vMin;
-  float range = vMax - base;
-  if (range == 0) range = 1;
+  float baselineValue;
+  if (vMin <= 0 && vMax >= 0) baselineValue = 0;
+  else if (vMin > 0) baselineValue = vMin;
+  else baselineValue = vMax;
 
-  int slot = pw / n;
-  int barW = max(4, slot - 6);
+  int baselineY = valueToY(baselineValue, vMin, vMax, py, ph);
+  tft.drawFastHLine(px, baselineY, pw, COL_LINE);
 
   for (int i = 0; i < n; i++) {
-    int barH = (int)(((values[i] - base) / range) * ph);
-    barH = constrain(barH, 0, ph);
-    int x = px + i * slot + (slot - barW) / 2;
-    int y = py + ph - barH;
-    tft.fillRect(x, y, barW, barH, COL_INFO);
+    int centerX = px + i * slot + slot / 2;
+    int valueY = valueToY(values[i], vMin, vMax, py, ph);
+    int topY = min(valueY, baselineY);
+    int height = max(1, abs(valueY - baselineY));
+    int x = centerX - barWidth / 2;
+    bool highlighted = i == maxIndex;
+
+    tft.fillRect(x, topY, barWidth, height, highlighted ? COL_MAX : COL_INFO);
+
+    if (shouldDrawPointValue(i, n, maxIndex)) {
+      drawPointValue(values[i], centerX, valueY, py, ph, highlighted);
+    }
   }
-  drawAxisLabels(labels, n, px, py, pw, ph);
+
+  drawXAxisLabels(labels, n, px, py, pw, ph, true);
 }
 
 void drawHBar(String* labels, float* values, int n, float vMin, float vMax,
               int px, int py, int pw, int ph) {
-  tft.drawRect(px, py, pw, ph, COL_LINE);
+  int visibleCount = min(n, 10);
+  int maxIndex = maxValueIndex(values, visibleCount);
 
-  float base = (vMin > 0) ? 0 : vMin;
+  int labelWidth = 54;
+  int valueWidth = 34;
+  int barX = px + labelWidth;
+  int barWidthMax = pw - labelWidth - valueWidth;
+  int slot = max(1, ph / visibleCount);
+  int barHeight = max(4, slot - 5);
+
+  float base = min(0.0f, vMin);
   float range = vMax - base;
   if (range == 0) range = 1;
 
-  int labelW   = 64;
-  int barAreaX = px + labelW;
-  int barAreaW = pw - labelW;
-  int slot = ph / n;
-  int barH = max(6, slot - 6);
-
   tft.setTextSize(1);
-  for (int i = 0; i < n; i++) {
-    int y = py + i * slot + (slot - barH) / 2;
-    int barW = (int)(((values[i] - base) / range) * barAreaW);
-    barW = constrain(barW, 0, barAreaW);
 
-    tft.setTextColor(COL_SUB);
-    tft.setCursor(px, y + 2);
-    tft.print(shortenLabel(labels[i], 8));
+  for (int i = 0; i < visibleCount; i++) {
+    int y = py + i * slot + max(0, (slot - barHeight) / 2);
+    int width = (int)roundf(((values[i] - base) / range) * barWidthMax);
+    width = constrain(width, 0, barWidthMax);
+    bool highlighted = i == maxIndex;
 
-    tft.fillRect(barAreaX, y, barW, barH, COL_INFO);
-  }
-}
+    tft.setTextColor(COL_SUB, COL_BG);
+    tft.setCursor(px, y + 1);
+    tft.print(shortenLabel(asciiOnly(labels[i]), 8));
 
-void drawAxisLabels(String* labels, int n, int px, int py, int pw, int ph) {
-  tft.setTextColor(COL_SUB);
-  tft.setTextSize(1);
-  tft.setCursor(px, py + ph + 5);
-  tft.print(shortenLabel(labels[0], 9));
+    tft.fillRect(barX, y, width, barHeight, highlighted ? COL_MAX : COL_INFO);
 
-  if (n > 1) {
-    String lastLbl = shortenLabel(labels[n - 1], 9);
-    int textW = lastLbl.length() * 6;
-    tft.setCursor(px + pw - textW, py + ph + 5);
-    tft.print(lastLbl);
+    String valueText = formatGraphNumber(values[i]);
+    tft.setTextColor(highlighted ? COL_MAX : COL_TEXT, COL_BG);
+    tft.setCursor(barX + barWidthMax + 3, y + 1);
+    tft.print(valueText);
   }
 }
 
@@ -719,38 +1266,41 @@ void drawAxisLabels(String* labels, int n, int px, int py, int pw, int ph) {
 void drawFreeTable(String* hdrs, String* cells, int C, int R) {
   tft.fillScreen(COL_BG);
 
-  tft.fillRect(0, 0, 320, 26, COL_CARD);
+  tft.fillRect(0, 0, SCR_W, 26, COL_CARD);
   tft.setTextColor(COL_TEXT);
   tft.setTextSize(2);
   tft.setCursor(10, 4);
   tft.print("FREE DATA");
   tft.setTextColor(COL_SUB);
   tft.setTextSize(1);
-  tft.setCursor(220, 9);
+  tft.setCursor(SCR_W - 44, 9);
   tft.print(R); tft.print("x"); tft.print(C);
 
-  int colW = 320 / C;
-  int rowH = 18;
+  int colW = SCR_W / C;
   int y0 = 30;
+  int availH = SCR_H - y0;         // 표에 쓸 수 있는 세로 공간
+  int rowH = availH / (R + 1);     // 헤더1 + 데이터R 행이 화면을 꽉 채우도록
+  rowH = constrain(rowH, 14, 34);
+  int textDy = (rowH - 8) / 2;     // 셀 안에서 글자를 세로 가운데로
   int charCap = max(3, colW / 6 - 1);
 
   // 헤더 행(강조 배경)
-  tft.fillRect(0, y0, 320, rowH, COL_LINE);
+  tft.fillRect(0, y0, SCR_W, rowH, COL_LINE);
   tft.setTextColor(COL_TEXT);
   tft.setTextSize(1);
   for (int c = 0; c < C; c++) {
-    tft.setCursor(4 + c * colW, y0 + 5);
+    tft.setCursor(4 + c * colW, y0 + textDy);
     tft.print(shortenLabel(asciiOnly(hdrs[c]), charCap));
   }
 
   // 데이터 행 (한 줄 걸러 배경색으로 가독성 확보, 화면 밖으로 넘치면 중단)
   for (int r = 0; r < R; r++) {
     int y = y0 + rowH * (r + 1);
-    if (y + rowH > 240) break;
-    if (r % 2 == 1) tft.fillRect(0, y, 320, rowH, COL_CARD);
+    if (y + rowH > SCR_H) break;
+    if (r % 2 == 1) tft.fillRect(0, y, SCR_W, rowH, COL_CARD);
     tft.setTextColor(COL_TEXT);
     for (int c = 0; c < C; c++) {
-      tft.setCursor(4 + c * colW, y + 5);
+      tft.setCursor(4 + c * colW, y + textDy);
       tft.print(shortenLabel(asciiOnly(cells[r * C + c]), charCap));
     }
   }
@@ -758,13 +1308,24 @@ void drawFreeTable(String* hdrs, String* cells, int C, int R) {
 `;
 $('arduinoCodeBlock').textContent = ARDUINO_CODE;
 let lastSendTarget='tool';
+let responseWaitTimer = null;
+let responseTimeoutTimer = null;
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function clearResponseTimers(){
+  if(responseWaitTimer){ clearTimeout(responseWaitTimer); responseWaitTimer=null; }
+  if(responseTimeoutTimer){ clearTimeout(responseTimeoutTimer); responseTimeoutTimer=null; }
+}
 $('topViewTabs').addEventListener('click', e=>{
   const b = e.target.closest('button'); if(!b) return;
   const view = b.dataset.view;
   $('topViewTabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
   $('basicView').classList.toggle('hidden', view!=='BASIC');
   $('toolView').classList.toggle('hidden', view!=='TOOL');
+  $('graphView').classList.toggle('hidden', view!=='GRAPH');
   $('codeView').classList.toggle('hidden', view!=='CODE');
+  if(view==='GRAPH') renderGraphView();
 });
 $('copyCodeBtn').addEventListener('click', async()=>{
   try{
@@ -776,24 +1337,203 @@ $('copyCodeBtn').addEventListener('click', async()=>{
 
 function setConnectionState(state, text){
   document.querySelectorAll('.status-pill').forEach(p=>p.className='status-pill'+(state?' '+state:''));
-  const box=$('connStateBox'); if(box) box.className='conn-state'+(state?' '+state:'');
+  ['connStateBox','graphConnStateBox'].forEach(id=>{ const box=$(id); if(box) box.className='conn-state'+(state?' '+state:''); });
   const tt=$('topStatusText'); if(tt) tt.textContent=text;
   const bt=$('basicStatusText'); if(bt) bt.textContent=text;
-  const cs=$('connStateText'); if(cs) cs.textContent=text.replace('아두이노 ','').replace('Arduino ','');
+  const gt=$('graphStatusText'); if(gt) gt.textContent=text;
+  const stateText=text.replace('아두이노 ','').replace('Arduino ','');
+  const cs=$('connStateText'); if(cs) cs.textContent=stateText;
+  const gs=$('graphConnStateText'); if(gs) gs.textContent=stateText;
   const busy=state==='connected'||state==='connecting', connected=state==='connected';
-  ['connectBtn','basicConnectBtn'].forEach(id=>{const el=$(id); if(el) el.disabled=busy;});
-  ['disconnectBtn','basicDisconnectBtn'].forEach(id=>{const el=$(id); if(el) el.disabled=!connected;});
+  ['connectBtn','basicConnectBtn','graphConnectBtn'].forEach(id=>{const el=$(id); if(el) el.disabled=busy;});
+  ['disconnectBtn','basicDisconnectBtn','graphDisconnectBtn'].forEach(id=>{const el=$(id); if(el) el.disabled=!connected;});
   updateSendAvailability();
 }
 function setSendStatus(text, kind=''){ const el=$('sendStatus'); if(el){ el.className='send-status'+(kind?' '+kind:''); el.textContent=text; } }
 function setBasicStatus(text, kind=''){ const el=$('basicSendStatus'); if(el){ el.className='send-status'+(kind?' '+kind:''); el.textContent=text; } }
-function reportResult(kind, msg){ if(lastSendTarget==='basic') setBasicStatus(msg, kind); else setSendStatus(msg, kind); }
-async function connectArduino(){ if(!('serial' in navigator)){ setConnectionState('error','브라우저 미지원'); alert('이 브라우저는 아두이노 연결(Web Serial)을 지원하지 않아요. Chrome이나 Edge에서 열어주세요.'); return; } try{ setConnectionState('connecting','아두이노 연결 중'); port=await navigator.serial.requestPort(); await port.open({baudRate:BAUD_RATE}); writer=port.writable.getWriter(); setConnectionState('connected','아두이노 연결됨'); setSendStatus('전송 대기'); if(basicSelIdx>=0) setBasicStatus('보낼 준비 완료! [LCD로 보내기]를 눌러요',''); readLoop(); }catch(err){ console.error(err); setConnectionState('error','연결 실패'); } }
-async function disconnectArduino(){ try{ keepReading=false; if(reader){try{await reader.cancel();}catch(e){} try{reader.releaseLock();}catch(e){} reader=null;} if(writer){try{writer.releaseLock();}catch(e){} writer=null;} if(port){try{await port.close();}catch(e){} port=null;} } finally{ setConnectionState('', '아두이노 연결 안 됨'); } }
-async function readLoop(){ if(!port||!port.readable) return; keepReading=true; const decoder=new TextDecoder(); let buffer=''; while(port&&port.readable&&keepReading){ try{ reader=port.readable.getReader(); while(true){ const {value,done}=await reader.read(); if(done) break; buffer+=decoder.decode(value); const lines=buffer.split(/\r?\n/); buffer=lines.pop()||''; for(const line of lines){ const clean=line.trim(); if(!clean) continue; if(clean.startsWith('OK')) reportResult('ok','전송 완료! LCD 화면을 확인하세요'); else if(clean.startsWith('ERR|TOO_LONG')) reportResult('err','데이터가 너무 길어요'); else if(clean.startsWith('ERR')) reportResult('err','아두이노 처리 오류 (최신 코드를 올렸는지 확인)'); } } }catch(e){ if(keepReading) console.error(e); } finally{ try{reader&&reader.releaseLock();}catch(e){} reader=null; } } }
-async function sendPacket(packet, target){ const set = target==='basic'?setBasicStatus:setSendStatus; if(!writer||!packet){ set('먼저 아두이노를 연결하고 날씨를 고르세요','wait'); return; } lastSendTarget=target; try{ set('보내는 중...','wait'); await writer.write(new TextEncoder().encode(packet+'\n')); const elId=target==='basic'?'basicSendStatus':'sendStatus'; setTimeout(()=>{ const el=$(elId); if(el&&el.textContent==='보내는 중...') set('보냈어요. 아두이노 응답을 기다리는 중...','wait'); },300); setTimeout(()=>{ const el=$(elId); if(el&&el.textContent.includes('기다리는 중')) set('응답이 없어요. 아두이노에 최신 코드를 올렸는지 확인하세요','err'); },1800); }catch(e){ console.error(e); set('보내기 실패','err'); } }
-navigator.serial?.addEventListener('disconnect',()=>{ disconnectArduino(); setConnectionState('error','포트 분리됨'); });
-$('connectBtn').addEventListener('click',connectArduino); $('disconnectBtn').addEventListener('click',disconnectArduino);
+function setGraphStatus(text, kind=''){ const el=$('graphSendStatus'); if(el){ el.className='send-status'+(kind?' '+kind:''); el.textContent=text; } }
+function reportResult(kind, msg){
+  clearResponseTimers();
+  if(lastSendTarget==='basic') setBasicStatus(msg, kind);
+  else if(lastSendTarget==='graph') setGraphStatus(msg, kind);
+  else setSendStatus(msg, kind);
+}
+
+async function connectArduino(){ 
+  if(!('serial' in navigator)){ 
+    setConnectionState('error','브라우저 미지원'); 
+    alert('이 브라우저는 아두이노 연결(Web Serial)을 지원하지 않아요. Chrome이나 Edge에서 열어주세요.'); 
+    return; 
+  }
+
+  try{
+    setConnectionState('connecting','아두이노 연결 중');
+
+    port = await navigator.serial.requestPort();
+    await port.open({baudRate:BAUD_RATE});
+
+    // ESP32가 포트 개방 시 재부팅되는 경우를 줄입니다.
+    try{
+      await port.setSignals({dataTerminalReady:false, requestToSend:false});
+    }catch(e){
+      console.warn('포트 신호 설정을 건너뜁니다.', e);
+    }
+
+    writer = port.writable.getWriter();
+
+    // 응답 수신을 먼저 시작합니다.
+    readLoop();
+
+    // 포트 개방 직후 ESP32가 재부팅될 수 있으므로 준비 시간을 줍니다.
+    await sleep(2500);
+
+    // 최신 INO의 대기 화면/READY 응답을 요청합니다.
+    try{
+      await writer.write(new TextEncoder().encode('I1\n'));
+      await sleep(250);
+    }catch(e){
+      console.warn('I1 준비 명령 전송을 건너뜁니다.', e);
+    }
+
+    setConnectionState('connected','아두이노 연결됨');
+    setSendStatus('전송 대기');
+
+    if(basicSelIdx>=0){
+      setBasicStatus('보낼 준비 완료! [LCD로 보내기]를 눌러요','');
+    }
+
+    if(lastGraphPacket){
+      setGraphStatus('보낼 준비 완료! [그래프를 LCD로 보내기]를 눌러요','');
+    }
+  }catch(err){
+    console.error(err);
+    setConnectionState('error','연결 실패');
+  }
+}
+
+async function disconnectArduino(){
+  clearResponseTimers();
+
+  try{
+    keepReading=false;
+
+    if(reader){
+      try{ await reader.cancel(); }catch(e){}
+      try{ reader.releaseLock(); }catch(e){}
+      reader=null;
+    }
+
+    if(writer){
+      try{ writer.releaseLock(); }catch(e){}
+      writer=null;
+    }
+
+    if(port){
+      try{ await port.close(); }catch(e){}
+      port=null;
+    }
+  }finally{
+    setConnectionState('', '아두이노 연결 안 됨');
+  }
+}
+
+async function readLoop(){
+  if(!port || !port.readable) return;
+
+  keepReading=true;
+  const decoder=new TextDecoder();
+  let buffer='';
+
+  while(port && port.readable && keepReading){
+    try{
+      reader=port.readable.getReader();
+
+      while(true){
+        const {value,done}=await reader.read();
+        if(done) break;
+
+        buffer+=decoder.decode(value,{stream:true});
+        const lines=buffer.split(/\r?\n/);
+        buffer=lines.pop()||'';
+
+        for(const line of lines){
+          const clean=line.trim();
+          if(!clean) continue;
+
+          if(clean.startsWith('READY|')){
+            setConnectionState('connected','아두이노 연결됨');
+            continue;
+          }
+
+          if(clean.startsWith('OK')){
+            reportResult('ok','전송 완료! LCD 화면을 확인하세요');
+          }
+          else if(clean.startsWith('ERR|TOO_LONG')){
+            reportResult('err','전송 데이터가 너무 깁니다. 비교 구간을 줄여주세요');
+          }
+          else if(clean.startsWith('ERR')){
+            reportResult('err',`아두이노 처리 오류: ${clean}`);
+          }
+        }
+      }
+    }catch(e){
+      if(keepReading) console.error(e);
+    }finally{
+      try{ if(reader) reader.releaseLock(); }catch(e){}
+      reader=null;
+    }
+  }
+}
+
+async function sendPacket(packet, target){
+  const set = target==='basic'
+    ? setBasicStatus
+    : (target==='graph' ? setGraphStatus : setSendStatus);
+
+  if(!writer || !packet){
+    set(
+      target==='graph'
+        ? '① 기본 예제에서 아두이노를 먼저 연결한 뒤 그래프를 보내주세요'
+        : '먼저 아두이노를 연결하고 날씨를 고르세요',
+      'wait'
+    );
+    return;
+  }
+
+  clearResponseTimers();
+  lastSendTarget=target;
+
+  try{
+    set('보내는 중...','wait');
+    await writer.write(new TextEncoder().encode(packet+'\n'));
+
+    // 그래프는 LCD에 선·글자·눈금을 그린 뒤 OK를 보내므로 시간이 걸릴 수 있습니다.
+    responseWaitTimer=setTimeout(()=>{
+      set('LCD에 화면을 그리는 중입니다. 잠시 기다려주세요...','wait');
+    },700);
+
+    responseTimeoutTimer=setTimeout(()=>{
+      set('12초 동안 응답이 없습니다. ① 기본 예제에서 연결을 해제한 뒤 다시 연결해 주세요','err');
+      responseTimeoutTimer=null;
+    },12000);
+  }catch(e){
+    console.error(e);
+    clearResponseTimers();
+    set('보내기 실패','err');
+  }
+}
+
+navigator.serial?.addEventListener('disconnect',()=>{
+  disconnectArduino();
+  setConnectionState('error','포트 분리됨');
+});
+
+$('connectBtn').addEventListener('click',connectArduino);
+$('disconnectBtn').addEventListener('click',disconnectArduino);
+const graphConnectBtn=$('graphConnectBtn');
+if(graphConnectBtn) graphConnectBtn.addEventListener('click',connectArduino);
+const graphDisconnectBtn=$('graphDisconnectBtn');
+if(graphDisconnectBtn) graphDisconnectBtn.addEventListener('click',disconnectArduino);
 
 function parseCSV(text){ text=text.replace(/^\uFEFF/,''); const out=[]; let row=[], cell='', q=false; for(let i=0;i<text.length;i++){ const c=text[i], n=text[i+1]; if(q){ if(c==='"'&&n==='"'){cell+='"';i++;} else if(c==='"') q=false; else cell+=c; } else { if(c==='"') q=true; else if(c===','){row.push(cell.trim());cell='';} else if(c==='\n'){row.push(cell.trim());cell=''; if(row.some(v=>v!=='')) out.push(row); row=[];} else if(c!=='\r') cell+=c; } } row.push(cell.trim()); if(row.some(v=>v!=='')) out.push(row); if(!out.length) return {headers:[],rows:[]}; const h=out[0].map((v,i)=>v||`열${i+1}`); const rs=out.slice(1).map(r=>h.map((_,i)=>r[i]??'')); return {headers:h,rows:rs}; }
 async function decodeFile(file){ const buf=await file.arrayBuffer(); let text=new TextDecoder('utf-8').decode(buf); if(text.includes('\uFFFD')){ try{text=new TextDecoder('euc-kr').decode(buf);}catch(e){} } return text; }
@@ -803,69 +1543,261 @@ function numericColumns(){ return headers.map((h,i)=>({name:h,i})).filter(c=>isN
 function findCol(patterns, fallback=0){ for(const p of patterns){ const idx=headers.findIndex(h=>p.test(h)); if(idx>=0) return idx; } return fallback; }
 function allHeaderOptions(){ return headers.map((h,i)=>`<option value="${i}">${escapeHTML(h)}</option>`).join(''); }
 function numericHeaderOptions(){ const nums=numericColumns(); return (nums.length?nums:headers.map((h,i)=>({name:h,i}))).map(c=>`<option value="${c.i}">${escapeHTML(c.name)}</option>`).join(''); }
-async function handleFile(file){ const text=await decodeFile(file); const parsed=parseCSV(text); headers=parsed.headers; rows=parsed.rows; $('fileName').textContent=file.name; $('fileInfo').classList.add('show'); $('dataCount').textContent=`${rows.length}행`; $('columnCount').textContent=`${headers.length}열`; buildControls(); updateDataBlock(); renderCurrent(); }
-const uploadZone=$('uploadZone'); $('csvFile').addEventListener('change',e=>{const f=e.target.files?.[0]; if(f) handleFile(f); e.target.value='';}); ['dragenter','dragover'].forEach(ev=>uploadZone.addEventListener(ev,e=>{e.preventDefault();uploadZone.classList.add('drag')})); ['dragleave','dragend'].forEach(ev=>uploadZone.addEventListener(ev,e=>{e.preventDefault();uploadZone.classList.remove('drag')})); uploadZone.addEventListener('drop',e=>{e.preventDefault();uploadZone.classList.remove('drag'); const f=e.dataTransfer?.files?.[0]; if(f) handleFile(f);});
-
-function buildControls(){
-  const opts=allHeaderOptions(), nums=numericHeaderOptions();
-  ['dateCol','areaCol','condCol','noticeCol'].forEach(id=>$(id).innerHTML=opts);
-  ['tempCol','humCol','rainCol','windCol','feelCol'].forEach(id=>$(id).innerHTML=nums);
-  $('dateCol').value=findCol([/날짜|일시|일자|년월일|date|time|tm/i]);
-  const areaIdx=findCol([/지역명|지역|지점|장소|시군구|area|station|loc/i], -1);
-  hasArea = areaIdx>=0;
-  $('areaCol').value = hasArea?areaIdx:0;
-  $('condCol').value=findCol([/날씨상태|상태|기상|일기|condition|weather/i]);
-  $('noticeCol').value=findCol([/뉴스|주의|특보|단계|notice|event|issue/i], Math.min(headers.length-1,0));
-  $('tempCol').value=findCol([/평균.*기온|기온|온도|temp/i], numericColumns()[0]?.i??0);
-  $('humCol').value=findCol([/습도|hum/i], numericColumns()[0]?.i??0);
-  $('rainCol').value=findCol([/강수|비|rain/i], numericColumns()[0]?.i??0);
-  $('windCol').value=findCol([/풍속|바람|wind/i], numericColumns()[0]?.i??0);
-  $('feelCol').value=findCol([/체감|feel/i], Number($('tempCol').value||0));
-  $('areaValueField').classList.toggle('hidden', !hasArea);
-  updateDateAreaOptions();
+function acceptedCSVFiles(fileList){
+  return Array.from(fileList||[])
+    .filter(file=>/\.(csv|txt)$/i.test(file.name))
+    .sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true,sensitivity:'base'}));
 }
-function uniqueValues(idx){ return [...new Set(rows.map(r=>r[idx]).filter(v=>String(v).trim()!==''))]; }
-function updateDateAreaOptions(keep=true){
-  if(!rows.length) return;
-  const dIdx=Number($('dateCol').value); const oldD=$('dateValue').value;
-  const dates=uniqueValues(dIdx);
-  $('dateValue').innerHTML=dates.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join('');
-  if(keep&&dates.includes(oldD)) $('dateValue').value=oldD;
-  if(hasArea){
-    const aIdx=Number($('areaCol').value); const oldA=$('areaValue').value;
-    const areas=uniqueValues(aIdx);
-    $('areaValue').innerHTML=areas.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join('');
-    if(keep&&areas.includes(oldA)) $('areaValue').value=oldA;
-  } else {
-    $('areaValue').innerHTML='<option value="광명">광명</option>';
+function sortDatasets(){ datasets.sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true,sensitivity:'base'})); }
+function datasetById(id){ return datasets.find(d=>d.id===String(id))||null; }
+function datasetRows(selectId){
+  const select=$(selectId), dataset=select?datasetById(select.value):null;
+  return dataset?dataset.rows:[];
+}
+function headerSignature(){ return JSON.stringify(headers); }
+// 올라와 있는 모든 CSV의 헤더를 합쳐 공통 열 구조를 만들고, 파일마다 행을 그 순서에 맞춰 다시 정렬합니다.
+function rebuildDatasetRows(){
+  const union=[];
+  for(const d of datasets){ for(const header of d.rawHeaders){ if(!union.includes(header)) union.push(header); } }
+  headers=union;
+  for(const d of datasets){
+    const headerIndex=new Map(d.rawHeaders.map((header,i)=>[header,i]));
+    d.rows=d.rawRows.map((sourceRow,rowIndex)=>{
+      const aligned=headers.map(header=>{
+        const sourceIndex=headerIndex.get(header);
+        return sourceIndex===undefined?'':(sourceRow[sourceIndex]??'');
+      });
+      aligned.__datasetId=d.id;
+      aligned.__datasetName=d.name;
+      aligned.__sourceRow=rowIndex+1;
+      return aligned;
+    });
+    d.rowCount=d.rows.length;
+  }
+  rows=datasets.flatMap(d=>d.rows);
+}
+function renderUploadedFileLists(){
+  const summary=datasets.length?`${datasets.length}개 파일 · 총 ${rows.length.toLocaleString()}행`:'-';
+  ['fileName','graphFileName'].forEach(id=>{ const el=$(id); if(el){el.textContent=summary;el.title=datasets.map(d=>d.name).join('\n');} });
+  ['fileInfo','graphFileInfo'].forEach(id=>{ const el=$(id); if(el) el.classList.toggle('show',!!datasets.length); });
+  const chips=datasets.map(d=>{
+    const warn=d.rowCount!==EXPECTED_ROWS_PER_FILE;
+    return `<span class="file-chip${warn?' warn':''}" title="${escapeHTML(d.name)}"><span>${escapeHTML(d.name)}</span><em>${d.rowCount}행${warn?' · 확인':''}</em><button class="chip-x" type="button" data-remove="${escapeHTML(d.id)}" title="${escapeHTML(d.name)} 빼기" aria-label="${escapeHTML(d.name)} 목록에서 빼기">&#10005;</button></span>`;
+  }).join('');
+  [['fileList',chips],['graphFileList',chips]].forEach(([id,html])=>{ const el=$(id); if(el){el.innerHTML=html;el.classList.toggle('show',!!datasets.length);} });
+  $('dataCount').textContent=`${datasets.length}개 파일`;
+  $('columnCount').textContent=`${headers.length}열`;
+  $('graphFileCount').textContent=`${datasets.length}개 파일`;
+  $('graphDataCount').textContent=`${rows.length.toLocaleString()}행`;
+  $('graphColumnCount').textContent=`${headers.length}열`;
+  const slotText=!datasets.length
+    ? `아직 올린 파일이 없어요. 최대 ${MAX_CSV_FILES}개까지 추가할 수 있습니다.`
+    : (datasets.length>=MAX_CSV_FILES
+        ? `${MAX_CSV_FILES}개를 모두 채웠어요. 다른 파일을 올리려면 목록에서 X 버튼으로 빼주세요.`
+        : `지금 ${datasets.length}개 · ${MAX_CSV_FILES-datasets.length}개 더 추가할 수 있어요.`);
+  ['uploadSlotNote','graphUploadSlotNote'].forEach(id=>{ const el=$(id); if(el) el.textContent=slotText; });
+}
+// 이미 올린 파일은 그대로 두고 새 파일만 더합니다(같은 이름이면 최신 내용으로 교체).
+async function handleFiles(fileList){
+  try{
+    const files=acceptedCSVFiles(fileList);
+    if(!files.length){ alert('CSV 또는 TXT 파일을 선택해주세요.'); return; }
+
+    const parsedFiles=[], failed=[];
+    for(const file of files){
+      const text=await decodeFile(file), parsed=parseCSV(text);
+      if(!parsed.headers.length){ failed.push(`${file.name}: 첫 줄에서 열 이름을 찾지 못했어요.`); continue; }
+      parsedFiles.push({name:file.name,headers:parsed.headers,rows:parsed.rows});
+    }
+    if(!parsedFiles.length) throw new Error(failed.join('\n')||'읽을 수 있는 CSV가 없습니다.');
+
+    const wasEmpty=!datasets.length, beforeHeaders=headerSignature();
+    const skipped=[];
+    for(const item of parsedFiles){
+      const found=datasets.findIndex(d=>d.name===item.name);
+      if(found>=0){ datasets[found].rawHeaders=item.headers; datasets[found].rawRows=item.rows; continue; }
+      if(datasets.length>=MAX_CSV_FILES){ skipped.push(item.name); continue; }
+      datasets.push({id:`ds${++datasetSeq}`,name:item.name,rawHeaders:item.headers,rawRows:item.rows,rows:[],rowCount:item.rows.length});
+    }
+    sortDatasets();
+    rebuildDatasetRows();
+
+    // 열 구조가 그대로면 사용자가 고른 파일·날짜·열 설정을 유지합니다.
+    refreshAfterDatasetChange(!wasEmpty && headerSignature()===beforeHeaders);
+
+    const notes=[];
+    if(skipped.length) notes.push(`CSV는 최대 ${MAX_CSV_FILES}개까지 올릴 수 있어 아래 파일은 추가하지 못했어요.\n· ${skipped.join('\n· ')}\n\n목록에서 필요 없는 파일을 뺀 뒤 다시 올려주세요.`);
+    if(failed.length) notes.push(failed.join('\n'));
+    if(notes.length) alert(notes.join('\n\n'));
+  }catch(err){
+    console.error(err); alert(`CSV 파일을 읽지 못했습니다.\n${err.message||'파일 형식과 첫 번째 줄의 열 이름을 확인해주세요.'}`);
   }
 }
-['dateCol','areaCol'].forEach(id=>$(id).addEventListener('change',()=>{updateDateAreaOptions(false); renderCurrent();}));
-['condCol','tempCol','humCol','rainCol','windCol','feelCol','noticeCol','dateValue','areaValue'].forEach(id=>$(id).addEventListener('input',renderCurrent));
-
-function normalRowIndex(){
-  if(!rows.length) return -1;
-  const dIdx=Number($('dateCol').value), d=$('dateValue').value;
-  if(hasArea){ const aIdx=Number($('areaCol').value), a=$('areaValue').value; return rows.findIndex(r=>String(r[dIdx])===String(d)&&String(r[aIdx])===String(a)); }
-  return rows.findIndex(r=>String(r[dIdx])===String(d));
+function refreshAfterDatasetChange(keepSelection){
+  renderUploadedFileLists();
+  buildControls(!!keepSelection);
+  updateDataBlock(); renderCurrent(); renderGraphView();
 }
-function currentWeatherData(){ const idx=normalRowIndex(); if(idx<0)return null; const r=rows[idx]; const get=id=>r[Number($(id).value)]??''; return {rowNo:idx+1, row:r, date:get('dateCol'), area:hasArea?get('areaCol'):'광명', cond:get('condCol'), temp:get('tempCol'), hum:get('humCol'), rain:get('rainCol'), wind:get('windCol'), feel:get('feelCol'), notice:get('noticeCol')}; }
+function removeDataset(id){
+  const before=datasets.length, beforeHeaders=headerSignature();
+  datasets=datasets.filter(d=>d.id!==String(id));
+  if(datasets.length===before) return;
+  if(!datasets.length){ clearAllDatasets(); return; }
+  rebuildDatasetRows();
+  refreshAfterDatasetChange(headerSignature()===beforeHeaders);
+}
+function clearAllDatasets(){
+  if(!datasets.length) return;
+  datasets=[]; headers=[]; rows=[]; datasetSeq=0;
+  refreshAfterDatasetChange(false);
+}
+function bindUploadZone(zoneId,inputId){
+  const zone=$(zoneId), input=$(inputId); if(!zone||!input) return;
+  input.addEventListener('change',e=>{ const files=e.target.files; if(files?.length) handleFiles(files); e.target.value=''; });
+  ['dragenter','dragover'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('drag')}));
+  ['dragleave','dragend'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('drag')}));
+  zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag'); const files=e.dataTransfer?.files; if(files?.length) handleFiles(files);});
+}
+bindUploadZone('uploadZone','csvFile');
+bindUploadZone('graphUploadZone','graphCsvFile');
+['fileList','graphFileList'].forEach(id=>{
+  const el=$(id); if(!el) return;
+  el.addEventListener('click',e=>{ const btn=e.target.closest('button[data-remove]'); if(btn) removeDataset(btn.dataset.remove); });
+});
+['clearFilesBtn','graphClearFilesBtn'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('click',clearAllDatasets); });
+
+const COLUMN_SELECT_IDS=['dateCol','areaCol','condCol','noticeCol','tempCol','humCol','rainCol','windCol','feelCol'];
+// 셀렉트에 없는 열 번호를 넣으면 값이 조용히 빈 문자열(=0열)로 바뀌므로, 실제 있는 옵션만 고릅니다.
+function setSelectIndex(id,wanted,fallback){
+  const el=$(id); if(!el) return;
+  const has=v=>v!==''&&v!=null&&Array.prototype.some.call(el.options,o=>o.value===String(v));
+  if(has(wanted)) el.value=String(wanted);
+  else if(has(fallback)) el.value=String(fallback);
+  else if(el.options.length) el.selectedIndex=0;
+}
+function buildControls(keep=false){
+  if(!headers.length){
+    COLUMN_SELECT_IDS.forEach(id=>{ const el=$(id); if(el){ el.innerHTML='<option>CSV 필요</option>'; el.disabled=true; } });
+    hasArea=false;
+    $('areaValueField').classList.add('hidden');
+    buildDatasetSelectors(false); updateDateAreaOptions(false); buildGraphControls(false);
+    return;
+  }
+  const prev={};
+  COLUMN_SELECT_IDS.forEach(id=>{ prev[id]=keep?$(id).value:''; });
+  const opts=allHeaderOptions(), nums=numericHeaderOptions();
+  ['dateCol','areaCol','condCol','noticeCol'].forEach(id=>{ $(id).innerHTML=opts; $(id).disabled=false; });
+  ['tempCol','humCol','rainCol','windCol','feelCol'].forEach(id=>{ $(id).innerHTML=nums; $(id).disabled=false; });
+  const firstNum=numericColumns()[0]?.i??0;
+  const areaIdx=findCol([/지역명|지역|지점|장소|시군구|area|station|loc/i], -1);
+  hasArea = areaIdx>=0;
+  const auto={
+    dateCol:findCol([/날짜|일시|일자|년월일|date|time|tm/i]),
+    areaCol:hasArea?areaIdx:0,
+    condCol:findCol([/날씨상태|상태|기상|일기|condition|weather/i]),
+    noticeCol:findCol([/뉴스|주의|특보|단계|notice|event|issue/i], Math.max(headers.length-1,0)),
+    tempCol:findCol([/평균.*기온|기온|온도|temp/i], firstNum),
+    humCol:findCol([/습도|hum/i], firstNum),
+    rainCol:findCol([/강수|비|rain/i], firstNum),
+    windCol:findCol([/풍속|바람|wind/i], firstNum)
+  };
+  Object.keys(auto).forEach(id=>setSelectIndex(id, prev[id]!==''?prev[id]:auto[id], auto[id]));
+  const feelAuto=findCol([/체감|feel/i], Number($('tempCol').value||firstNum));
+  setSelectIndex('feelCol', prev.feelCol!==''?prev.feelCol:feelAuto, feelAuto);
+  $('areaValueField').classList.toggle('hidden', !hasArea);
+  buildDatasetSelectors(keep);
+  updateDateAreaOptions(keep);
+  buildGraphControls(keep);
+}
+function uniqueValues(idx,source=rows){ return [...new Set(source.map(r=>r[idx]).filter(v=>String(v).trim()!==''))]; }
+function buildDatasetSelectors(keep=true){
+  const options=datasets.map(d=>`<option value="${d.id}">${escapeHTML(d.name)} · ${d.rowCount}행</option>`).join('');
+  ['datasetValue','graphDatasetValue'].forEach(id=>{
+    const select=$(id); if(!select) return;
+    const old=select.value;
+    select.innerHTML=options||'<option>CSV 필요</option>';
+    select.disabled=!datasets.length;
+    if(datasets.length){
+      const valid=datasets.some(d=>d.id===old);
+      select.value=keep&&valid?old:datasets[0].id;
+    }
+  });
+}
+function updateDateAreaOptions(keep=true){
+  const source=datasetRows('datasetValue');
+  if(!source.length){
+    $('dateValue').innerHTML='<option>CSV 필요</option>'; $('dateValue').disabled=true;
+    $('areaValue').innerHTML='<option>CSV 필요</option>'; $('areaValue').disabled=true;
+    return;
+  }
+  const dIdx=Number($('dateCol').value), oldD=$('dateValue').value;
+  let dateSource=source;
+  if(hasArea){
+    const aIdx=Number($('areaCol').value), oldA=$('areaValue').value, areas=uniqueValues(aIdx,source);
+    $('areaValue').innerHTML=areas.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join('');
+    $('areaValue').value=keep&&areas.includes(oldA)?oldA:(areas[0]??'');
+    $('areaValue').disabled=!areas.length;
+    dateSource=source.filter(r=>String(r[aIdx])===String($('areaValue').value));
+  }else{
+    $('areaValue').innerHTML='<option value="금천구">금천구</option>';
+    $('areaValue').disabled=true;
+  }
+  const dates=uniqueValues(dIdx,dateSource);
+  $('dateValue').innerHTML=dates.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join('');
+  $('dateValue').value=keep&&dates.includes(oldD)?oldD:(dates[0]??'');
+  $('dateValue').disabled=!dates.length;
+}
+$('datasetValue').addEventListener('change',()=>{updateDateAreaOptions(false);renderCurrent();});
+$('graphDatasetValue').addEventListener('change',()=>{buildGraphControls(false);renderGraphView();});
+['dateCol','areaCol'].forEach(id=>$(id).addEventListener('change',()=>{updateDateAreaOptions(false);buildGraphControls(false);renderCurrent();renderGraphView();}));
+$('areaValue').addEventListener('change',()=>{updateDateAreaOptions(true);renderCurrent();});
+['condCol','noticeCol','dateValue'].forEach(id=>$(id).addEventListener('input',renderCurrent));
+['tempCol','humCol','rainCol','windCol','feelCol'].forEach(id=>$(id).addEventListener('input',()=>{renderCurrent();updateGraphMappingNote();renderGraphView();}));
+
+function normalRowSelection(){
+  const source=datasetRows('datasetValue');
+  if(!source.length) return null;
+  const dIdx=Number($('dateCol').value), d=$('dateValue').value;
+  const index=hasArea
+    ? source.findIndex(r=>String(r[dIdx])===String(d)&&String(r[Number($('areaCol').value)])===String($('areaValue').value))
+    : source.findIndex(r=>String(r[dIdx])===String(d));
+  if(index<0) return null;
+  const row=source[index];
+  return {row,index,rowNo:row.__sourceRow||index+1,fileName:row.__datasetName||datasetById($('datasetValue').value)?.name||'-'};
+}
+function currentWeatherData(){
+  const selected=normalRowSelection(); if(!selected) return null;
+  const r=selected.row, get=id=>r[Number($(id).value)]??'';
+  return {rowNo:selected.rowNo,fileName:selected.fileName,row:r,date:get('dateCol'),area:hasArea?get('areaCol'):'금천구',cond:get('condCol'),temp:get('tempCol'),hum:get('humCol'),rain:get('rainCol'),wind:get('windCol'),feel:get('feelCol'),notice:get('noticeCol')};
+}
 function renderCurrent(){ if(!rows.length){ $('emptyPreview').classList.remove('hidden'); $('previewArea').classList.add('hidden'); lastPacket=''; updateSendAvailability(); return; } $('emptyPreview').classList.add('hidden'); $('previewArea').classList.remove('hidden'); renderWeatherView(); updateSendAvailability(); }
-function renderWeatherView(){ const w=currentWeatherData(); if(!w){ $('selectedTableWrap').innerHTML='<div class="empty" style="margin:14px"><div><b>고른 날짜의 데이터가 없어요.</b><span>날짜(또는 지역)를 다시 골라주세요.</span></div></div>'; $('previewTitle').textContent='고른 날씨 미리보기'; $('previewMeta').textContent='-'; lastPacket=''; return; } const cols=[['날짜',w.date],['지역',w.area],['날씨상태',w.cond],['기온',w.temp],['습도',w.hum],['강수량',w.rain],['풍속',w.wind],['체감온도',w.feel],['뉴스/주의',w.notice]]; renderKeyValueTable(w.rowNo, cols); $('previewTitle').textContent=`${w.date} · ${w.area}`; $('previewMeta').textContent=`CSV ${w.rowNo}행`; $('selectedNote').textContent='LCD에는 날씨 아이콘과 기온·습도·강수량·풍속이 카드 형태로 표시됩니다.'; $('mType').textContent='날씨 카드'; $('mCount').textContent='1개'; $('mX').textContent=w.area; $('mY').textContent=w.cond; $('sendHint').textContent='고른 날짜·지역의 날씨 카드가 LCD에 표시됩니다.'; lastPacket=buildWeatherPacket(w); }
+function renderWeatherView(){ const w=currentWeatherData(); if(!w){ $('selectedTableWrap').innerHTML='<div class="empty" style="margin:14px"><div><b>고른 날짜의 데이터가 없어요.</b><span>CSV 파일·날짜·지역을 다시 골라주세요.</span></div></div>'; $('previewTitle').textContent='고른 날씨 미리보기'; $('previewMeta').textContent='-'; lastPacket=''; return; } const cols=[['CSV 파일',w.fileName],['날짜',w.date],['지역',w.area],['날씨상태',w.cond],['기온',w.temp],['습도',w.hum],['강수량',w.rain],['풍속',w.wind],['체감온도',w.feel],['뉴스/주의',w.notice]]; renderKeyValueTable(w.rowNo, cols); $('previewTitle').textContent=`${w.date} · ${w.area}`; $('previewMeta').textContent=`${w.fileName} · ${w.rowNo}행`; $('selectedNote').textContent='선택한 CSV의 한 행을 날씨 카드로 변환합니다. LCD에는 날씨 아이콘과 기온·습도·강수량·풍속이 표시됩니다.'; $('mType').textContent='날씨 카드'; $('mCount').textContent='1개'; $('mX').textContent=w.area; $('mY').textContent=w.cond; $('sendHint').textContent='고른 CSV·날짜·지역의 날씨 카드가 LCD에 표시됩니다.'; lastPacket=buildWeatherPacket(w); }
 function renderKeyValueTable(rowNo, cols){ let html='<table class="selected-table"><thead><tr><th>행</th><th>항목</th><th>CSV 값</th><th>LCD 변환</th></tr></thead><tbody>'; for(const [k,v] of cols){ html+=`<tr><td>${rowNo}</td><td>${escapeHTML(k)}</td><td title="${escapeHTML(v)}">${escapeHTML(v)}</td><td>${escapeHTML(toLCDToken(k,v))}</td></tr>`; } html+='</tbody></table>'; $('selectedTableWrap').innerHTML=html; }
 function buildWeatherPacket(w){ const date=shortDate(w.date); const area=asciiRegion(w.area); const cond=asciiCondition(w.cond,w.rain,w.wind,w.temp); const temp=safeNumber(toNum(w.temp)); const hum=safeNumber(toNum(w.hum)); const rain=safeNumber(toNum(w.rain)); const wind=safeNumber(toNum(w.wind)); const feel=safeNumber(toNum(w.feel)); const notice=asciiNotice(w.notice||w.cond); return `W2|${date}|${area}|${cond}|${temp}|${hum}|${rain}|${wind}|${feel}|${notice}`; }
-function updateSendAvailability(){ const conn=!!(port&&writer); const tb=$('sendBtn'); if(tb) tb.disabled=!(conn&&rows.length&&lastPacket); const bb=$('basicSendBtn'); if(bb) bb.disabled=!(conn&&basicPacket); }
+function updateSendAvailability(){ const conn=!!(port&&writer); const tb=$('sendBtn'); if(tb) tb.disabled=!(conn&&rows.length&&lastPacket); const bb=$('basicSendBtn'); if(bb) bb.disabled=!(conn&&basicPacket); const gb=$('graphSendBtn'); if(gb) gb.disabled=!(conn&&lastGraphPacket); }
 $('sendBtn').addEventListener('click',()=>sendPacket(lastPacket,'tool'));
 
-function updateDataBlock(){ const nums=numericColumns().length; $('statRows').textContent=rows.length.toLocaleString(); $('statCols').textContent=headers.length.toLocaleString(); $('statNums').textContent=nums.toLocaleString(); $('statPreview').textContent='클릭'; $('dataBlockTitle').textContent='CSV 전체 데이터 확인'; $('dataBlockHint').textContent='클릭하면 전체 표를 별도 창에서 확인합니다. 열이 많아도 창 안에서만 가로 스크롤됩니다.'; $('openDataBtn').disabled=!rows.length; $('dataBlock').classList.toggle('disabled',!rows.length); }
-function renderFullTable(){ if(!headers.length){ $('tableWrap').innerHTML='<div class="empty" style="margin:16px"><div><b>데이터 없음</b><span>CSV 파일을 먼저 업로드하세요.</span></div></div>'; return; } let html='<table><thead><tr><th>#</th>'+headers.map(h=>`<th title="${escapeHTML(h)}">${escapeHTML(h)}</th>`).join('')+'</tr></thead><tbody>'; for(let i=0;i<rows.length;i++) html+=`<tr><td>${i+1}</td>`+headers.map((_,j)=>`<td title="${escapeHTML(rows[i][j]??'')}">${escapeHTML(rows[i][j]??'')}</td>`).join('')+'</tr>'; html+='</tbody></table>'; $('tableWrap').innerHTML=html; }
-function openDataModal(){ if(!rows.length)return; $('modalMeta').textContent=`${rows.length.toLocaleString()}행 · ${headers.length.toLocaleString()}열`; renderFullTable(); $('dataModal').classList.remove('hidden'); }
+function updateDataBlock(){ const nums=numericColumns().length; $('statFiles').textContent=datasets.length.toLocaleString(); $('statRows').textContent=rows.length.toLocaleString(); $('statCols').textContent=headers.length.toLocaleString(); $('statNums').textContent=nums.toLocaleString(); $('dataBlockTitle').textContent=datasets.length?`${datasets.length}개 CSV 전체 데이터 확인`:'CSV를 업로드하면 전체 데이터를 볼 수 있습니다.'; $('dataBlockHint').textContent=datasets.length?'파일별 행 번호와 원본 데이터를 한 창에서 확인합니다.':'최대 10개, 파일당 50행까지 불러올 수 있습니다. 1개씩 나눠 올려도 누적됩니다.'; $('openDataBtn').disabled=!rows.length; $('dataBlock').classList.toggle('disabled',!rows.length); }
+function renderFullTable(){ if(!headers.length){ $('tableWrap').innerHTML='<div class="empty" style="margin:16px"><div><b>데이터 없음</b><span>CSV 파일을 먼저 업로드하세요.</span></div></div>'; return; } let html='<table><thead><tr><th>#</th><th>CSV 파일</th><th>파일 행</th>'+headers.map(h=>`<th title="${escapeHTML(h)}">${escapeHTML(h)}</th>`).join('')+'</tr></thead><tbody>'; let globalNo=0; for(const dataset of datasets){ for(const row of dataset.rows){ globalNo++; html+=`<tr><td>${globalNo}</td><td title="${escapeHTML(dataset.name)}">${escapeHTML(dataset.name)}</td><td>${row.__sourceRow||''}</td>`+headers.map((_,j)=>`<td title="${escapeHTML(row[j]??'')}">${escapeHTML(row[j]??'')}</td>`).join('')+'</tr>'; } } html+='</tbody></table>'; $('tableWrap').innerHTML=html; }
+function openDataModal(){ if(!rows.length)return; $('modalMeta').textContent=`${datasets.length}개 파일 · 총 ${rows.length.toLocaleString()}행 · ${headers.length.toLocaleString()}열`; renderFullTable(); $('dataModal').classList.remove('hidden'); }
 function closeDataModal(){ $('dataModal').classList.add('hidden'); }
 $('openDataBtn').addEventListener('click',openDataModal); $('dataBlock').addEventListener('click',e=>{ if(e.target.id!=='openDataBtn')openDataModal(); }); $('closeDataBtn').addEventListener('click',closeDataModal); $('dataModal').addEventListener('click',e=>{if(e.target===$('dataModal'))closeDataModal();}); document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDataModal();});
 
-function shortLabel(v,max=7){ const s=String(v??'').trim()||'-'; if(/^\d{4}-\d{2}-\d{2}/.test(s)){ const m=s.match(/(\d{2}-\d{2})(?:\s+)?(\d{2}:\d{2})?/); return m?(m[2]?m[2]:m[1]):s.slice(5,10);} return s.length>max?s.slice(0,max):s; }
-function shortDate(v){ const s=String(v??'').trim(); const m=s.match(/\d{4}-(\d{2}-\d{2})/); return m?m[1]:safeToken(s).slice(0,10); }
-function asciiRegion(v){ const s=String(v??''); const map=[['광명','GWANGMYEONG'],['서울','SEOUL'],['부산','BUSAN'],['대구','DAEGU'],['광주','GWANGJU'],['대전','DAEJEON'],['제주','JEJU'],['인천','INCHEON'],['강릉','GANGNEUNG'],['수원','SUWON'],['울산','ULSAN'],['세종','SEJONG']]; for(const [ko,en] of map){if(s.includes(ko))return en;} const ascii=s.replace(/[^A-Za-z0-9_ -]/g,'').trim(); return safeToken(ascii||'AREA'); }
+function dateOnly(v){ const s=String(v??'').trim(); const m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if(!m) return s; return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`; }
+function shortLabel(v,max=7){ const d=dateOnly(v); if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d.slice(5); const s=String(v??'').trim()||'-'; return s.length>max?s.slice(0,max):s; }
+function shortDate(v){ const d=dateOnly(v); return /^\d{4}-\d{2}-\d{2}$/.test(d)?d.slice(5):safeToken(d).slice(0,10); }
+// 금천구 10개 동을 먼저 찾고(독산1동 -> DOKSAN1), 없으면 시·도 이름으로 넘어갑니다.
+const REGION_MAP=[['가산','GASAN'],['독산','DOKSAN'],['시흥','SIHEUNG'],['금천','GEUMCHEON'],['서울','SEOUL'],['부산','BUSAN'],['대구','DAEGU'],['광주','GWANGJU'],['대전','DAEJEON'],['제주','JEJU'],['인천','INCHEON'],['강릉','GANGNEUNG'],['수원','SUWON'],['울산','ULSAN'],['세종','SEJONG']];
+function asciiRegion(v){
+  const s=String(v??'').trim();
+  for(const [ko,en] of REGION_MAP){
+    if(!s.includes(ko)) continue;
+    const num=s.slice(s.indexOf(ko)+ko.length).match(/(\d{1,2})/);
+    return safeToken(num?en+num[1]:en);
+  }
+  const ascii=s.replace(/[^A-Za-z0-9_ -]/g,'').trim();
+  return safeToken(ascii||'AREA');
+}
 function asciiCondition(cond,rain,wind,temp){ const s=String(cond??''); const r=toNum(rain), w=toNum(wind), t=toNum(temp); if(/폭우|호우|집중|태풍|storm/i.test(s)||r>=50)return 'STORM'; if(/비|강수|rain/i.test(s)||r>0)return 'RAIN'; if(/폭염|heat|hot/i.test(s)||t>=33)return 'HEAT'; if(/강풍|wind/i.test(s)||w>=10)return 'WIND'; if(/구름|흐림|cloud/i.test(s))return 'CLOUD'; if(/눈|snow/i.test(s))return 'SNOW'; return 'SUN'; }
 function asciiNotice(v){ const s=String(v??''); if(/위험|폭우|집중호우|호우|태풍/i.test(s))return 'WARNING'; if(/주의|폭염|강풍|건조/i.test(s))return 'CAUTION'; if(/관심/i.test(s))return 'WATCH'; return 'WEATHER'; }
 function asciiTitle(v){ const s=String(v??''); if(/요약|SUMMARY/i.test(s))return 'SUMMARY'; if(/폭염.*여부|폭염.*특보|heat/i.test(s))return 'HEAT'; if(/최고.*체감|체감|feel/i.test(s))return 'FEEL_TEMP'; if(/최고.*기온|max.*temp/i.test(s))return 'MAX_TEMP'; if(/평균.*기온|avg.*temp|mean.*temp/i.test(s))return 'AVG_TEMP'; if(/최저.*기온|min.*temp/i.test(s))return 'MIN_TEMP'; if(/기온|온도|temp/i.test(s))return 'TEMP'; if(/상대.*습도|습도|hum/i.test(s))return 'HUM'; if(/강수|비|rain/i.test(s))return 'RAIN'; if(/풍속|바람|wind/i.test(s))return 'WIND'; if(/자외선|uv/i.test(s))return 'UV'; if(/일시|날짜|시간|date|time/i.test(s))return 'DATE'; if(/지점|지역|장소|station|area|loc/i.test(s))return 'AREA'; const ascii=s.replace(/[^A-Za-z0-9_ -]/g,'').trim(); return safeToken(ascii||'DATA'); }
@@ -876,9 +1808,342 @@ function safeNumber(v){ const n=Number(v); return Number.isFinite(n)?Number(n.to
 function fmt(n){ return Number.isInteger(Number(n))?Number(n).toLocaleString():Number(n).toFixed(1); }
 function escapeHTML(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 let hasArea=false;
+
+// ===== ③ 그래프로 비교하기 =====
+function currentGraphMetric(){ return GRAPH_METRICS.find(m=>m.key===graphMetricKey)||GRAPH_METRICS[0]; }
+function renderGraphMetricButtons(){
+  $('graphMetricGrid').innerHTML=GRAPH_METRICS.map(m=>`<button type="button" class="graph-metric-btn${m.key===graphMetricKey?' on':''}" data-key="${m.key}"><span class="gm-emoji">${m.emoji}</span><span class="gm-text"><b>${m.label}</b><span>${m.unit} 날짜별 비교</span></span></button>`).join('');
+  $('graphMetricGrid').querySelectorAll('.graph-metric-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    graphMetricKey=btn.dataset.key;
+    graphType=currentGraphMetric().defaultType;
+    graphAxisMode='AUTO';
+    if($('graphYMin')) $('graphYMin').value='';
+    if($('graphYMax')) $('graphYMax').value='';
+    renderGraphMetricButtons(); updateGraphTypeTabs(); updateGraphAxisModeUI(); updateGraphMappingNote(); renderGraphView();
+  }));
+}
+function updateGraphTypeTabs(){ $('graphTypeTabs').querySelectorAll('button').forEach(btn=>btn.classList.toggle('on',btn.dataset.type===graphType)); }
+function graphRowsForArea(){
+  const source=datasetRows('graphDatasetValue');
+  if(!source.length) return [];
+  if(!hasArea) return source;
+  const areaIdx=Number($('areaCol').value), area=$('graphAreaValue').value;
+  return source.filter(r=>String(r[areaIdx])===String(area));
+}
+function graphDateEntries(){
+  const dateIdx=Number($('dateCol').value), source=graphRowsForArea();
+  const entries=[];
+  for(let i=0;i<source.length;i++){
+    const row=source[i], raw=String(row[dateIdx]??'').trim();
+    if(!raw) continue;
+    entries.push({date:raw,row,rowNo:Number(row.__sourceRow)||i+1});
+  }
+  return entries;
+}
+function buildGraphEndOptions(keep=true){
+  const entries=graphDateEntries(), startSelect=$('graphStartDate'), endSelect=$('graphEndDate');
+  if(entries.length<MIN_VISIBLE_GRAPH_POINTS){
+    endSelect.innerHTML='<option>데이터 부족</option>'; endSelect.disabled=true; return;
+  }
+
+  // 각 CSV의 앞 50행 안에서 끝 행을 자유롭게 고를 수 있습니다.
+  const selectableCount=Math.min(entries.length,MAX_VISIBLE_GRAPH_POINTS);
+  const start=Math.max(0,Math.min(selectableCount-1,Number(startSelect.value)||0));
+  const minEnd=start+MIN_VISIBLE_GRAPH_POINTS-1;
+  const maxEnd=selectableCount-1;
+  const old=Number(endSelect.value);
+  const options=[];
+
+  for(let i=minEnd;i<=maxEnd;i++) options.push(i);
+  endSelect.innerHTML=options.map(i=>`<option value="${i}">${entries[i].rowNo}행 · ${escapeHTML(dateOnly(entries[i].date))}</option>`).join('');
+
+  // 처음 열거나 시작 행을 바꿀 때는 12행 범위를 기본값으로 유지합니다.
+  const defaultEnd=Math.min(maxEnd,start+DEFAULT_VISIBLE_GRAPH_POINTS-1);
+  const next=keep&&options.includes(old)?old:defaultEnd;
+  if(Number.isFinite(next)) endSelect.value=String(next);
+  endSelect.disabled=!options.length;
+}
+function buildGraphDateOptions(keep=true){
+  const select=$('graphStartDate'), entries=graphDateEntries(), old=Number(select.value);
+  if(entries.length<MIN_VISIBLE_GRAPH_POINTS){
+    select.innerHTML='<option>데이터 부족</option>'; select.disabled=true;
+    $('graphEndDate').innerHTML='<option>데이터 부족</option>'; $('graphEndDate').disabled=true;
+    return;
+  }
+  const selectableCount=Math.min(entries.length,MAX_VISIBLE_GRAPH_POINTS);
+  const maxStart=selectableCount-MIN_VISIBLE_GRAPH_POINTS;
+  const options=[];
+  for(let i=0;i<=maxStart;i++) options.push(i);
+  select.innerHTML=options.map(i=>`<option value="${i}">${entries[i].rowNo}행 · ${escapeHTML(dateOnly(entries[i].date))}</option>`).join('');
+  select.value=keep&&options.includes(old)?String(old):'0';
+  select.disabled=false;
+  buildGraphEndOptions(keep);
+}
+function buildGraphControls(keep=true){
+  const areaField=$('graphAreaField'), areaSelect=$('graphAreaValue'), source=datasetRows('graphDatasetValue');
+  if(!source.length){
+    areaSelect.innerHTML='<option>CSV 필요</option>'; areaSelect.disabled=true;
+    $('graphStartDate').innerHTML='<option>CSV 필요</option>'; $('graphStartDate').disabled=true;
+    $('graphEndDate').innerHTML='<option>CSV 필요</option>'; $('graphEndDate').disabled=true;
+    $('graphRangeNote').innerHTML='<b>표시 구간:</b> 기본 12행으로 열리며, 끝 행은 최대 50행까지 선택할 수 있습니다.';
+    setGraphAxisNote('선택한 데이터에 맞춰 Y축을 자동으로 설정합니다.');
+    areaField.classList.remove('hidden'); updateGraphMappingNote(); return;
+  }
+  if(hasArea){
+    const areaIdx=Number($('areaCol').value), areas=uniqueValues(areaIdx,source), old=areaSelect.value;
+    areaSelect.innerHTML=areas.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join('');
+    areaSelect.value=keep&&areas.includes(old)?old:(areas[0]??'');
+    areaSelect.disabled=!areas.length; areaField.classList.remove('hidden');
+  }else{
+    areaSelect.innerHTML='<option value="ALL">금천구</option>'; areaSelect.disabled=true; areaField.classList.add('hidden');
+  }
+  buildGraphDateOptions(keep); updateGraphMappingNote();
+}
+function updateGraphMappingNote(){
+  const cfg=currentGraphMetric();
+  if(!rows.length){ $('graphMappingNote').innerHTML='<b>열 자동 인식:</b> CSV를 올리면 날짜와 날씨 값의 열을 자동으로 찾습니다.'; return; }
+  const dateHeader=headers[Number($('dateCol').value)]||'-';
+  const valueHeader=headers[Number($(cfg.selectId).value)]||'-';
+  const areaHeader=hasArea?(headers[Number($('areaCol').value)]||'-'):'지역 열 없음';
+  const dataset=datasetById($('graphDatasetValue').value), datasetText=dataset?`${escapeHTML(dataset.name)} · ${dataset.rowCount}행`:'-';
+  $('graphMappingNote').innerHTML=`<b>선택 데이터:</b> ${datasetText} <span style="margin-left:7px"><b>열 자동 인식:</b> 날짜 「${escapeHTML(dateHeader)}」 · 값 「${escapeHTML(valueHeader)}」 · 지역 「${escapeHTML(areaHeader)}」</span> <span style="margin-left:5px">인식이 다르면 ② 실제 데이터의 고급 설정에서 바꿔주세요.</span>`;
+}
+function selectedGraphPoints(){
+  if(!rows.length) return [];
+  const cfg=currentGraphMetric(), valueIdx=Number($(cfg.selectId).value), entries=graphDateEntries();
+  const start=Math.max(0,Number($('graphStartDate').value)||0);
+  const requestedEnd=Number($('graphEndDate').value);
+  const maxEnd=Math.min(entries.length-1,MAX_VISIBLE_GRAPH_POINTS-1);
+  const end=Math.min(maxEnd,Number.isFinite(requestedEnd)?requestedEnd:start+DEFAULT_VISIBLE_GRAPH_POINTS-1);
+  const points=[];
+  for(let i=start;i<=end&&points.length<MAX_VISIBLE_GRAPH_POINTS;i++){
+    const entry=entries[i]; if(!entry) continue;
+    const value=toNum(entry.row[valueIdx]);
+    if(!Number.isFinite(value)) continue;
+    points.push({date:entry.date,label:shortLabel(entry.date,10),value,row:entry.row,rowNo:entry.rowNo,position:i+1});
+  }
+  return points;
+}
+function currentGraphRangeMeta(points=[]){
+  const entries=graphDateEntries();
+  const start=Math.max(0,Number($('graphStartDate').value)||0);
+  const requestedEnd=Number($('graphEndDate').value);
+  const maxEnd=Math.min(entries.length-1,MAX_VISIBLE_GRAPH_POINTS-1);
+  const end=Math.min(maxEnd,Number.isFinite(requestedEnd)?requestedEnd:start+DEFAULT_VISIBLE_GRAPH_POINTS-1);
+  return {
+    startIndex:start,
+    endIndex:end,
+    startRow:entries[start]?.rowNo??'-',
+    endRow:entries[end]?.rowNo??'-',
+    startDate:entries[start]?.date??'',
+    endDate:entries[end]?.date??'',
+    count:points.length||Math.max(0,end-start+1)
+  };
+}
+function graphLCDLabel(v,i){
+  const s=String(v??'').trim();
+  const d=dateOnly(s);
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d.slice(5);
+  return safeLabelForArduino(s,i);
+}
+function buildGraphPacket(points,cfg,axisRange){
+  const labels=points.map((p,i)=>graphLCDLabel(p.date,i));
+  const values=points.map(p=>safeNumber(p.value));
+  const yMin=Number(Number(axisRange?.min).toFixed(2));
+  const yMax=Number(Number(axisRange?.max).toFixed(2));
+  return `G2|${graphType}|${cfg.lcdTitle}|DATE|${points.length}|${labels.join(',')}|${values.join(',')}|${yMin}|${yMax}`;
+}
+function graphNumber(n){
+  const v=Number(n); if(!Number.isFinite(v)) return '-';
+  if(Math.abs(v)>=1000) return Math.round(v).toLocaleString();
+  return Number.isInteger(v)?String(v):v.toFixed(1);
+}
+function graphValue(n,cfg){ return `${graphNumber(n)}${cfg.unit}`; }
+function svgText(s){ return escapeHTML(String(s)); }
+function calculateAutoAxis(points){
+  const values=points.map(p=>p.value), rawMin=Math.min(...values), rawMax=Math.max(...values);
+  let min=rawMin,max=rawMax;
+  if(graphType==='BAR'){
+    if(min>=0) min=0; if(max<=0) max=0;
+    const span=max-min||1;
+    if(max>0) max+=span*.08;
+    if(min<0) min-=span*.08;
+  }else{
+    const span=max-min||1, pad=Math.max(span*.12,.5); min-=pad; max+=pad;
+  }
+  if(max===min){max+=1;min-=1;}
+  return {min,max,rawMin,rawMax,valid:true,mode:'AUTO'};
+}
+function formatAxisInput(value){
+  if(!Number.isFinite(value)) return '';
+  const rounded=Math.abs(value)>=100?Math.round(value):Number(value.toFixed(1));
+  return String(rounded);
+}
+function updateGraphAxisModeUI(){
+  $('graphAxisModeTabs').querySelectorAll('button[data-axis-mode]').forEach(btn=>btn.classList.toggle('on',btn.dataset.axisMode===graphAxisMode));
+  const manual=graphAxisMode==='MANUAL';
+  $('graphYMin').disabled=!manual; $('graphYMax').disabled=!manual;
+}
+function setGraphAxisNote(text,kind=''){
+  const el=$('graphAxisNote'); if(!el) return;
+  el.className='graph-axis-note'+(kind?' '+kind:''); el.textContent=text;
+}
+function numericInputValue(id){
+  const raw=String($(id).value??'').trim();
+  if(raw==='') return NaN;
+  const value=Number(raw);
+  return Number.isFinite(value)?value:NaN;
+}
+function resolveGraphAxis(points,cfg){
+  const auto=calculateAutoAxis(points);
+  if(graphAxisMode==='AUTO'){
+    $('graphYMin').value=formatAxisInput(auto.min); $('graphYMax').value=formatAxisInput(auto.max);
+    setGraphAxisNote(`자동 범위 ${graphNumber(auto.min)} ~ ${graphNumber(auto.max)}${cfg.unit} · 선택값을 모두 표시합니다.`,'ok');
+    return auto;
+  }
+  if($('graphYMin').value===''&&$('graphYMax').value===''){
+    $('graphYMin').value=formatAxisInput(auto.min); $('graphYMax').value=formatAxisInput(auto.max);
+  }
+  const min=numericInputValue('graphYMin'), max=numericInputValue('graphYMax');
+  if(!Number.isFinite(min)||!Number.isFinite(max)||min>=max){
+    const message='Y축 최솟값은 최댓값보다 작아야 합니다.'; setGraphAxisNote(message,'err');
+    return {...auto,valid:false,message};
+  }
+  if(min>auto.rawMin||max<auto.rawMax){
+    const message=`선택 데이터 ${graphNumber(auto.rawMin)} ~ ${graphNumber(auto.rawMax)}${cfg.unit}가 모두 들어오도록 범위를 넓혀주세요.`;
+    setGraphAxisNote(message,'err');
+    return {...auto,valid:false,message};
+  }
+  setGraphAxisNote(`직접 범위 ${graphNumber(min)} ~ ${graphNumber(max)}${cfg.unit} · 실제값 ${graphNumber(auto.rawMin)} ~ ${graphNumber(auto.rawMax)}${cfg.unit}`,'ok');
+  return {min,max,rawMin:auto.rawMin,rawMax:auto.rawMax,valid:true,mode:'MANUAL'};
+}
+function renderWebGraph(points,cfg,axisRange){
+  const H=500,L=70,R=28,T=36,B=82;
+  const canvasWidth=Math.max(760,(document.getElementById('graphChartCanvas')?.clientWidth||0)-28);
+  const pointGap=points.length>30?32:(points.length>16?42:(points.length>8?58:82));
+  const contentWidth=Math.max(1,points.length-1)*pointGap;
+  const PW=Math.max(canvasWidth-L-R,contentWidth), W=L+PW+R, PH=H-T-B;
+  const values=points.map(p=>p.value), rawMin=Math.min(...values), rawMax=Math.max(...values);
+  let min=axisRange?.min, max=axisRange?.max;
+  if(!Number.isFinite(min)||!Number.isFinite(max)){ const auto=calculateAutoAxis(points); min=auto.min; max=auto.max; }
+  if(max===min){max+=1;min-=1;}
+  const y=v=>T+PH-((v-min)/(max-min))*PH;
+  const x=i=>L+(points.length<=1?PW/2:(PW*i)/(points.length-1));
+  const ticks=5, maxIndex=values.indexOf(rawMax), lastIndex=points.length-1;
+  const labelStep=Math.max(1,Math.ceil(points.length/12));
+  const valueStep=Math.max(1,Math.ceil(points.length/14));
+  const showLabel=i=>points.length<=12||i===0||i===lastIndex||i===maxIndex||i%labelStep===0;
+  const showValue=i=>points.length<=16||i===0||i===lastIndex||i===maxIndex||i%valueStep===0;
+  let grid='';
+  for(let i=0;i<ticks;i++){
+    const ratio=i/(ticks-1), val=max-(max-min)*ratio, yy=T+PH*ratio;
+    grid+=`<line x1="${L}" y1="${yy}" x2="${L+PW}" y2="${yy}" stroke="#E6EDF6" stroke-width="1"/><text x="${L-10}" y="${yy+4}" text-anchor="end" font-size="11" fill="#64748B">${svgText(graphNumber(val))}</text>`;
+  }
+  let marks='';
+  if(graphType==='BAR'){
+    const zeroY=y(Math.min(max,Math.max(min,0))), slot=PW/points.length, barW=Math.max(8,Math.min(34,slot*.62));
+    points.forEach((p,i)=>{
+      const yy=y(p.value), top=Math.min(yy,zeroY), h=Math.max(2,Math.abs(zeroY-yy)), xx=L+i*slot+(slot-barW)/2;
+      const fill=i===maxIndex?'#F97316':'#2563EB';
+      marks+=`<rect x="${xx}" y="${top}" width="${barW}" height="${h}" rx="${barW>8?4:1}" fill="${fill}" opacity="${i===maxIndex?'1':'.88'}"/>`;
+      if(showValue(i)) marks+=`<text x="${xx+barW/2}" y="${Math.max(17,top-8)}" text-anchor="middle" font-size="11" font-weight="800" fill="${i===maxIndex?'#C2410C':'#334155'}">${svgText(graphNumber(p.value))}</text>`;
+    });
+  }else{
+    const path=points.map((p,i)=>`${i?'L':'M'} ${x(i).toFixed(1)} ${y(p.value).toFixed(1)}`).join(' ');
+    marks+=`<path d="${path}" fill="none" stroke="#2563EB" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    points.forEach((p,i)=>{
+      const fill=i===maxIndex?'#F97316':'#2563EB', radius=i===maxIndex?6:(points.length>24?3.4:4.5);
+      marks+=`<circle cx="${x(i)}" cy="${y(p.value)}" r="${radius}" fill="${fill}" stroke="#fff" stroke-width="2"/>`;
+      if(showValue(i)) marks+=`<text x="${x(i)}" y="${Math.max(17,y(p.value)-12)}" text-anchor="middle" font-size="11" font-weight="800" fill="${i===maxIndex?'#C2410C':'#334155'}">${svgText(graphNumber(p.value))}</text>`;
+    });
+  }
+  const rotate=points.length>7;
+  let labels='';
+  points.forEach((p,i)=>{
+    if(!showLabel(i)) return;
+    const xx=graphType==='BAR'?L+(PW/points.length)*i+(PW/points.length)/2:x(i), yy=T+PH+22;
+    labels+=`<text x="${xx}" y="${yy}" text-anchor="${rotate?'end':'middle'}" font-size="10.5" fill="#64748B" transform="${rotate?`rotate(-35 ${xx} ${yy})`:''}">${svgText(p.label)}</text>`;
+  });
+  return `<svg style="width:${W}px;min-width:${W}px;max-width:none" viewBox="0 0 ${W} ${H}" role="img" aria-label="${svgText(cfg.label)} 날짜별 비교 그래프">
+    <rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>
+    ${grid}
+    <line x1="${L}" y1="${T}" x2="${L}" y2="${T+PH}" stroke="#AFC0D6" stroke-width="1.5"/>
+    <line x1="${L}" y1="${T+PH}" x2="${L+PW}" y2="${T+PH}" stroke="#AFC0D6" stroke-width="1.5"/>
+    ${marks}${labels}
+    <text x="19" y="${T+PH/2}" text-anchor="middle" font-size="12" font-weight="800" fill="#334155" transform="rotate(-90 19 ${T+PH/2})">${svgText(cfg.label)} (${svgText(cfg.unit)})</text>
+    <circle cx="${W-128}" cy="18" r="5" fill="#F97316"/><text x="${W-117}" y="22" font-size="10.5" fill="#64748B">가장 높은 값</text>
+  </svg>`;
+}
+function renderPointTable(points,cfg,maxValue){
+  $('graphPointTableWrap').innerHTML=`<table class="point-table"><thead><tr><th>행</th><th>날짜</th><th>${escapeHTML(cfg.label)}</th></tr></thead><tbody>${points.map(p=>`<tr class="${p.value===maxValue?'max-row':''}"><td>${p.rowNo}</td><td title="${escapeHTML(p.date)}">${escapeHTML(dateOnly(p.date))}</td><td>${escapeHTML(graphValue(p.value,cfg))}</td></tr>`).join('')}</tbody></table>`;
+}
+function showGraphEmpty(title,detail){
+  $('graphEmpty').innerHTML=`<div><b>${escapeHTML(title)}</b><span>${escapeHTML(detail)}</span></div>`;
+  $('graphEmpty').classList.remove('hidden'); $('graphPreviewWrap').classList.add('hidden');
+  lastGraphPacket=''; updateSendAvailability();
+}
+function renderGraphView(){
+  const cfg=currentGraphMetric();
+  $('graphMissionTitle').textContent=cfg.question; $('graphMissionText').textContent=cfg.guide;
+  if(!rows.length){ showGraphEmpty('CSV 파일을 먼저 올려주세요.','최대 10개를 올려두고(1개씩 나눠 올려도 누적) 그중 1개 CSV를 선택해 시작 행과 끝 행을 비교할 수 있어요.'); return; }
+  const points=selectedGraphPoints();
+  if(points.length<MIN_VISIBLE_GRAPH_POINTS){
+    showGraphEmpty('비교할 숫자 데이터가 부족해요.',`선택 구간에 숫자 값이 ${MIN_VISIBLE_GRAPH_POINTS}개 이상 있는지 확인해주세요.`); return;
+  }
+  const axisRange=resolveGraphAxis(points,cfg);
+  if(!axisRange.valid){ showGraphEmpty('Y축 범위를 확인해주세요.',axisRange.message); return; }
+  $('graphEmpty').classList.add('hidden'); $('graphPreviewWrap').classList.remove('hidden');
+  const range=currentGraphRangeMeta(points);
+  $('graphRangeNote').innerHTML=`<b>표시 구간:</b> ${range.startRow}행 ~ ${range.endRow}행 · ${escapeHTML(dateOnly(range.startDate))} ~ ${escapeHTML(dateOnly(range.endDate))} · 그래프 ${points.length}개 / 최대 50개`;
+  const values=points.map(p=>p.value), maxValue=Math.max(...values), minValue=Math.min(...values), avg=values.reduce((a,b)=>a+b,0)/values.length;
+  const maxPoint=points.find(p=>p.value===maxValue), minPoint=points.find(p=>p.value===minValue);
+  const area=hasArea?$('graphAreaValue').value:'금천구';
+  const dataset=datasetById($('graphDatasetValue').value);
+  $('graphChartTitle').textContent=`${area} · 날짜별 ${cfg.label} 비교`;
+  $('graphChartMeta').textContent=`${dataset?.name||'-'} · ${range.startRow}~${range.endRow}행 · ${points.length}개`;
+  $('graphChartCanvas').innerHTML=renderWebGraph(points,cfg,axisRange);
+  $('graphChartCaption').textContent=`${cfg.label} 최고값을 주황색으로 강조했습니다. 웹 Y축 ${graphNumber(axisRange.min)}~${graphNumber(axisRange.max)}${cfg.unit}.`;
+  $('graphAnswer').textContent=`${dateOnly(maxPoint.date)} · ${graphValue(maxPoint.value,cfg)}`;
+  $('graphAnswerDetail').textContent=`선택한 구간에서 ${cfg.label}이 가장 높은 날입니다.`;
+  $('graphMax').textContent=graphValue(maxValue,cfg); $('graphMax').title=dateOnly(maxPoint.date);
+  $('graphMin').textContent=graphValue(minValue,cfg); $('graphMin').title=dateOnly(minPoint.date);
+  $('graphAvg').textContent=graphValue(avg,cfg); $('graphCount').textContent=`${points.length}개`;
+  renderPointTable(points,cfg,maxValue);
+  const lcdLabelGuide=points.length<=12?'모든 날짜와 값을 표시합니다.':'전체 점은 표시하고, 날짜와 값은 겹침 방지를 위해 대표 지점만 표시합니다.';
+  $('graphSendHint').textContent=`${range.startRow}~${range.endRow}행의 ${points.length}개 값을 LCD로 보냅니다. LCD에는 X축·Y축 이름과 눈금을 표시하며, ${lcdLabelGuide}`;
+  lastGraphPacket=buildGraphPacket(points,cfg,axisRange);
+  if(port&&writer) setGraphStatus('보낼 준비 완료! [그래프를 LCD로 보내기]를 눌러요','');
+  else setGraphStatus('① 기본 예제에서 아두이노를 연결하면 여기서 그래프를 보낼 수 있어요','wait');
+  updateSendAvailability();
+}
+$('graphTypeTabs').addEventListener('click',e=>{ const btn=e.target.closest('button[data-type]'); if(!btn)return; graphType=btn.dataset.type; updateGraphTypeTabs(); renderGraphView(); });
+$('graphAreaValue').addEventListener('change',()=>{buildGraphDateOptions(false); renderGraphView();});
+$('graphStartDate').addEventListener('change',()=>{buildGraphEndOptions(false); renderGraphView();});
+$('graphEndDate').addEventListener('change',renderGraphView);
+$('graphAxisModeTabs').addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-axis-mode]'); if(!btn)return;
+  graphAxisMode=btn.dataset.axisMode; updateGraphAxisModeUI();
+  if(graphAxisMode==='MANUAL'){
+    const points=selectedGraphPoints();
+    if(points.length){ const auto=calculateAutoAxis(points); $('graphYMin').value=formatAxisInput(auto.min); $('graphYMax').value=formatAxisInput(auto.max); }
+  }
+  renderGraphView();
+});
+['graphYMin','graphYMax'].forEach(id=>$(id).addEventListener('input',renderGraphView));
+$('graphSendBtn').addEventListener('click',()=>sendPacket(lastGraphPacket,'graph'));
+
+let graphResizeTimer=null;
+window.addEventListener('resize',()=>{
+  clearTimeout(graphResizeTimer);
+  graphResizeTimer=setTimeout(()=>{
+    const view=document.getElementById('graphView');
+    if(view&&!view.classList.contains('hidden')&&rows.length) renderGraphView();
+  },120);
+});
+
 // ===== ① 기본 예제: 내장 샘플 데이터 (CSV 업로드 없이 바로 사용) =====
 const SAMPLE=[
-  {area:'광명', emoji:'☀️', date:'2026-07-01', cond:'맑음',   temp:28, hum:55, rain:0,  wind:3,  feel:29, notice:'맑고 화창함', desc:'맑고 화창해요'},
+  {area:'금천구', emoji:'☀️', date:'2026-07-01', cond:'맑음',   temp:28, hum:55, rain:0,  wind:3,  feel:29, notice:'맑고 화창함', desc:'맑고 화창해요'},
   {area:'부산', emoji:'🌧️', date:'2026-07-02', cond:'폭우',   temp:24, hum:95, rain:85, wind:7,  feel:26, notice:'호우경보',   desc:'집중호우·폭우'},
   {area:'강릉', emoji:'🌵', date:'2026-07-03', cond:'건조',   temp:30, hum:22, rain:0,  wind:11, feel:29, notice:'건조주의보', desc:'건조·강풍'},
   {area:'대구', emoji:'🔥', date:'2026-07-04', cond:'폭염',   temp:37, hum:45, rain:0,  wind:2,  feel:40, notice:'폭염경보',   desc:'매우 더움'},
@@ -912,6 +2177,11 @@ $('basicConnectBtn').addEventListener('click',connectArduino);
 $('basicDisconnectBtn').addEventListener('click',disconnectArduino);
 $('basicSendBtn').addEventListener('click',()=>sendPacket(basicPacket,'basic'));
 renderBasicScenarios();
+renderGraphMetricButtons();
+updateGraphTypeTabs();
+updateGraphAxisModeUI();
+buildGraphControls(false);
+renderGraphView();
 
 setConnectionState('','아두이노 연결 안 됨'); updateDataBlock();
 </script>
