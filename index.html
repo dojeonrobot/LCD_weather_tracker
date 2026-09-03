@@ -81,7 +81,7 @@
   .graph-side{border:1px solid var(--line2);border-radius:16px;background:#F8FBFF;padding:14px;display:flex;flex-direction:column;min-width:0}
   .answer-card{background:linear-gradient(135deg,#0F213F,#2456BE);color:#fff;border-radius:14px;padding:15px}.answer-card span{display:block;font-size:11px;color:rgba(255,255,255,.72);font-weight:850}.answer-card b{display:block;font-size:18px;line-height:1.35;margin-top:4px}.answer-card p{font-size:12px;color:rgba(255,255,255,.78);margin-top:5px}
   .graph-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.graph-stat{background:#fff;border:1px solid var(--line2);border-radius:11px;padding:10px;min-width:0}.graph-stat span{display:block;font-size:10.5px;color:var(--muted);font-weight:800}.graph-stat b{display:block;font-size:15px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .point-table-wrap{margin-top:12px;border:1px solid var(--line2);border-radius:12px;background:#fff;overflow:auto;max-height:254px}.point-table{width:100%;border-collapse:collapse;font-size:11.5px}.point-table th,.point-table td{padding:8px 10px;border-bottom:1px solid #EEF2F7;text-align:left;white-space:nowrap}.point-table th{background:#F4F8FE;color:#334155;font-weight:950;position:sticky;top:0}.point-table td:last-child,.point-table th:last-child{text-align:right}.point-table tr.max-row td{background:#FFF7ED;color:#9A3412;font-weight:900}.point-table tr:last-child td{border-bottom:none}
+  .point-table-wrap{margin-top:12px;border:1px solid var(--line2);border-radius:12px;background:#fff;overflow:auto;max-height:254px}.point-table{width:100%;border-collapse:collapse;font-size:11.5px}.point-table th,.point-table td{padding:8px 10px;border-bottom:1px solid #EEF2F7;text-align:left;white-space:nowrap}.point-table th{background:#F4F8FE;color:#334155;font-weight:950;position:sticky;top:0}.point-table td:last-child,.point-table th:last-child{text-align:right}.point-table tr.max-row td{background:#FFF7ED;color:#9A3412;font-weight:900}.point-table tr.min-row td{background:#F5F3FF;color:#5B21B6;font-weight:900}.graph-stat em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);font-weight:800;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.graph-stat.is-max{border-color:#FED7AA;background:#FFFBF5}.graph-stat.is-max b{color:#C2410C}.graph-stat.is-min{border-color:#DDD6FE;background:#FAF8FF}.graph-stat.is-min b{color:#6D28D9}.point-table tr:last-child td{border-bottom:none}
   .graph-send-wrap{margin-top:auto;padding-top:12px}.graph-send-wrap .btn-send{font-size:15px;padding:13px}
   @media(max-width:1320px){.graph-control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.graph-axis-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.graph-axis-note{grid-column:1/-1}}
   @media(max-width:1180px){.graph-preview-layout{grid-template-columns:1fr}.graph-side{min-height:0}.graph-send-wrap{margin-top:12px}.point-table-wrap{max-height:220px}}
@@ -141,11 +141,10 @@
       <section class="card">
         <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 업로드</div><span class="tag" id="dataCount">0개 파일</span></div>
         <div class="card-body">
-          <p class="hint">공공데이터 날씨 CSV를 최대 10개까지 올릴 수 있어요. 한 번에 여러 개를 고르거나, 1개씩 나눠서 추가해도 먼저 올린 파일은 그대로 남습니다.</p>
-          <label class="upload-zone" id="uploadZone"><input id="csvFile" type="file" accept=".csv,.txt" multiple /><div><strong>CSV 파일 선택 (최대 10개)</strong><span>각 파일 50행 · 여러 개를 한 번에 골라도, 1개씩 추가해도 됩니다</span></div></label>
+          <label class="upload-zone" id="uploadZone"><input id="csvFile" type="file" accept=".csv,.txt" multiple /><div><strong>CSV 파일 올리기</strong><span>여러 개를 한 번에 골라도, 1개씩 나눠 올려도 됩니다</span></div></label>
           <div class="file-info" id="fileInfo"><span>업로드</span><b id="fileName">-</b><button class="file-clear" id="clearFilesBtn" type="button">전체 지우기</button></div>
           <div class="file-list" id="fileList"></div>
-          <p class="slot-note" id="uploadSlotNote">아직 올린 파일이 없어요. 최대 10개까지 추가할 수 있습니다.</p>
+          <p class="slot-note" id="uploadSlotNote">아직 올린 파일이 없어요 · 최대 10개</p>
         </div>
       </section>
 
@@ -216,7 +215,7 @@
 
 <div class="wrap hidden" id="graphView">
   <header class="practice-hero">
-    <div><h1>③ 날씨 데이터 · 그래프로 비교하기</h1><div class="sub">최대 10개 CSV를 올려두고, 그중 1개 파일을 선택해 시작 행부터 끝 행까지 최대 50개 값을 비교해 보세요. LCD 전송은 ① 기본 예제에서 아두이노를 연결한 뒤 사용할 수 있어요.</div></div>
+    <div><h1>③ 날씨 데이터 · 그래프로 비교하기</h1><div class="sub">올린 CSV 중 1개를 골라 원하는 구간의 날씨 값을 그래프로 비교해 보세요. LCD 전송은 ① 기본 예제에서 아두이노를 연결한 뒤 사용할 수 있어요.</div></div>
   </header>
 
   <section class="card step" style="margin-top:16px">
@@ -227,11 +226,10 @@
             <div class="step-num">1</div>
             <div class="graph-panel-head-text"><b>날씨 CSV를 불러와요</b><span>비교할 파일을 먼저 준비합니다.</span></div>
           </div>
-          <p class="hint">최대 10개 파일을 미리 올려둘 수 있어요(1개씩 나눠 올려도 누적됩니다). 그래프에서는 그중 선택한 1개 CSV의 데이터만 비교합니다.</p>
-          <label class="upload-zone" id="graphUploadZone"><input id="graphCsvFile" type="file" accept=".csv,.txt" multiple /><div><strong>날씨 CSV 파일 추가 (최대 10개)</strong><span>각 파일 50행 · 1개씩 올려도 누적되며, 업로드 후 비교할 CSV 1개를 선택합니다</span></div></label>
+          <label class="upload-zone" id="graphUploadZone"><input id="graphCsvFile" type="file" accept=".csv,.txt" multiple /><div><strong>날씨 CSV 파일 올리기</strong><span>여러 개를 한 번에 골라도, 1개씩 나눠 올려도 됩니다</span></div></label>
           <div class="file-info" id="graphFileInfo"><span>업로드</span><b id="graphFileName">-</b><button class="file-clear" id="graphClearFilesBtn" type="button">전체 지우기</button></div>
           <div class="file-list" id="graphFileList"></div>
-          <p class="slot-note" id="graphUploadSlotNote">아직 올린 파일이 없어요. 최대 10개까지 추가할 수 있습니다.</p>
+          <p class="slot-note" id="graphUploadSlotNote">아직 올린 파일이 없어요 · 최대 10개</p>
           <div class="graph-file-meta"><span class="tag" id="graphFileCount">0개 파일</span><span class="tag" id="graphDataCount">0행</span><span class="tag" id="graphColumnCount">0열</span></div>
         </div>
 
@@ -274,13 +272,13 @@
         <div class="chart-panel">
           <div class="chart-head"><b id="graphChartTitle">날짜별 기온 비교</b><span id="graphChartMeta">-</span></div>
           <div class="chart-canvas" id="graphChartCanvas"></div>
-          <div class="chart-caption"><span id="graphChartCaption">값이 가장 높은 날짜를 강조해서 표시합니다.</span><span>LCD 전송: 최대 50개 · 12개 초과 시 대표 날짜·값만 표시</span></div>
+          <div class="chart-caption"><span id="graphChartCaption">값이 가장 높은 날짜를 강조해서 표시합니다.</span><span>날짜는 모두 표시 · 값 숫자는 좁을 때 일정 간격으로 표시</span></div>
         </div>
         <aside class="graph-side">
           <div class="answer-card"><span>그래프에서 찾은 결과</span><b id="graphAnswer">-</b><p id="graphAnswerDetail">-</p></div>
           <div class="graph-stat-grid">
-            <div class="graph-stat"><span>최댓값</span><b id="graphMax">-</b></div>
-            <div class="graph-stat"><span>최솟값</span><b id="graphMin">-</b></div>
+            <div class="graph-stat is-max"><span>가장 높은 값</span><b id="graphMax">-</b><em id="graphMaxDate">-</em></div>
+            <div class="graph-stat is-min"><span>가장 낮은 값</span><b id="graphMin">-</b><em id="graphMinDate">-</em></div>
             <div class="graph-stat"><span>평균</span><b id="graphAvg">-</b></div>
             <div class="graph-stat"><span>데이터 수</span><b id="graphCount">-</b></div>
           </div>
@@ -308,7 +306,7 @@
   </div>
 </div>
 
-<div class="modal-back hidden" id="dataModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">CSV 10개 전체 데이터</div><p class="hint" id="modalMeta">-</p></div><button class="modal-close" id="closeDataBtn" type="button">닫기</button></div><div class="modal-body"><div class="table-wrap" id="tableWrap"></div></div></div></div>
+<div class="modal-back hidden" id="dataModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">CSV 전체 데이터</div><p class="hint" id="modalMeta">-</p></div><button class="modal-close" id="closeDataBtn" type="button">닫기</button></div><div class="modal-body"><div class="table-wrap" id="tableWrap"></div></div></div></div>
 
 <script>
 'use strict';
@@ -1592,10 +1590,10 @@ function renderUploadedFileLists(){
   $('graphDataCount').textContent=`${rows.length.toLocaleString()}행`;
   $('graphColumnCount').textContent=`${headers.length}열`;
   const slotText=!datasets.length
-    ? `아직 올린 파일이 없어요. 최대 ${MAX_CSV_FILES}개까지 추가할 수 있습니다.`
+    ? `아직 올린 파일이 없어요 · 최대 ${MAX_CSV_FILES}개`
     : (datasets.length>=MAX_CSV_FILES
-        ? `${MAX_CSV_FILES}개를 모두 채웠어요. 다른 파일을 올리려면 목록에서 X 버튼으로 빼주세요.`
-        : `지금 ${datasets.length}개 · ${MAX_CSV_FILES-datasets.length}개 더 추가할 수 있어요.`);
+        ? `${MAX_CSV_FILES}개를 모두 채웠어요 · 바꾸려면 목록에서 X를 눌러 빼주세요`
+        : `${datasets.length}개 올림 · ${MAX_CSV_FILES-datasets.length}개 더 추가할 수 있어요`);
   ['uploadSlotNote','graphUploadSlotNote'].forEach(id=>{ const el=$(id); if(el) el.textContent=slotText; });
 }
 // 이미 올린 파일은 그대로 두고 새 파일만 더합니다(같은 이름이면 최신 내용으로 교체).
@@ -1778,7 +1776,7 @@ function buildWeatherPacket(w){ const date=shortDate(w.date); const area=asciiRe
 function updateSendAvailability(){ const conn=!!(port&&writer); const tb=$('sendBtn'); if(tb) tb.disabled=!(conn&&rows.length&&lastPacket); const bb=$('basicSendBtn'); if(bb) bb.disabled=!(conn&&basicPacket); const gb=$('graphSendBtn'); if(gb) gb.disabled=!(conn&&lastGraphPacket); }
 $('sendBtn').addEventListener('click',()=>sendPacket(lastPacket,'tool'));
 
-function updateDataBlock(){ const nums=numericColumns().length; $('statFiles').textContent=datasets.length.toLocaleString(); $('statRows').textContent=rows.length.toLocaleString(); $('statCols').textContent=headers.length.toLocaleString(); $('statNums').textContent=nums.toLocaleString(); $('dataBlockTitle').textContent=datasets.length?`${datasets.length}개 CSV 전체 데이터 확인`:'CSV를 업로드하면 전체 데이터를 볼 수 있습니다.'; $('dataBlockHint').textContent=datasets.length?'파일별 행 번호와 원본 데이터를 한 창에서 확인합니다.':'최대 10개, 파일당 50행까지 불러올 수 있습니다. 1개씩 나눠 올려도 누적됩니다.'; $('openDataBtn').disabled=!rows.length; $('dataBlock').classList.toggle('disabled',!rows.length); }
+function updateDataBlock(){ const nums=numericColumns().length; $('statFiles').textContent=datasets.length.toLocaleString(); $('statRows').textContent=rows.length.toLocaleString(); $('statCols').textContent=headers.length.toLocaleString(); $('statNums').textContent=nums.toLocaleString(); $('dataBlockTitle').textContent=datasets.length?`${datasets.length}개 CSV 전체 데이터 확인`:'CSV를 업로드하면 전체 데이터를 볼 수 있습니다.'; $('dataBlockHint').textContent=datasets.length?'파일별 행 번호와 원본 데이터를 한 창에서 확인합니다.':'CSV를 올리면 파일별 원본 데이터를 한 창에서 확인할 수 있습니다.'; $('openDataBtn').disabled=!rows.length; $('dataBlock').classList.toggle('disabled',!rows.length); }
 function renderFullTable(){ if(!headers.length){ $('tableWrap').innerHTML='<div class="empty" style="margin:16px"><div><b>데이터 없음</b><span>CSV 파일을 먼저 업로드하세요.</span></div></div>'; return; } let html='<table><thead><tr><th>#</th><th>CSV 파일</th><th>파일 행</th>'+headers.map(h=>`<th title="${escapeHTML(h)}">${escapeHTML(h)}</th>`).join('')+'</tr></thead><tbody>'; let globalNo=0; for(const dataset of datasets){ for(const row of dataset.rows){ globalNo++; html+=`<tr><td>${globalNo}</td><td title="${escapeHTML(dataset.name)}">${escapeHTML(dataset.name)}</td><td>${row.__sourceRow||''}</td>`+headers.map((_,j)=>`<td title="${escapeHTML(row[j]??'')}">${escapeHTML(row[j]??'')}</td>`).join('')+'</tr>'; } } html+='</tbody></table>'; $('tableWrap').innerHTML=html; }
 function openDataModal(){ if(!rows.length)return; $('modalMeta').textContent=`${datasets.length}개 파일 · 총 ${rows.length.toLocaleString()}행 · ${headers.length.toLocaleString()}열`; renderFullTable(); $('dataModal').classList.remove('hidden'); }
 function closeDataModal(){ $('dataModal').classList.add('hidden'); }
@@ -1993,7 +1991,7 @@ function calculateAutoAxis(points){
   }else{
     const span=max-min||1, pad=Math.max(span*.12,.5); min-=pad; max+=pad;
   }
-  if(max===min){max+=1;min-=1;}
+  if(max===min){ if(min>=0){max=min+1;} else {max+=1;min-=1;} }
   return {min,max,rawMin,rawMax,valid:true,mode:'AUTO'};
 }
 function formatAxisInput(value){
@@ -2051,11 +2049,10 @@ function renderWebGraph(points,cfg,axisRange){
   if(max===min){max+=1;min-=1;}
   const y=v=>T+PH-((v-min)/(max-min))*PH;
   const x=i=>L+(points.length<=1?PW/2:(PW*i)/(points.length-1));
-  const ticks=5, maxIndex=values.indexOf(rawMax), lastIndex=points.length-1;
-  const labelStep=Math.max(1,Math.ceil(points.length/12));
-  const valueStep=Math.max(1,Math.ceil(points.length/14));
-  const showLabel=i=>points.length<=12||i===0||i===lastIndex||i===maxIndex||i%labelStep===0;
-  const showValue=i=>points.length<=16||i===0||i===lastIndex||i===maxIndex||i%valueStep===0;
+  const ticks=5, maxIndex=values.indexOf(rawMax), minIndex=values.indexOf(rawMin), lastIndex=points.length-1;
+  const showLabel=()=>true;
+  const valueStep=Math.max(1,Math.ceil(38/pointGap));
+  const showValue=i=>i%valueStep===0||i===maxIndex||i===minIndex;
   let grid='';
   for(let i=0;i<ticks;i++){
     const ratio=i/(ticks-1), val=max-(max-min)*ratio, yy=T+PH*ratio;
@@ -2066,17 +2063,22 @@ function renderWebGraph(points,cfg,axisRange){
     const zeroY=y(Math.min(max,Math.max(min,0))), slot=PW/points.length, barW=Math.max(8,Math.min(34,slot*.62));
     points.forEach((p,i)=>{
       const yy=y(p.value), top=Math.min(yy,zeroY), h=Math.max(2,Math.abs(zeroY-yy)), xx=L+i*slot+(slot-barW)/2;
-      const fill=i===maxIndex?'#F97316':'#2563EB';
-      marks+=`<rect x="${xx}" y="${top}" width="${barW}" height="${h}" rx="${barW>8?4:1}" fill="${fill}" opacity="${i===maxIndex?'1':'.88'}"/>`;
-      if(showValue(i)) marks+=`<text x="${xx+barW/2}" y="${Math.max(17,top-8)}" text-anchor="middle" font-size="11" font-weight="800" fill="${i===maxIndex?'#C2410C':'#334155'}">${svgText(graphNumber(p.value))}</text>`;
+      const fill=i===maxIndex?'#F97316':(i===minIndex?'#7C3AED':'#2563EB');
+      marks+=`<rect x="${xx}" y="${top}" width="${barW}" height="${h}" rx="${barW>8?4:1}" fill="${fill}" opacity="${i===maxIndex||i===minIndex?'1':'.88'}"/>`;
+      if(showValue(i)) marks+=`<text x="${xx+barW/2}" y="${Math.max(17,top-8)}" text-anchor="middle" font-size="11" font-weight="800" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" fill="${i===maxIndex?'#C2410C':(i===minIndex?'#6D28D9':'#334155')}">${svgText(graphNumber(p.value))}</text>`;
     });
   }else{
     const path=points.map((p,i)=>`${i?'L':'M'} ${x(i).toFixed(1)} ${y(p.value).toFixed(1)}`).join(' ');
     marks+=`<path d="${path}" fill="none" stroke="#2563EB" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>`;
     points.forEach((p,i)=>{
-      const fill=i===maxIndex?'#F97316':'#2563EB', radius=i===maxIndex?6:(points.length>24?3.4:4.5);
+      const key=i===maxIndex||i===minIndex;
+      const fill=i===maxIndex?'#F97316':(i===minIndex?'#7C3AED':'#2563EB'), radius=key?6:(points.length>24?3.4:4.5);
       marks+=`<circle cx="${x(i)}" cy="${y(p.value)}" r="${radius}" fill="${fill}" stroke="#fff" stroke-width="2"/>`;
-      if(showValue(i)) marks+=`<text x="${x(i)}" y="${Math.max(17,y(p.value)-12)}" text-anchor="middle" font-size="11" font-weight="800" fill="${i===maxIndex?'#C2410C':'#334155'}">${svgText(graphNumber(p.value))}</text>`;
+      if(showValue(i)){
+        // 최솟값 라벨은 점 아래에 적어 선과 겹치지 않게 한다.
+        const below=i===minIndex, ty=below?Math.min(T+PH-4,y(p.value)+18):Math.max(17,y(p.value)-12);
+        marks+=`<text x="${x(i)}" y="${ty}" text-anchor="middle" font-size="11" font-weight="800" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" fill="${i===maxIndex?'#C2410C':(below?'#6D28D9':'#334155')}">${svgText(graphNumber(p.value))}</text>`;
+      }
     });
   }
   const rotate=points.length>7;
@@ -2084,7 +2086,7 @@ function renderWebGraph(points,cfg,axisRange){
   points.forEach((p,i)=>{
     if(!showLabel(i)) return;
     const xx=graphType==='BAR'?L+(PW/points.length)*i+(PW/points.length)/2:x(i), yy=T+PH+22;
-    labels+=`<text x="${xx}" y="${yy}" text-anchor="${rotate?'end':'middle'}" font-size="10.5" fill="#64748B" transform="${rotate?`rotate(-35 ${xx} ${yy})`:''}">${svgText(p.label)}</text>`;
+    labels+=`<text x="${xx}" y="${yy}" text-anchor="${rotate?'end':'middle'}" font-size="10.5" fill="#64748B" paint-order="stroke" stroke="#fff" stroke-width="3" stroke-linejoin="round" transform="${rotate?`rotate(-35 ${xx} ${yy})`:''}">${svgText(p.label)}</text>`;
   });
   return `<svg style="width:${W}px;min-width:${W}px;max-width:none" viewBox="0 0 ${W} ${H}" role="img" aria-label="${svgText(cfg.label)} 날짜별 비교 그래프">
     <rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>
@@ -2093,11 +2095,13 @@ function renderWebGraph(points,cfg,axisRange){
     <line x1="${L}" y1="${T+PH}" x2="${L+PW}" y2="${T+PH}" stroke="#AFC0D6" stroke-width="1.5"/>
     ${marks}${labels}
     <text x="19" y="${T+PH/2}" text-anchor="middle" font-size="12" font-weight="800" fill="#334155" transform="rotate(-90 19 ${T+PH/2})">${svgText(cfg.label)} (${svgText(cfg.unit)})</text>
-    <circle cx="${W-128}" cy="18" r="5" fill="#F97316"/><text x="${W-117}" y="22" font-size="10.5" fill="#64748B">가장 높은 값</text>
+    <circle cx="${L+6}" cy="18" r="5" fill="#F97316"/><text x="${L+17}" y="22" font-size="10.5" fill="#64748B">가장 높은 값</text>
+    <circle cx="${L+108}" cy="18" r="5" fill="#7C3AED"/><text x="${L+119}" y="22" font-size="10.5" fill="#64748B">가장 낮은 값</text>
   </svg>`;
 }
-function renderPointTable(points,cfg,maxValue){
-  $('graphPointTableWrap').innerHTML=`<table class="point-table"><thead><tr><th>행</th><th>날짜</th><th>${escapeHTML(cfg.label)}</th></tr></thead><tbody>${points.map(p=>`<tr class="${p.value===maxValue?'max-row':''}"><td>${p.rowNo}</td><td title="${escapeHTML(p.date)}">${escapeHTML(dateOnly(p.date))}</td><td>${escapeHTML(graphValue(p.value,cfg))}</td></tr>`).join('')}</tbody></table>`;
+function renderPointTable(points,cfg,maxValue,minValue){
+  const cls=v=>v===maxValue?'max-row':(v===minValue?'min-row':'');
+  $('graphPointTableWrap').innerHTML=`<table class="point-table"><thead><tr><th>행</th><th>날짜</th><th>${escapeHTML(cfg.label)}</th></tr></thead><tbody>${points.map(p=>`<tr class="${cls(p.value)}"><td>${p.rowNo}</td><td title="${escapeHTML(p.date)}">${escapeHTML(dateOnly(p.date))}</td><td>${escapeHTML(graphValue(p.value,cfg))}</td></tr>`).join('')}</tbody></table>`;
 }
 function showGraphEmpty(title,detail){
   $('graphEmpty').innerHTML=`<div><b>${escapeHTML(title)}</b><span>${escapeHTML(detail)}</span></div>`;
@@ -2107,7 +2111,7 @@ function showGraphEmpty(title,detail){
 function renderGraphView(){
   const cfg=currentGraphMetric();
   $('graphMissionTitle').textContent=cfg.question; $('graphMissionText').textContent=cfg.guide;
-  if(!rows.length){ showGraphEmpty('CSV 파일을 먼저 올려주세요.','최대 10개를 올려두고(1개씩 나눠 올려도 누적) 그중 1개 CSV를 선택해 시작 행과 끝 행을 비교할 수 있어요.'); return; }
+  if(!rows.length){ showGraphEmpty('CSV 파일을 먼저 올려주세요.','올린 파일 중 1개를 골라 시작 행과 끝 행을 정하면 그래프로 비교할 수 있어요.'); return; }
   const points=selectedGraphPoints();
   if(points.length<MIN_VISIBLE_GRAPH_POINTS){
     showGraphEmpty('비교할 숫자 데이터가 부족해요.',`선택 구간에 숫자 값이 ${MIN_VISIBLE_GRAPH_POINTS}개 이상 있는지 확인해주세요.`); return;
@@ -2124,14 +2128,21 @@ function renderGraphView(){
   $('graphChartTitle').textContent=`${area} · 날짜별 ${cfg.label} 비교`;
   $('graphChartMeta').textContent=`${dataset?.name||'-'} · ${range.startRow}~${range.endRow}행 · ${points.length}개`;
   $('graphChartCanvas').innerHTML=renderWebGraph(points,cfg,axisRange);
-  $('graphChartCaption').textContent=`${cfg.label} 최고값을 주황색으로 강조했습니다. 웹 Y축 ${graphNumber(axisRange.min)}~${graphNumber(axisRange.max)}${cfg.unit}.`;
-  $('graphAnswer').textContent=`${dateOnly(maxPoint.date)} · ${graphValue(maxPoint.value,cfg)}`;
-  $('graphAnswerDetail').textContent=`선택한 구간에서 ${cfg.label}이 가장 높은 날입니다.`;
-  $('graphMax').textContent=graphValue(maxValue,cfg); $('graphMax').title=dateOnly(maxPoint.date);
-  $('graphMin').textContent=graphValue(minValue,cfg); $('graphMin').title=dateOnly(minPoint.date);
+  $('graphChartCaption').textContent=`가장 높은 값은 주황색, 가장 낮은 값은 보라색으로 강조했습니다. Y축 ${graphNumber(axisRange.min)}~${graphNumber(axisRange.max)}${cfg.unit}.`;
+  const flat=maxValue===minValue;
+  $('graphAnswer').textContent=flat
+    ? `${cfg.label} ${graphValue(maxValue,cfg)} · 모두 같음`
+    : `${dateOnly(maxPoint.date)} · ${graphValue(maxPoint.value,cfg)}`;
+  $('graphAnswerDetail').textContent=flat
+    ? (maxValue===0
+        ? `이 구간에는 ${cfg.label}이 0인 날만 있어요. 시작 행을 뒤로 옮기면 값이 있는 기간을 볼 수 있습니다.`
+        : `이 구간은 ${cfg.label}이 모두 같아요. 구간을 넓혀서 비교해 보세요.`)
+    : `가장 낮은 날은 ${dateOnly(minPoint.date)} · ${graphValue(minPoint.value,cfg)} 입니다. 두 날의 차이는 ${graphValue(maxValue-minValue,cfg)}예요.`;
+  $('graphMax').textContent=graphValue(maxValue,cfg); $('graphMaxDate').textContent=`${dateOnly(maxPoint.date)} · ${maxPoint.rowNo}행`;
+  $('graphMin').textContent=graphValue(minValue,cfg); $('graphMinDate').textContent=`${dateOnly(minPoint.date)} · ${minPoint.rowNo}행`;
   $('graphAvg').textContent=graphValue(avg,cfg); $('graphCount').textContent=`${points.length}개`;
-  renderPointTable(points,cfg,maxValue);
-  const lcdLabelGuide=points.length<=12?'모든 날짜와 값을 표시합니다.':'전체 점은 표시하고, 날짜와 값은 겹침 방지를 위해 대표 지점만 표시합니다.';
+  renderPointTable(points,cfg,maxValue,minValue);
+  const lcdLabelGuide=points.length<=12?'모든 날짜와 값을 표시합니다.':'점은 모두 표시하고, 좁을 때는 값 숫자만 일정 간격으로 솎아 표시합니다.';
   $('graphSendHint').textContent=`${range.startRow}~${range.endRow}행의 ${points.length}개 값을 LCD로 보냅니다. LCD에는 X축·Y축 이름과 눈금을 표시하며, ${lcdLabelGuide}`;
   lastGraphPacket=buildGraphPacket(points,cfg,axisRange);
   if(port&&writer) setGraphStatus('보낼 준비 완료! [그래프를 LCD로 보내기]를 눌러요','');

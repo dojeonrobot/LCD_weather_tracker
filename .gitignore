@@ -1,0 +1,4 @@
+# 로컬 바로가기·임시 파일
+*.url
+Thumbs.db
+.DS_Store
