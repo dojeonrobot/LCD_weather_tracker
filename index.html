@@ -21,8 +21,7 @@
   .layout{margin-top:16px;display:grid;grid-template-columns:minmax(310px,370px) minmax(0,1fr);gap:16px;align-items:start}@media(max-width:1060px){.layout{grid-template-columns:1fr}}
   .left,.right{min-width:0}.card{background:rgba(255,255,255,.95);border:1px solid var(--line2);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.card+.card{margin-top:14px}.card-head{padding:14px 16px;border-bottom:1px solid var(--line2);background:linear-gradient(180deg,#fff,#FBFCFF);display:flex;align-items:center;justify-content:space-between;gap:10px}.card-title{font-size:14px;font-weight:950;display:flex;align-items:center;gap:8px;color:#111827}.dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px #DBEAFE}.tag{font-size:11.5px;font-weight:850;color:var(--blue2);background:#EAF2FF;padding:4px 9px;border-radius:999px;white-space:nowrap}.card-body{padding:16px}.hint{font-size:12px;color:var(--muted);line-height:1.55}.muted{color:var(--muted)}
   .upload-zone{margin-top:12px;border:1.8px dashed #B9C8DB;background:#F8FBFF;border-radius:14px;min-height:118px;display:grid;place-items:center;text-align:center;padding:18px;cursor:pointer;transition:.15s}.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:#fff;transform:translateY(-1px)}.upload-zone strong{display:block;font-size:15px;margin-bottom:5px;color:#172033}.upload-zone span{font-size:12px;color:var(--muted)}input[type=file]{display:none}.file-info{margin-top:12px;display:none;gap:8px;align-items:center;padding:10px 12px;background:var(--soft);border:1px solid var(--line2);border-radius:11px;font-size:12.5px;color:var(--muted)}.file-info.show{display:flex}.file-info b{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-list{display:none;margin-top:9px;gap:6px;flex-wrap:wrap;max-height:150px;overflow:auto;padding-right:2px}.file-list.show{display:flex}.file-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:5px 8px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:10.5px;font-weight:850;color:#334155}.file-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}.file-chip em{font-style:normal;color:var(--muted);font-weight:800}.file-chip.warn{background:#FFF7ED;border-color:#FED7AA;color:#9A3412}.file-chip.warn em{color:#C2410C}.file-chip{padding-right:3px}.chip-x{border:0;background:transparent;color:#94A3B8;font-size:11px;line-height:1;font-weight:900;cursor:pointer;padding:3px 5px;border-radius:999px;flex:none}.chip-x:hover{background:#FEE2E2;color:#B91C1C}.file-chip.warn .chip-x:hover{background:#FED7AA;color:#9A3412}.file-clear{margin-left:auto;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:850;padding:4px 9px;border-radius:999px;cursor:pointer;white-space:nowrap;flex:none}.file-clear:hover{border-color:#FCA5A5;color:#B91C1C;background:#FEF2F2}.slot-note{margin-top:8px;font-size:11.5px;font-weight:800;color:var(--muted)}
-  button{border:none;font-family:inherit;cursor:pointer;font-weight:850;border-radius:11px;padding:11px 14px;transition:.13s}.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;box-shadow:0 6px 16px rgba(37,99,235,.24)}.btn-primary:hover:not(:disabled){filter:brightness(1.05);transform:translateY(-1px)}.btn-ghost{background:var(--soft);color:#334155;border:1px solid var(--line)}.btn-ghost:hover:not(:disabled){background:#fff;border-color:#A9B8CD}.btn-send{width:100%;font-size:15px;background:linear-gradient(135deg,#0891B2,#2563EB);color:#fff;box-shadow:0 8px 20px rgba(8,145,178,.23)}button:disabled{opacity:.42;cursor:default;transform:none!important;box-shadow:none!important}
-  .conn-box{display:flex;flex-direction:column;gap:12px}.conn-state{border-radius:14px;background:#F8FBFF;border:1px solid var(--line2);padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px}.conn-label{font-size:12px;color:var(--muted);font-weight:800}.conn-value{font-size:17px;font-weight:950;margin-top:2px}.conn-led{width:34px;height:34px;border-radius:50%;background:#CBD5E1;box-shadow:inset 0 0 0 7px #EFF4FA;flex:none}.conn-state.connected .conn-led{background:#22C55E;box-shadow:0 0 0 7px #DCFCE7}.conn-state.error .conn-led{background:#EF4444;box-shadow:0 0 0 7px #FEE2E2}
+  button{border:none;font-family:inherit;cursor:pointer;font-weight:850;border-radius:11px;padding:11px 14px;transition:.13s}.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;box-shadow:0 6px 16px rgba(37,99,235,.24)}.btn-primary:hover:not(:disabled){filter:brightness(1.05);transform:translateY(-1px)}.btn-ghost{background:var(--soft);color:#334155;border:1px solid var(--line)}.btn-ghost:hover:not(:disabled){background:#fff;border-color:#A9B8CD}.btn-send{width:100%;font-size:15px;background:linear-gradient(135deg,#0891B2,#2563EB);color:#fff;box-shadow:0 8px 20px rgba(8,145,178,.23)}.btn-connect-now{width:100%;margin-top:12px;font-size:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.24)}.btn-connect-now+.btn-send{margin-top:8px!important}button:disabled{opacity:.42;cursor:default;transform:none!important;box-shadow:none!important}
   .data-block{border:1px solid var(--line2);background:#F8FBFF;border-radius:14px;padding:14px;cursor:pointer;transition:.14s;display:grid;gap:11px}.data-block:hover{background:#fff;border-color:#AFC0D6;transform:translateY(-1px)}.data-block.disabled{opacity:.58;cursor:default;transform:none!important}.data-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.data-stat{background:#fff;border:1px solid var(--line2);border-radius:11px;padding:10px}.data-stat span{display:block;font-size:11px;color:var(--muted);font-weight:800}.data-stat b{font-size:17px;font-weight:950}.open-data{width:100%;background:#EAF2FF;color:#1D4ED8;border:1px solid #CFE0FF}
   .mode-switch{display:flex;gap:8px;flex-wrap:wrap}.mode-switch button{background:#EEF4FA;color:#334155;border:1px solid var(--line);padding:10px 14px}.mode-switch button.on{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-color:transparent}.panel{display:none}.panel.on{display:block}
   .top-switch{width:min(1660px,calc(100vw - 28px));margin:16px auto 0;display:flex;gap:8px;flex-wrap:wrap}.top-switch button{background:#EEF4FA;color:#334155;border:1px solid var(--line);padding:10px 16px;border-radius:10px;font-weight:800;cursor:pointer;font-size:13px}.top-switch button.on{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-color:transparent}
@@ -69,7 +68,6 @@
   .range-note{margin-top:10px;padding:9px 11px;border-radius:10px;background:#EFF6FF;border:1px solid #CFE0FF;font-size:11.5px;color:#334155;font-weight:800}.range-note b{color:#1D4ED8}
   input[type=number]:disabled,select:disabled{background:#F1F5F9;color:#94A3B8}
   .mapping-note{margin-top:8px;padding:9px 11px;border-radius:10px;background:#fff;border:1px solid var(--line2);font-size:11.5px;color:var(--muted)}.mapping-note b{color:#334155}
-  .graph-connect-strip{margin-bottom:13px;padding:10px 12px;border:1px solid var(--line2);border-radius:13px;background:#F8FBFF;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.graph-connect-strip .conn-state{min-width:230px;flex:1;padding:10px 12px;background:#fff}.graph-connect-strip .conn-value{font-size:14px}.graph-connect-strip .conn-led{width:26px;height:26px;box-shadow:inset 0 0 0 6px #EFF4FA}.graph-connect-strip .conn-state.connected .conn-led{box-shadow:0 0 0 6px #DCFCE7}.graph-connect-strip .btn-row{flex:none}.graph-connect-strip button{padding:9px 12px;font-size:12px}.graph-connect-strip .hint{flex:1 1 260px}
   .graph-preview-layout{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:16px;align-items:start}
   .chart-panel{border:1px solid var(--line2);border-radius:16px;background:#fff;overflow:hidden;min-width:0;display:flex;flex-direction:column}.chart-head{padding:12px 14px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#fff,#F8FBFF)}.chart-head b{font-size:14px}.chart-head span{font-size:11px;color:var(--muted);font-weight:800}
   .chart-canvas{padding:12px 14px 6px;overflow-x:auto;background:#fff;min-height:514px}.chart-canvas svg{display:block;width:auto;min-width:100%;max-width:none;height:auto}.chart-caption{padding:10px 14px 12px;border-top:1px solid var(--line2);font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -81,7 +79,7 @@
   @media(max-width:1320px){.graph-control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.graph-axis-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.graph-axis-note{grid-column:1/-1}}
   @media(max-width:1180px){.graph-preview-layout{grid-template-columns:1fr}.graph-side{min-height:0}.graph-send-wrap{margin-top:12px}.point-table-wrap{max-height:220px}}
   @media(max-width:1020px){.graph-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-  @media(max-width:700px){.graph-metric-grid,.graph-control-grid,.graph-axis-grid{grid-template-columns:1fr}.graph-connect-strip{align-items:stretch}.graph-connect-strip .conn-state,.graph-connect-strip .btn-row{width:100%}.graph-connect-strip .btn-row button{flex:1}.chart-canvas svg{min-width:620px}}
+  @media(max-width:700px){.graph-metric-grid,.graph-control-grid,.graph-axis-grid{grid-template-columns:1fr}.chart-canvas svg{min-width:620px}}
 
 </style>
 </head>
@@ -144,14 +142,6 @@
       </section>
 
       <section class="card">
-        <div class="card-head"><div class="card-title"><span class="dot"></span>아두이노 연결</div></div>
-        <div class="card-body conn-box">
-          <div class="conn-state" id="connStateBox"><div><div class="conn-label">상태</div><div class="conn-value" id="connStateText">연결 안 됨</div></div><div class="conn-led"></div></div>
-          <div class="btn-row"><button class="btn-primary" id="connectBtn" type="button">아두이노 연결</button><button class="btn-ghost" id="disconnectBtn" type="button" disabled>연결 해제</button></div>
-        </div>
-      </section>
-
-      <section class="card">
         <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 데이터 확인</div><span class="tag" id="columnCount">0열</span></div>
         <div class="card-body">
           <div class="data-block disabled" id="dataBlock">
@@ -199,7 +189,7 @@
           <div id="emptyPreview" class="empty"><div><b>CSV를 올린 뒤 날짜를 고르면 여기에 미리보기가 나와요.</b><span>화면에는 CSV 값을 확인하고, LCD에는 날씨 카드가 표시됩니다.</span></div></div>
           <div id="previewArea" class="content-layout hidden">
             <div class="selected-data-wrap"><div class="selected-data-head"><b id="previewTitle">선택한 CSV 데이터</b><span id="previewMeta">-</span></div><div class="selected-table-wrap" id="selectedTableWrap"></div><div class="selected-note" id="selectedNote">여기에는 LCD로 전송될 CSV 원본 값만 표시됩니다.</div></div>
-            <div class="lcd-box"><div class="lcd-title">LCD 전송 요약</div><p class="hint" id="sendHint">선택한 데이터가 LCD에 표시됩니다.</p><div class="metric-grid"><div class="metric"><span>모드</span><b id="mType">-</b></div><div class="metric"><span>데이터 수</span><b id="mCount">-</b></div><div class="metric"><span>기준</span><b id="mX">-</b></div><div class="metric"><span>값</span><b id="mY">-</b></div></div><button class="btn-send" id="sendBtn" type="button" disabled style="margin-top:12px">LCD로 보내기</button><div class="send-status" id="sendStatus">전송 대기</div></div>
+            <div class="lcd-box"><div class="lcd-title">LCD 전송 요약</div><p class="hint" id="sendHint">선택한 데이터가 LCD에 표시됩니다.</p><div class="metric-grid"><div class="metric"><span>모드</span><b id="mType">-</b></div><div class="metric"><span>데이터 수</span><b id="mCount">-</b></div><div class="metric"><span>기준</span><b id="mX">-</b></div><div class="metric"><span>값</span><b id="mY">-</b></div></div><button class="btn-connect-now hidden" id="connectBtn" type="button">아두이노 연결하기</button><button class="btn-send" id="sendBtn" type="button" disabled style="margin-top:12px">LCD로 보내기</button><div class="send-status" id="sendStatus">전송 대기</div></div>
           </div>
         </div>
       </section>
@@ -223,14 +213,6 @@
           <div class="file-info" id="graphFileInfo"><span>업로드</span><b id="graphFileName">-</b><button class="file-clear" id="graphClearFilesBtn" type="button">전체 지우기</button></div>
           <div class="file-list" id="graphFileList"></div>
           <p class="slot-note" id="graphUploadSlotNote">아직 올린 파일이 없어요 · 최대 10개</p>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="card-head"><div class="card-title"><span class="dot"></span>아두이노 연결</div></div>
-        <div class="card-body conn-box">
-          <div class="conn-state" id="graphConnStateBox"><div><div class="conn-label">상태</div><div class="conn-value" id="graphConnStateText">연결 안 됨</div></div><div class="conn-led"></div></div>
-          <div class="btn-row"><button class="btn-primary" id="graphConnectBtn" type="button">아두이노 연결</button><button class="btn-ghost" id="graphDisconnectBtn" type="button" disabled>연결 해제</button></div>
         </div>
       </section>
 
@@ -293,8 +275,8 @@
               </div>
               <div class="point-table-wrap" id="graphPointTableWrap"></div>
               <div class="graph-send-wrap">
-                <p class="hint" id="graphSendHint" style="margin-bottom:9px">왼쪽에서 아두이노를 연결한 뒤, 그래프를 LCD로 보내세요.</p>
-                <button class="btn-send" id="graphSendBtn" type="button" disabled>그래프를 LCD로 보내기</button>
+                <p class="hint" id="graphSendHint" style="margin-bottom:9px">아두이노를 연결하면 그래프를 LCD로 보낼 수 있어요.</p>
+                <button class="btn-connect-now hidden" id="graphConnectBtn" type="button">아두이노 연결하기</button><button class="btn-send" id="graphSendBtn" type="button" disabled>그래프를 LCD로 보내기</button>
                 <div class="send-status" id="graphSendStatus">CSV를 올리고 그래프를 만든 뒤, 아두이노를 연결해 주세요</div>
               </div>
             </aside>
@@ -1348,16 +1330,12 @@ $('copyCodeBtn').addEventListener('click', async()=>{
 
 function setConnectionState(state, text){
   document.querySelectorAll('.status-pill').forEach(p=>p.className='status-pill'+(state?' '+state:''));
-  ['connStateBox','graphConnStateBox'].forEach(id=>{ const box=$(id); if(box) box.className='conn-state'+(state?' '+state:''); });
   const tt=$('topStatusText'); if(tt) tt.textContent=text;
   const bt=$('basicStatusText'); if(bt) bt.textContent=text;
   const gt=$('graphStatusText'); if(gt) gt.textContent=text;
-  const stateText=text.replace('아두이노 ','').replace('Arduino ','');
-  const cs=$('connStateText'); if(cs) cs.textContent=stateText;
-  const gs=$('graphConnStateText'); if(gs) gs.textContent=stateText;
   const busy=state==='connected'||state==='connecting', connected=state==='connected';
   ['connectBtn','basicConnectBtn','graphConnectBtn'].forEach(id=>{const el=$(id); if(el) el.disabled=busy;});
-  ['disconnectBtn','basicDisconnectBtn','graphDisconnectBtn'].forEach(id=>{const el=$(id); if(el) el.disabled=!connected;});
+  ['basicDisconnectBtn'].forEach(id=>{const el=$(id); if(el) el.disabled=!connected;});
   updateSendAvailability();
 }
 function setSendStatus(text, kind=''){ const el=$('sendStatus'); if(el){ el.className='send-status'+(kind?' '+kind:''); el.textContent=text; } }
@@ -1539,12 +1517,7 @@ navigator.serial?.addEventListener('disconnect',()=>{
   setConnectionState('error','포트 분리됨');
 });
 
-$('connectBtn').addEventListener('click',connectArduino);
-$('disconnectBtn').addEventListener('click',disconnectArduino);
-const graphConnectBtn=$('graphConnectBtn');
-if(graphConnectBtn) graphConnectBtn.addEventListener('click',connectArduino);
-const graphDisconnectBtn=$('graphDisconnectBtn');
-if(graphDisconnectBtn) graphDisconnectBtn.addEventListener('click',disconnectArduino);
+['connectBtn','graphConnectBtn'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('click',connectArduino); });
 
 function parseCSV(text){ text=text.replace(/^\uFEFF/,''); const out=[]; let row=[], cell='', q=false; for(let i=0;i<text.length;i++){ const c=text[i], n=text[i+1]; if(q){ if(c==='"'&&n==='"'){cell+='"';i++;} else if(c==='"') q=false; else cell+=c; } else { if(c==='"') q=true; else if(c===','){row.push(cell.trim());cell='';} else if(c==='\n'){row.push(cell.trim());cell=''; if(row.some(v=>v!=='')) out.push(row); row=[];} else if(c!=='\r') cell+=c; } } row.push(cell.trim()); if(row.some(v=>v!=='')) out.push(row); if(!out.length) return {headers:[],rows:[]}; const h=out[0].map((v,i)=>v||`열${i+1}`); const rs=out.slice(1).map(r=>h.map((_,i)=>r[i]??'')); return {headers:h,rows:rs}; }
 async function decodeFile(file){ const buf=await file.arrayBuffer(); let text=new TextDecoder('utf-8').decode(buf); if(text.includes('\uFFFD')){ try{text=new TextDecoder('euc-kr').decode(buf);}catch(e){} } return text; }
@@ -1785,7 +1758,9 @@ function renderCurrent(){ if(!rows.length){ $('emptyPreview').classList.remove('
 function renderWeatherView(){ const w=currentWeatherData(); if(!w){ $('selectedTableWrap').innerHTML='<div class="empty" style="margin:14px"><div><b>고른 날짜의 데이터가 없어요.</b><span>CSV 파일·날짜·지역을 다시 골라주세요.</span></div></div>'; $('previewTitle').textContent='고른 날씨 미리보기'; $('previewMeta').textContent='-'; lastPacket=''; return; } const cols=[['CSV 파일',w.fileName],['날짜',w.date],['지역',w.area],['날씨상태',w.cond],['기온',w.temp],['습도',w.hum],['강수량',w.rain],['풍속',w.wind],['체감온도',w.feel],['뉴스/주의',w.notice]]; renderKeyValueTable(w.rowNo, cols); $('previewTitle').textContent=`${w.date} · ${w.area}`; $('previewMeta').textContent=`${w.fileName} · ${w.rowNo}행`; $('selectedNote').textContent='선택한 CSV의 한 행을 날씨 카드로 변환합니다. LCD에는 날씨 아이콘과 기온·습도·강수량·풍속이 표시됩니다.'; $('mType').textContent='날씨 카드'; $('mCount').textContent='1개'; $('mX').textContent=w.area; $('mY').textContent=w.cond; $('sendHint').textContent='고른 CSV·날짜·지역의 날씨 카드가 LCD에 표시됩니다.'; lastPacket=buildWeatherPacket(w); }
 function renderKeyValueTable(rowNo, cols){ let html='<table class="selected-table"><thead><tr><th>행</th><th>항목</th><th>CSV 값</th><th>LCD 변환</th></tr></thead><tbody>'; for(const [k,v] of cols){ html+=`<tr><td>${rowNo}</td><td>${escapeHTML(k)}</td><td title="${escapeHTML(v)}">${escapeHTML(v)}</td><td>${escapeHTML(toLCDToken(k,v))}</td></tr>`; } html+='</tbody></table>'; $('selectedTableWrap').innerHTML=html; }
 function buildWeatherPacket(w){ const date=shortDate(w.date); const area=asciiRegion(w.area); const cond=asciiCondition(w.cond,w.rain,w.wind,w.temp); const temp=safeNumber(toNum(w.temp)); const hum=safeNumber(toNum(w.hum)); const rain=safeNumber(toNum(w.rain)); const wind=safeNumber(toNum(w.wind)); const feel=safeNumber(toNum(w.feel)); const notice=asciiNotice(w.notice||w.cond); return `W2|${date}|${area}|${cond}|${temp}|${hum}|${rain}|${wind}|${feel}|${notice}`; }
-function updateSendAvailability(){ const conn=!!(port&&writer); const tb=$('sendBtn'); if(tb) tb.disabled=!(conn&&rows.length&&lastPacket); const bb=$('basicSendBtn'); if(bb) bb.disabled=!(conn&&basicPacket); const gb=$('graphSendBtn'); if(gb) gb.disabled=!(conn&&lastGraphPacket); }
+function updateSendAvailability(){ const conn=!!(port&&writer);
+  // 연결이 끊긴 동안에만 전송 자리에 연결 버튼을 띄웁니다(사이드바 연결 카드는 ①에만 있습니다).
+  ['connectBtn','graphConnectBtn'].forEach(id=>{ const el=$(id); if(el) el.classList.toggle('hidden',conn); }); const tb=$('sendBtn'); if(tb) tb.disabled=!(conn&&rows.length&&lastPacket); const bb=$('basicSendBtn'); if(bb) bb.disabled=!(conn&&basicPacket); const gb=$('graphSendBtn'); if(gb) gb.disabled=!(conn&&lastGraphPacket); }
 $('sendBtn').addEventListener('click',()=>sendPacket(lastPacket,'tool'));
 
 function updateDataBlock(){ const nums=numericColumns().length; $('statFiles').textContent=datasets.length.toLocaleString(); $('statRows').textContent=rows.length.toLocaleString(); $('statCols').textContent=headers.length.toLocaleString(); $('statNums').textContent=nums.toLocaleString(); $('dataBlockTitle').textContent=datasets.length?`${datasets.length}개 CSV 전체 데이터 확인`:'CSV를 업로드하면 전체 데이터를 볼 수 있습니다.'; $('dataBlockHint').textContent=datasets.length?'파일별 행 번호와 원본 데이터를 한 창에서 확인합니다.':'CSV를 올리면 파일별 원본 데이터를 한 창에서 확인할 수 있습니다.'; $('openDataBtn').disabled=!rows.length; $('dataBlock').classList.toggle('disabled',!rows.length); }
@@ -2165,7 +2140,7 @@ function renderGraphView(){
   $('graphSendHint').textContent=`${range.startRow}~${range.endRow}행의 ${points.length}개 값을 LCD로 보냅니다. LCD에는 X축·Y축 이름과 눈금, 그리고 모든 날짜와 값을 표시합니다.`;
   lastGraphPacket=buildGraphPacket(points,cfg,axisRange);
   if(port&&writer) setGraphStatus('보낼 준비 완료! [그래프를 LCD로 보내기]를 눌러요','');
-  else setGraphStatus('왼쪽에서 아두이노를 연결하면 그래프를 보낼 수 있어요','wait');
+  else setGraphStatus('아래 [아두이노 연결하기]를 눌러 연결해 주세요','wait');
   updateSendAvailability();
 }
 $('graphTypeTabs').addEventListener('click',e=>{ const btn=e.target.closest('button[data-type]'); if(!btn)return; graphType=btn.dataset.type; updateGraphTypeTabs(); renderGraphView(); });
@@ -2222,7 +2197,7 @@ function selectBasic(i){
     </div>`;
   basicPacket=buildWeatherPacket({date:s.date,area:s.area,cond:s.cond,temp:s.temp,hum:s.hum,rain:s.rain,wind:s.wind,feel:s.feel,notice:s.notice});
   if(port&&writer) setBasicStatus('보낼 준비 완료! [LCD로 보내기]를 눌러요','');
-  else setBasicStatus('아두이노를 먼저 연결하세요 (1단계)','wait');
+  else setBasicStatus('위 1단계에서 아두이노를 먼저 연결하세요','wait');
   updateSendAvailability();
 }
 $('basicConnectBtn').addEventListener('click',connectArduino);
