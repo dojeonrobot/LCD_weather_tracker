@@ -55,12 +55,7 @@
   details.adv{margin-top:14px;border:1px solid var(--line2);border-radius:12px;background:#F8FBFF;padding:0 13px}details.adv summary{cursor:pointer;padding:13px 0;font-size:13px;font-weight:900;color:#334155;list-style:none}details.adv summary::-webkit-details-marker{display:none}details.adv summary:before{content:"▸ ";color:var(--blue)}details.adv[open] summary:before{content:"▾ "}details.adv .adv-body{padding-bottom:15px}
 
   /* ===== ③ 그래프로 비교하기 ===== */
-  .graph-setup-grid{display:grid;grid-template-columns:minmax(300px,350px) minmax(0,1fr);gap:16px;align-items:stretch}
-  .graph-upload-panel,.graph-compare-panel{border:1px solid var(--line2);background:#F8FBFF;border-radius:15px;padding:15px;min-width:0}
-  .graph-upload-panel .upload-zone{margin-top:10px;min-height:94px;padding:14px;background:#fff}
-  .graph-panel-head{display:flex;align-items:center;gap:10px;margin-bottom:11px}.graph-panel-head .step-num{width:29px;height:29px;font-size:14px}.graph-panel-head-text{min-width:0}.graph-panel-head-text b{display:block;font-size:15px;font-weight:950;color:#172033}.graph-panel-head-text span{display:block;margin-top:1px;font-size:11.5px;color:var(--muted)}
-  .graph-file-meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.graph-file-meta .tag{font-size:11px}
-  .graph-compare-panel{padding:15px 16px 16px}
+  
   .mission-box{margin-bottom:12px;border:1px solid #CFE0FF;background:linear-gradient(135deg,#EFF6FF,#F8FBFF);border-radius:13px;padding:12px 14px;display:grid;gap:2px}
   .mission-box span{font-size:10.5px;font-weight:950;color:#1D4ED8;letter-spacing:.02em}.mission-box b{font-size:16px;color:#172033}.mission-box p{font-size:12px;color:var(--muted)}
   .graph-metric-grid{display:grid;grid-template-columns:repeat(5,minmax(112px,1fr));gap:8px}
@@ -85,7 +80,7 @@
   .graph-send-wrap{margin-top:auto;padding-top:12px}.graph-send-wrap .btn-send{font-size:15px;padding:13px}
   @media(max-width:1320px){.graph-control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.graph-axis-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.graph-axis-note{grid-column:1/-1}}
   @media(max-width:1180px){.graph-preview-layout{grid-template-columns:1fr}.graph-side{min-height:0}.graph-send-wrap{margin-top:12px}.point-table-wrap{max-height:220px}}
-  @media(max-width:1020px){.graph-setup-grid{grid-template-columns:1fr}.graph-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:1020px){.graph-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
   @media(max-width:700px){.graph-metric-grid,.graph-control-grid,.graph-axis-grid{grid-template-columns:1fr}.graph-connect-strip{align-items:stretch}.graph-connect-strip .conn-state,.graph-connect-strip .btn-row{width:100%}.graph-connect-strip .btn-row button{flex:1}.chart-canvas svg{min-width:620px}}
 
 </style>
@@ -215,29 +210,45 @@
 
 <div class="wrap hidden" id="graphView">
   <header class="practice-hero">
-    <div class="brand"><div class="logo">📊</div><div><h1>③ 날씨 데이터 · 그래프로 비교하기</h1><div class="sub">올린 CSV 중 1개를 골라 원하는 구간의 날씨 값을 그래프로 비교해 보세요. LCD 전송은 ① 기본 예제에서 아두이노를 연결한 뒤 사용할 수 있어요.</div></div></div>
+    <div class="brand"><div class="logo">📊</div><div><h1>③ 날씨 데이터 · 그래프로 비교하기</h1><div class="sub">올린 CSV 중 1개를 골라, 원하는 구간의 날씨 값을 그래프로 비교하고 LCD로 보내요</div></div></div>
+    <div class="status-pill" id="graphStatus"><span class="status-dot"></span><span id="graphStatusText">아두이노 연결 안 됨</span></div>
   </header>
 
-  <section class="card step" style="margin-top:16px">
-    <div class="card-body">
-      <div class="graph-setup-grid">
-        <div class="graph-upload-panel">
-          <div class="graph-panel-head">
-            <div class="step-num">1</div>
-            <div class="graph-panel-head-text"><b>날씨 CSV를 불러와요</b><span>비교할 파일을 먼저 준비합니다.</span></div>
-          </div>
+  <div class="layout">
+    <aside class="left">
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 업로드</div><span class="tag" id="graphFileCount">0개 파일</span></div>
+        <div class="card-body">
           <label class="upload-zone" id="graphUploadZone"><input id="graphCsvFile" type="file" accept=".csv,.txt" multiple /><div><strong>날씨 CSV 파일 올리기</strong><span>여러 개를 한 번에 골라도, 1개씩 나눠 올려도 됩니다</span></div></label>
           <div class="file-info" id="graphFileInfo"><span>업로드</span><b id="graphFileName">-</b><button class="file-clear" id="graphClearFilesBtn" type="button">전체 지우기</button></div>
           <div class="file-list" id="graphFileList"></div>
           <p class="slot-note" id="graphUploadSlotNote">아직 올린 파일이 없어요 · 최대 10개</p>
-          <div class="graph-file-meta"><span class="tag" id="graphFileCount">0개 파일</span><span class="tag" id="graphDataCount">0행</span><span class="tag" id="graphColumnCount">0열</span></div>
         </div>
+      </section>
 
-        <div class="graph-compare-panel">
-          <div class="graph-panel-head">
-            <div class="step-num">2</div>
-            <div class="graph-panel-head-text"><b>비교할 날씨 정보를 골라요</b><span>업로드한 CSV 중 한 파일과 비교 구간을 선택합니다.</span></div>
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>아두이노 연결</div></div>
+        <div class="card-body conn-box">
+          <div class="conn-state" id="graphConnStateBox"><div><div class="conn-label">상태</div><div class="conn-value" id="graphConnStateText">연결 안 됨</div></div><div class="conn-led"></div></div>
+          <div class="btn-row"><button class="btn-primary" id="graphConnectBtn" type="button">아두이노 연결</button><button class="btn-ghost" id="graphDisconnectBtn" type="button" disabled>연결 해제</button></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>불러온 데이터</div></div>
+        <div class="card-body">
+          <div class="data-stats">
+            <div class="data-stat"><span>총 행</span><b id="graphDataCount">0행</b></div>
+            <div class="data-stat"><span>열</span><b id="graphColumnCount">0열</b></div>
           </div>
+        </div>
+      </section>
+    </aside>
+
+    <main class="right">
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>비교할 정보 고르기</div><span class="tag">그래프 설정</span></div>
+        <div class="card-body">
           <div class="mission-box">
             <span>오늘의 질문</span>
             <b id="graphMissionTitle">기온이 가장 높은 날은 언제일까요?</b>
@@ -260,38 +271,38 @@
           <div class="range-note" id="graphRangeNote"><b>표시 구간:</b> CSV를 올리면 시작 행과 끝 행을 선택할 수 있습니다.</div>
           <div class="mapping-note" id="graphMappingNote"><b>열 자동 인식:</b> CSV를 올리면 날짜와 날씨 값의 열을 자동으로 찾습니다.</div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <section class="card step" style="margin-top:14px">
-    <div class="card-body">
-      <div class="step-head"><div class="step-num">3</div><div class="step-title">그래프로 비교하고 LCD로 보내요</div></div>
-      <div id="graphEmpty" class="empty"><div><b>CSV 파일을 먼저 올려주세요.</b><span>업로드한 파일 중 1개를 선택하고, 원하는 시작 행과 끝 행을 골라 그래프로 비교할 수 있어요.</span></div></div>
-      <div id="graphPreviewWrap" class="graph-preview-layout hidden">
-        <div class="chart-panel">
-          <div class="chart-head"><b id="graphChartTitle">날짜별 기온 비교</b><span id="graphChartMeta">-</span></div>
-          <div class="chart-canvas" id="graphChartCanvas"></div>
-          <div class="chart-caption"><span id="graphChartCaption">값이 가장 높은 날짜를 강조해서 표시합니다.</span><span>날짜는 모두 표시 · 값 숫자는 좁을 때 일정 간격으로 표시</span></div>
+      <section class="card">
+        <div class="card-head"><div class="card-title"><span class="dot"></span>그래프 미리보기</div><span class="tag">전송용 그래프</span></div>
+        <div class="card-body">
+          <div id="graphEmpty" class="empty"><div><b>CSV 파일을 먼저 올려주세요.</b><span>업로드한 파일 중 1개를 선택하고, 원하는 시작 행과 끝 행을 골라 그래프로 비교할 수 있어요.</span></div></div>
+          <div id="graphPreviewWrap" class="graph-preview-layout hidden">
+            <div class="chart-panel">
+              <div class="chart-head"><b id="graphChartTitle">날짜별 기온 비교</b><span id="graphChartMeta">-</span></div>
+              <div class="chart-canvas" id="graphChartCanvas"></div>
+              <div class="chart-caption"><span id="graphChartCaption">값이 가장 높은 날짜를 강조해서 표시합니다.</span><span>날짜는 모두 표시 · 값 숫자는 좁을 때 일정 간격으로 표시</span></div>
+            </div>
+            <aside class="graph-side">
+              <div class="answer-card"><span>그래프에서 찾은 결과</span><b id="graphAnswer">-</b><p id="graphAnswerDetail">-</p></div>
+              <div class="graph-stat-grid">
+                <div class="graph-stat is-max"><span>가장 높은 값</span><b id="graphMax">-</b><em id="graphMaxDate">-</em></div>
+                <div class="graph-stat is-min"><span>가장 낮은 값</span><b id="graphMin">-</b><em id="graphMinDate">-</em></div>
+                <div class="graph-stat"><span>평균</span><b id="graphAvg">-</b></div>
+                <div class="graph-stat"><span>데이터 수</span><b id="graphCount">-</b></div>
+              </div>
+              <div class="point-table-wrap" id="graphPointTableWrap"></div>
+              <div class="graph-send-wrap">
+                <p class="hint" id="graphSendHint" style="margin-bottom:9px">왼쪽에서 아두이노를 연결한 뒤, 그래프를 LCD로 보내세요.</p>
+                <button class="btn-send" id="graphSendBtn" type="button" disabled>그래프를 LCD로 보내기</button>
+                <div class="send-status" id="graphSendStatus">CSV를 올리고 그래프를 만든 뒤, 아두이노를 연결해 주세요</div>
+              </div>
+            </aside>
+          </div>
         </div>
-        <aside class="graph-side">
-          <div class="answer-card"><span>그래프에서 찾은 결과</span><b id="graphAnswer">-</b><p id="graphAnswerDetail">-</p></div>
-          <div class="graph-stat-grid">
-            <div class="graph-stat is-max"><span>가장 높은 값</span><b id="graphMax">-</b><em id="graphMaxDate">-</em></div>
-            <div class="graph-stat is-min"><span>가장 낮은 값</span><b id="graphMin">-</b><em id="graphMinDate">-</em></div>
-            <div class="graph-stat"><span>평균</span><b id="graphAvg">-</b></div>
-            <div class="graph-stat"><span>데이터 수</span><b id="graphCount">-</b></div>
-          </div>
-          <div class="point-table-wrap" id="graphPointTableWrap"></div>
-          <div class="graph-send-wrap">
-            <p class="hint" id="graphSendHint" style="margin-bottom:9px">아두이노 연결은 ① 기본 예제에서 먼저 진행한 뒤, 여기서 그래프를 LCD로 보내세요.</p>
-            <button class="btn-send" id="graphSendBtn" type="button" disabled>그래프를 LCD로 보내기</button>
-            <div class="send-status" id="graphSendStatus">CSV를 올리고 그래프를 만든 뒤, ① 기본 예제에서 아두이노를 연결해 주세요</div>
-          </div>
-        </aside>
-      </div>
-    </div>
-  </section>
+      </section>
+    </main>
+  </div>
 </div>
 
 <div class="code-view hidden" id="codeView">
@@ -1493,7 +1504,7 @@ async function sendPacket(packet, target){
   if(!writer || !packet){
     set(
       target==='graph'
-        ? '① 기본 예제에서 아두이노를 먼저 연결한 뒤 그래프를 보내주세요'
+        ? '아두이노를 먼저 연결한 뒤 그래프를 보내주세요'
         : '먼저 아두이노를 연결하고 날씨를 고르세요',
       'wait'
     );
@@ -2154,7 +2165,7 @@ function renderGraphView(){
   $('graphSendHint').textContent=`${range.startRow}~${range.endRow}행의 ${points.length}개 값을 LCD로 보냅니다. LCD에는 X축·Y축 이름과 눈금, 그리고 모든 날짜와 값을 표시합니다.`;
   lastGraphPacket=buildGraphPacket(points,cfg,axisRange);
   if(port&&writer) setGraphStatus('보낼 준비 완료! [그래프를 LCD로 보내기]를 눌러요','');
-  else setGraphStatus('① 기본 예제에서 아두이노를 연결하면 여기서 그래프를 보낼 수 있어요','wait');
+  else setGraphStatus('왼쪽에서 아두이노를 연결하면 그래프를 보낼 수 있어요','wait');
   updateSendAvailability();
 }
 $('graphTypeTabs').addEventListener('click',e=>{ const btn=e.target.closest('button[data-type]'); if(!btn)return; graphType=btn.dataset.type; updateGraphTypeTabs(); renderGraphView(); });
