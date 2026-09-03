@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>금천구 날씨 CSV 10개 · 그래프 비교 · LCD 전송기</title>
+<title>날씨 CSV · 그래프 비교 · LCD 전송기</title>
 <style>
   :root{
     --bg:#F4F7FB; --card:#FFFFFF; --ink:#132036; --muted:#64748B;
@@ -91,7 +91,7 @@
 </style>
 </head>
 <body>
-<div class="top-switch" id="topViewTabs"><button type="button" data-view="BASIC" class="on">① 기본 예제</button><button type="button" data-view="TOOL">② 금천구 실제 데이터</button><button type="button" data-view="GRAPH">③ 그래프로 비교하기</button><button type="button" data-view="CODE">예제 코드 (ESP32)</button></div>
+<div class="top-switch" id="topViewTabs"><button type="button" data-view="BASIC" class="on">① 기본 예제</button><button type="button" data-view="TOOL">② 우리 지역 실제 데이터</button><button type="button" data-view="GRAPH">③ 그래프로 비교하기</button><button type="button" data-view="CODE">예제 코드 (ESP32)</button></div>
 
 <div class="wrap" id="basicView">
   <header class="practice-hero">
@@ -132,7 +132,7 @@
 
 <div class="wrap hidden" id="toolView">
   <header class="topbar">
-    <div class="brand"><div class="logo">🌦</div><div><h1>② 금천구 실제 데이터</h1><div class="sub">공공데이터 CSV를 올리고, 날짜만 골라서 LCD로 보내요</div></div></div>
+    <div class="brand"><div class="logo">🌦</div><div><h1>② 우리 지역 실제 데이터</h1><div class="sub">공공데이터 CSV를 올리고, 날짜만 골라서 LCD로 보내요</div></div></div>
     <div class="status-pill" id="topStatus"><span class="status-dot"></span><span id="topStatusText">Arduino 연결 안 됨</span></div>
   </header>
 
@@ -141,7 +141,7 @@
       <section class="card">
         <div class="card-head"><div class="card-title"><span class="dot"></span>CSV 업로드</div><span class="tag" id="dataCount">0개 파일</span></div>
         <div class="card-body">
-          <p class="hint">금천구 공공데이터 CSV를 최대 10개까지 올릴 수 있어요. 한 번에 여러 개를 고르거나, 1개씩 나눠서 추가해도 먼저 올린 파일은 그대로 남습니다.</p>
+          <p class="hint">공공데이터 날씨 CSV를 최대 10개까지 올릴 수 있어요. 한 번에 여러 개를 고르거나, 1개씩 나눠서 추가해도 먼저 올린 파일은 그대로 남습니다.</p>
           <label class="upload-zone" id="uploadZone"><input id="csvFile" type="file" accept=".csv,.txt" multiple /><div><strong>CSV 파일 선택 (최대 10개)</strong><span>각 파일 50행 · 여러 개를 한 번에 골라도, 1개씩 추가해도 됩니다</span></div></label>
           <div class="file-info" id="fileInfo"><span>업로드</span><b id="fileName">-</b><button class="file-clear" id="clearFilesBtn" type="button">전체 지우기</button></div>
           <div class="file-list" id="fileList"></div>
@@ -228,7 +228,7 @@
             <div class="graph-panel-head-text"><b>날씨 CSV를 불러와요</b><span>비교할 파일을 먼저 준비합니다.</span></div>
           </div>
           <p class="hint">최대 10개 파일을 미리 올려둘 수 있어요(1개씩 나눠 올려도 누적됩니다). 그래프에서는 그중 선택한 1개 CSV의 데이터만 비교합니다.</p>
-          <label class="upload-zone" id="graphUploadZone"><input id="graphCsvFile" type="file" accept=".csv,.txt" multiple /><div><strong>금천구 CSV 파일 추가 (최대 10개)</strong><span>각 파일 50행 · 1개씩 올려도 누적되며, 업로드 후 비교할 CSV 1개를 선택합니다</span></div></label>
+          <label class="upload-zone" id="graphUploadZone"><input id="graphCsvFile" type="file" accept=".csv,.txt" multiple /><div><strong>날씨 CSV 파일 추가 (최대 10개)</strong><span>각 파일 50행 · 1개씩 올려도 누적되며, 업로드 후 비교할 CSV 1개를 선택합니다</span></div></label>
           <div class="file-info" id="graphFileInfo"><span>업로드</span><b id="graphFileName">-</b><button class="file-clear" id="graphClearFilesBtn" type="button">전체 지우기</button></div>
           <div class="file-list" id="graphFileList"></div>
           <p class="slot-note" id="graphUploadSlotNote">아직 올린 파일이 없어요. 최대 10개까지 추가할 수 있습니다.</p>
@@ -316,6 +316,7 @@ const $ = id => document.getElementById(id);
 const BAUD_RATE = 115200;
 const MAX_CSV_FILES = 10;
 const EXPECTED_ROWS_PER_FILE = 50;
+const NO_AREA_LABEL = '전체';   // CSV에 지역 열이 없을 때 쓰는 이름
 const MAX_GRAPH_POINTS = 50;       // INO 수신 안전 한도
 const MIN_VISIBLE_GRAPH_POINTS = 3;
 const DEFAULT_VISIBLE_GRAPH_POINTS = 12;
@@ -1739,7 +1740,7 @@ function updateDateAreaOptions(keep=true){
     $('areaValue').disabled=!areas.length;
     dateSource=source.filter(r=>String(r[aIdx])===String($('areaValue').value));
   }else{
-    $('areaValue').innerHTML='<option value="금천구">금천구</option>';
+    $('areaValue').innerHTML=`<option value="${NO_AREA_LABEL}">${NO_AREA_LABEL}</option>`;
     $('areaValue').disabled=true;
   }
   const dates=uniqueValues(dIdx,dateSource);
@@ -1768,7 +1769,7 @@ function normalRowSelection(){
 function currentWeatherData(){
   const selected=normalRowSelection(); if(!selected) return null;
   const r=selected.row, get=id=>r[Number($(id).value)]??'';
-  return {rowNo:selected.rowNo,fileName:selected.fileName,row:r,date:get('dateCol'),area:hasArea?get('areaCol'):'금천구',cond:get('condCol'),temp:get('tempCol'),hum:get('humCol'),rain:get('rainCol'),wind:get('windCol'),feel:get('feelCol'),notice:get('noticeCol')};
+  return {rowNo:selected.rowNo,fileName:selected.fileName,row:r,date:get('dateCol'),area:hasArea?get('areaCol'):NO_AREA_LABEL,cond:get('condCol'),temp:get('tempCol'),hum:get('humCol'),rain:get('rainCol'),wind:get('windCol'),feel:get('feelCol'),notice:get('noticeCol')};
 }
 function renderCurrent(){ if(!rows.length){ $('emptyPreview').classList.remove('hidden'); $('previewArea').classList.add('hidden'); lastPacket=''; updateSendAvailability(); return; } $('emptyPreview').classList.add('hidden'); $('previewArea').classList.remove('hidden'); renderWeatherView(); updateSendAvailability(); }
 function renderWeatherView(){ const w=currentWeatherData(); if(!w){ $('selectedTableWrap').innerHTML='<div class="empty" style="margin:14px"><div><b>고른 날짜의 데이터가 없어요.</b><span>CSV 파일·날짜·지역을 다시 골라주세요.</span></div></div>'; $('previewTitle').textContent='고른 날씨 미리보기'; $('previewMeta').textContent='-'; lastPacket=''; return; } const cols=[['CSV 파일',w.fileName],['날짜',w.date],['지역',w.area],['날씨상태',w.cond],['기온',w.temp],['습도',w.hum],['강수량',w.rain],['풍속',w.wind],['체감온도',w.feel],['뉴스/주의',w.notice]]; renderKeyValueTable(w.rowNo, cols); $('previewTitle').textContent=`${w.date} · ${w.area}`; $('previewMeta').textContent=`${w.fileName} · ${w.rowNo}행`; $('selectedNote').textContent='선택한 CSV의 한 행을 날씨 카드로 변환합니다. LCD에는 날씨 아이콘과 기온·습도·강수량·풍속이 표시됩니다.'; $('mType').textContent='날씨 카드'; $('mCount').textContent='1개'; $('mX').textContent=w.area; $('mY').textContent=w.cond; $('sendHint').textContent='고른 CSV·날짜·지역의 날씨 카드가 LCD에 표시됩니다.'; lastPacket=buildWeatherPacket(w); }
@@ -1786,15 +1787,36 @@ $('openDataBtn').addEventListener('click',openDataModal); $('dataBlock').addEven
 function dateOnly(v){ const s=String(v??'').trim(); const m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if(!m) return s; return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`; }
 function shortLabel(v,max=7){ const d=dateOnly(v); if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d.slice(5); const s=String(v??'').trim()||'-'; return s.length>max?s.slice(0,max):s; }
 function shortDate(v){ const d=dateOnly(v); return /^\d{4}-\d{2}-\d{2}$/.test(d)?d.slice(5):safeToken(d).slice(0,10); }
-// 금천구 10개 동을 먼저 찾고(독산1동 -> DOKSAN1), 없으면 시·도 이름으로 넘어갑니다.
-const REGION_MAP=[['가산','GASAN'],['독산','DOKSAN'],['시흥','SIHEUNG'],['금천','GEUMCHEON'],['서울','SEOUL'],['부산','BUSAN'],['대구','DAEGU'],['광주','GWANGJU'],['대전','DAEJEON'],['제주','JEJU'],['인천','INCHEON'],['강릉','GANGNEUNG'],['수원','SUWON'],['울산','ULSAN'],['세종','SEJONG']];
+// LCD는 한글을 못 찍으므로 지역명을 로마자로 바꿉니다.
+// 특정 지역 목록을 박아두면 다른 지역에서 못 쓰기 때문에, 국어의 로마자
+// 표기법(단순형)으로 어떤 지명이든 변환합니다. 예) 행복1동 -> HAENGBOK1
+const RR_CHO=['g','kk','n','d','tt','r','m','b','pp','s','ss','','j','jj','ch','k','t','p','h'];
+const RR_JUNG=['a','ae','ya','yae','eo','e','yeo','ye','o','wa','wae','oe','yo','u','wo','we','wi','yu','eu','ui','i'];
+const RR_JONG=['','k','k','k','n','n','n','t','l','k','m','p','l','l','p','l','m','p','p','t','t','ng','t','t','k','t','p','t'];
+// 자음 동화 때문에 기계 변환과 실제 표기가 다른 지명만 여기에 추가하세요.
+const REGION_OVERRIDES=[['강릉','GANGNEUNG'],['신림','SILLIM'],['종로','JONGNO'],['왕십리','WANGSIMNI']];
+function romanizeKorean(s){
+  let out='';
+  for(const ch of String(s)){
+    const code=ch.charCodeAt(0)-0xAC00;
+    if(code>=0&&code<11172) out+=RR_CHO[Math.floor(code/588)]+RR_JUNG[Math.floor((code%588)/28)]+RR_JONG[code%28];
+    else if(/[A-Za-z0-9]/.test(ch)) out+=ch;
+  }
+  return out.toUpperCase();
+}
 function asciiRegion(v){
   const s=String(v??'').trim();
-  for(const [ko,en] of REGION_MAP){
-    if(!s.includes(ko)) continue;
-    const num=s.slice(s.indexOf(ko)+ko.length).match(/(\d{1,2})/);
-    return safeToken(num?en+num[1]:en);
-  }
+  if(!s||s===NO_AREA_LABEL) return 'AREA';
+  // 행복1동 -> 기준이름 '행복' + 번호 '1'
+  let base=s.replace(/(특별자치시|특별자치도|광역시|특별시)$/,'');
+  const num=(base.match(/(\d{1,3})/)||['',''])[1];
+  base=base.replace(/\d+/g,'').trim();
+  // 행정 단위 접미사는 떼되, 이름이 한 글자만 남으면(대구, 제주…) 그대로 둡니다.
+  const trimmed=base.replace(/(동|읍|면|리|가|구|시|군|도)$/,'');
+  if(trimmed.length>=2) base=trimmed;
+  for(const [ko,en] of REGION_OVERRIDES){ if(base===ko) return safeToken(en+num); }
+  const roman=romanizeKorean(base);
+  if(roman) return safeToken(roman+num);
   const ascii=s.replace(/[^A-Za-z0-9_ -]/g,'').trim();
   return safeToken(ascii||'AREA');
 }
@@ -1895,7 +1917,7 @@ function buildGraphControls(keep=true){
     areaSelect.value=keep&&areas.includes(old)?old:(areas[0]??'');
     areaSelect.disabled=!areas.length; areaField.classList.remove('hidden');
   }else{
-    areaSelect.innerHTML='<option value="ALL">금천구</option>'; areaSelect.disabled=true; areaField.classList.add('hidden');
+    areaSelect.innerHTML=`<option value="ALL">${NO_AREA_LABEL}</option>`; areaSelect.disabled=true; areaField.classList.add('hidden');
   }
   buildGraphDateOptions(keep); updateGraphMappingNote();
 }
@@ -2097,7 +2119,7 @@ function renderGraphView(){
   $('graphRangeNote').innerHTML=`<b>표시 구간:</b> ${range.startRow}행 ~ ${range.endRow}행 · ${escapeHTML(dateOnly(range.startDate))} ~ ${escapeHTML(dateOnly(range.endDate))} · 그래프 ${points.length}개 / 최대 50개`;
   const values=points.map(p=>p.value), maxValue=Math.max(...values), minValue=Math.min(...values), avg=values.reduce((a,b)=>a+b,0)/values.length;
   const maxPoint=points.find(p=>p.value===maxValue), minPoint=points.find(p=>p.value===minValue);
-  const area=hasArea?$('graphAreaValue').value:'금천구';
+  const area=hasArea?$('graphAreaValue').value:NO_AREA_LABEL;
   const dataset=datasetById($('graphDatasetValue').value);
   $('graphChartTitle').textContent=`${area} · 날짜별 ${cfg.label} 비교`;
   $('graphChartMeta').textContent=`${dataset?.name||'-'} · ${range.startRow}~${range.endRow}행 · ${points.length}개`;
@@ -2143,7 +2165,7 @@ window.addEventListener('resize',()=>{
 
 // ===== ① 기본 예제: 내장 샘플 데이터 (CSV 업로드 없이 바로 사용) =====
 const SAMPLE=[
-  {area:'금천구', emoji:'☀️', date:'2026-07-01', cond:'맑음',   temp:28, hum:55, rain:0,  wind:3,  feel:29, notice:'맑고 화창함', desc:'맑고 화창해요'},
+  {area:'서울', emoji:'☀️', date:'2026-07-01', cond:'맑음',   temp:28, hum:55, rain:0,  wind:3,  feel:29, notice:'맑고 화창함', desc:'맑고 화창해요'},
   {area:'부산', emoji:'🌧️', date:'2026-07-02', cond:'폭우',   temp:24, hum:95, rain:85, wind:7,  feel:26, notice:'호우경보',   desc:'집중호우·폭우'},
   {area:'강릉', emoji:'🌵', date:'2026-07-03', cond:'건조',   temp:30, hum:22, rain:0,  wind:11, feel:29, notice:'건조주의보', desc:'건조·강풍'},
   {area:'대구', emoji:'🔥', date:'2026-07-04', cond:'폭염',   temp:37, hum:45, rain:0,  wind:2,  feel:40, notice:'폭염경보',   desc:'매우 더움'},
