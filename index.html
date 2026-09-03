@@ -317,8 +317,8 @@ const EXPECTED_ROWS_PER_FILE = 50;
 const NO_AREA_LABEL = '전체';   // CSV에 지역 열이 없을 때 쓰는 이름
 const MAX_GRAPH_POINTS = 50;       // INO 수신 안전 한도
 const MIN_VISIBLE_GRAPH_POINTS = 3;
-const DEFAULT_VISIBLE_GRAPH_POINTS = 12;
-const MAX_VISIBLE_GRAPH_POINTS = 15;   // 한 번에 비교할 점의 최대 개수(LCD 가독 한도)
+const DEFAULT_VISIBLE_GRAPH_POINTS = 10;
+const MAX_VISIBLE_GRAPH_POINTS = 10;   // 한 번에 비교할 점의 최대 개수(LCD 가독 한도)
 let headers = [], rows = [], datasets = [];
 let datasetSeq = 0;
 let screenMode = 'NORMAL';
@@ -1879,7 +1879,7 @@ function buildGraphEndOptions(keep=true){
   for(let i=minEnd;i<=maxEnd;i++) options.push(i);
   endSelect.innerHTML=options.map(i=>`<option value="${i}">${entries[i].rowNo}행 · ${escapeHTML(dateOnly(entries[i].date))}</option>`).join('');
 
-  // 처음 열거나 시작 행을 바꿀 때는 12행 범위를 기본값으로 유지합니다.
+  // 처음 열거나 시작 행을 바꿀 때는 기본 개수만큼의 범위를 유지합니다.
   const defaultEnd=Math.min(maxEnd,start+DEFAULT_VISIBLE_GRAPH_POINTS-1);
   const next=keep&&options.includes(old)?old:defaultEnd;
   if(Number.isFinite(next)) endSelect.value=String(next);
@@ -1907,7 +1907,7 @@ function buildGraphControls(keep=true){
     areaSelect.innerHTML='<option>CSV 필요</option>'; areaSelect.disabled=true;
     $('graphStartDate').innerHTML='<option>CSV 필요</option>'; $('graphStartDate').disabled=true;
     $('graphEndDate').innerHTML='<option>CSV 필요</option>'; $('graphEndDate').disabled=true;
-    $('graphRangeNote').innerHTML='<b>표시 구간:</b> 기본 12개로 열리며, 한 번에 최대 15개까지 비교할 수 있습니다.';
+    $('graphRangeNote').innerHTML='<b>표시 구간:</b> 시작 행을 고르면 한 번에 10개씩 비교합니다.';
     setGraphAxisNote('선택한 데이터에 맞춰 Y축을 자동으로 설정합니다.');
     areaField.classList.remove('hidden'); updateGraphMappingNote(); return;
   }
@@ -2107,9 +2107,9 @@ function renderWebGraph(points,cfg,axisRange){
     <circle cx="${L+108}" cy="18" r="5" fill="#7C3AED"/><text x="${L+119}" y="22" font-size="10.5" fill="#64748B">가장 낮은 값</text>
   </svg>`;
 }
-function renderPointTable(points,cfg,maxValue,minValue){
-  const cls=v=>v===maxValue?'max-row':(v===minValue?'min-row':'');
-  $('graphPointTableWrap').innerHTML=`<table class="point-table"><thead><tr><th>행</th><th>날짜</th><th>${escapeHTML(cfg.label)}</th></tr></thead><tbody>${points.map(p=>`<tr class="${cls(p.value)}"><td>${p.rowNo}</td><td title="${escapeHTML(p.date)}">${escapeHTML(dateOnly(p.date))}</td><td>${escapeHTML(graphValue(p.value,cfg))}</td></tr>`).join('')}</tbody></table>`;
+function renderPointTable(points,cfg,maxIdx,minIdx){
+  const cls=i=>i===maxIdx?'max-row':(i===minIdx?'min-row':'');
+  $('graphPointTableWrap').innerHTML=`<table class="point-table"><thead><tr><th>행</th><th>날짜</th><th>${escapeHTML(cfg.label)}</th></tr></thead><tbody>${points.map((p,i)=>`<tr class="${cls(i)}"><td>${p.rowNo}</td><td title="${escapeHTML(p.date)}">${escapeHTML(dateOnly(p.date))}</td><td>${escapeHTML(graphValue(p.value,cfg))}</td></tr>`).join('')}</tbody></table>`;
 }
 function showGraphEmpty(title,detail){
   $('graphEmpty').innerHTML=`<div><b>${escapeHTML(title)}</b><span>${escapeHTML(detail)}</span></div>`;
@@ -2130,7 +2130,8 @@ function renderGraphView(){
   const range=currentGraphRangeMeta(points);
   $('graphRangeNote').innerHTML=`<b>표시 구간:</b> ${range.startRow}행 ~ ${range.endRow}행 · ${escapeHTML(dateOnly(range.startDate))} ~ ${escapeHTML(dateOnly(range.endDate))} · 그래프 ${points.length}개 / 최대 ${MAX_VISIBLE_GRAPH_POINTS}개`;
   const values=points.map(p=>p.value), maxValue=Math.max(...values), minValue=Math.min(...values), avg=values.reduce((a,b)=>a+b,0)/values.length;
-  const maxPoint=points.find(p=>p.value===maxValue), minPoint=points.find(p=>p.value===minValue);
+  const maxIdx=values.indexOf(maxValue), minIdx=values.indexOf(minValue);
+  const maxPoint=points[maxIdx], minPoint=points[minIdx];
   const area=hasArea?$('graphAreaValue').value:NO_AREA_LABEL;
   const dataset=datasetById($('graphDatasetValue').value);
   $('graphChartTitle').textContent=`${area} · 날짜별 ${cfg.label} 비교`;
@@ -2149,9 +2150,8 @@ function renderGraphView(){
   $('graphMax').textContent=graphValue(maxValue,cfg); $('graphMaxDate').textContent=`${dateOnly(maxPoint.date)} · ${maxPoint.rowNo}행`;
   $('graphMin').textContent=graphValue(minValue,cfg); $('graphMinDate').textContent=`${dateOnly(minPoint.date)} · ${minPoint.rowNo}행`;
   $('graphAvg').textContent=graphValue(avg,cfg); $('graphCount').textContent=`${points.length}개`;
-  renderPointTable(points,cfg,maxValue,minValue);
-  const lcdLabelGuide=points.length<=12?'모든 날짜와 값을 표시합니다.':'점은 모두 표시하고, 좁을 때는 값 숫자만 일정 간격으로 솎아 표시합니다.';
-  $('graphSendHint').textContent=`${range.startRow}~${range.endRow}행의 ${points.length}개 값을 LCD로 보냅니다. LCD에는 X축·Y축 이름과 눈금을 표시하며, ${lcdLabelGuide}`;
+  renderPointTable(points,cfg,maxIdx,minIdx);
+  $('graphSendHint').textContent=`${range.startRow}~${range.endRow}행의 ${points.length}개 값을 LCD로 보냅니다. LCD에는 X축·Y축 이름과 눈금, 그리고 모든 날짜와 값을 표시합니다.`;
   lastGraphPacket=buildGraphPacket(points,cfg,axisRange);
   if(port&&writer) setGraphStatus('보낼 준비 완료! [그래프를 LCD로 보내기]를 눌러요','');
   else setGraphStatus('① 기본 예제에서 아두이노를 연결하면 여기서 그래프를 보낼 수 있어요','wait');
